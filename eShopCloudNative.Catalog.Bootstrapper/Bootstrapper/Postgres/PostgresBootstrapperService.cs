@@ -5,16 +5,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace eShopCloudNative.Catalog.Bootstrapper;
+namespace eShopCloudNative.Catalog.Bootstrapper.Postgres;
 
 public class PostgresBootstrapperService : IBootstrapperService
 {
 
-    public System.Net.NetworkCredential? SysAdminUser { get; set; }
-    public System.Net.DnsEndPoint? ServerEndpoint { get; set; }
-    public System.Net.NetworkCredential? AppUser { get; set; }
-    public string? DatabaseToCreate { get; set; }
-    public string? InitialDatabase { get; set; }
+    public System.Net.NetworkCredential SysAdminUser { get; set; }
+    public System.Net.DnsEndPoint ServerEndpoint { get; set; }
+    public System.Net.NetworkCredential AppUser { get; set; }
+    public string DatabaseToCreate { get; set; }
+    public string InitialDatabase { get; set; }
 
 
     public void Initialize()
@@ -38,7 +38,7 @@ public class PostgresBootstrapperService : IBootstrapperService
 
     public void Execute()
     {
-        using NpgsqlConnection connection = new NpgsqlConnection($"server={this.ServerEndpoint?.Host ?? "localhost"};Port={this.ServerEndpoint?.Port};Database={this.InitialDatabase};User Id={this.SysAdminUser?.UserName};Password={this.SysAdminUser?.Password};");
+        using var connection = new NpgsqlConnection($"server={this.ServerEndpoint?.Host ?? "localhost"};Port={this.ServerEndpoint?.Port};Database={this.InitialDatabase};User Id={this.SysAdminUser?.UserName};Password={this.SysAdminUser?.Password};");
         connection.Open();
         try
         {
@@ -80,7 +80,6 @@ public class PostgresBootstrapperService : IBootstrapperService
 
     private void CreateDatabase(NpgsqlConnection connection)
     {
-
         using var command = connection.CreateCommand();
 
         command.CommandText = @$"SELECT count(datname) FROM pg_database WHERE datname = '{this.DatabaseToCreate}'";
