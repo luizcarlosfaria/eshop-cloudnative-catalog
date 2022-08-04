@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<objects xmlns="http://www.springframework.net">
+
+    <object name="init" type="eShopCloudNative.Catalog.Bootstrapper.BootstrapperService, eShopCloudNative.Catalog.Bootstrapper">
+        
+        <property name="Services">
+            
+            <list element-type="eShopCloudNative.Catalog.Bootstrapper.IBootstrapperService, eShopCloudNative.Catalog.Bootstrapper">
+
+                <object type="eShopCloudNative.Catalog.Bootstrapper.PostgresBootstrapperService, eShopCloudNative.Catalog.Bootstrapper">
+                    <property name="SysAdminUser">
+                        <object type="System.Net.NetworkCredential, System.Net.Primitives">
+                            <constructor-arg name="userName" value="eshop_user" />
+                            <constructor-arg name="password" value="eshop_pass" />
+                        </object>
+                    </property>
+                    <property name="AppUser">
+                        <object type="System.Net.NetworkCredential, System.Net.Primitives">
+                            <constructor-arg name="userName" value="catalog_user" />
+                            <constructor-arg name="password" value="catalog_pass" />
+                        </object>
+                    </property>
+                    <property name="ServerEndpoint">
+                        <object type="System.Net.DnsEndPoint, System.Net.Primitives">
+                            <constructor-arg name="host" value="postgres" />
+                            <constructor-arg name="port" value="5432" />
+                        </object>
+                    </property>
+                    <property name="DatabaseToCreate" value="eshop_catalog_db" />
+                    <property name="InitialDatabase" value="eshop_db" />
+                </object>
+            </list>
+        </property>
+       
+    </object>
+</objects>
+

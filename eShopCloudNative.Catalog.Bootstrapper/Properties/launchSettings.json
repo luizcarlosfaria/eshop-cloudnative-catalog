@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "eShopCloudNative.Catalog.Bootstrapper": {
+      "commandName": "Project"
+    },
+    "Docker": {
+      "commandName": "Docker"
+    }
+  }
+}
