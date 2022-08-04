@@ -3,11 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
 namespace eShopCloudNative.Catalog.WebUI.Controllers;
-public class HomeController : Controller
+public class CatalogController : Controller
 {
-    private readonly ILogger<HomeController> _logger;
+    private readonly ILogger<CatalogController> _logger;
 
-    public HomeController(ILogger<HomeController> logger)
+    public CatalogController(ILogger<CatalogController> logger)
     {
         _logger = logger;
     }
