@@ -12,6 +12,4 @@ public interface IBootstrapperService
 
     void Execute();
 
-    void Check();
-
 }

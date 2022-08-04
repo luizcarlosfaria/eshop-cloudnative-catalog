@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 namespace eShopCloudNative.Catalog.Bootstrapper;
 public class BootstrapperService: IBootstrapperService
 {
-    public List<IBootstrapperService>? Services { get; set; }
+    public List<IBootstrapperService> Services { get; set; }
 
     public void Initialize()
     {
-        foreach (var service in Services)
+        foreach (var service in this.Services)
         {
             service.Initialize();
         }
@@ -19,18 +19,12 @@ public class BootstrapperService: IBootstrapperService
 
     public void Execute()
     {
-        foreach (var service in Services)
+        foreach (var service in this.Services)
         {
             service.Execute();
         }
     }
 
-    public void Check()
-    {
-        foreach (var service in Services)
-        {
-            service.Check();
-        }
-    }
+
 
 }

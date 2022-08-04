@@ -24,6 +24,16 @@ public class PostgresBootstrapperService : IBootstrapperService
 
         if (this.ServerEndpoint is null)
             throw new InvalidOperationException("ServerEndpoint can't be null");
+
+        if (this.AppUser is null)
+            throw new InvalidOperationException("AppUser can't be null");
+
+        if (this.DatabaseToCreate is null)
+            throw new InvalidOperationException("DatabaseToCreate can't be null");
+
+        if (this.InitialDatabase is null)
+            throw new InvalidOperationException("InitialDatabase can't be null");
+
     }
 
     public void Execute()
@@ -41,16 +51,20 @@ public class PostgresBootstrapperService : IBootstrapperService
                 connection.Close();
         }
     }
-    public void Check()
-    {
-        throw new NotImplementedException();
-    }
+
 
     private void CreateAppUser(NpgsqlConnection connection)
     {
         using var command = connection.CreateCommand();
 
-        command.CommandText = @$"CREATE ROLE {this.AppUser.UserName} WITH
+        command.CommandText = @$"SELECT count(rolname) FROM pg_catalog.pg_roles WHERE  rolname = '{this.AppUser.UserName}'";
+
+        long qtd = (long)command.ExecuteScalar();
+
+        if (qtd == 0)
+        {
+
+            command.CommandText = @$"CREATE ROLE {this.AppUser.UserName} WITH
 	                    LOGIN
 	                    NOSUPERUSER
 	                    NOCREATEDB
@@ -60,20 +74,30 @@ public class PostgresBootstrapperService : IBootstrapperService
 	                    CONNECTION LIMIT -1
 	                    PASSWORD '{this.AppUser.Password}';";
 
-        command.ExecuteNonQuery();
+            command.ExecuteNonQuery();
+        }
     }
 
     private void CreateDatabase(NpgsqlConnection connection)
     {
+
         using var command = connection.CreateCommand();
 
-        command.CommandText = @$"CREATE DATABASE {this.DatabaseToCreate} 
+        command.CommandText = @$"SELECT count(datname) FROM pg_database WHERE datname = '{this.DatabaseToCreate}'";
+
+        long qtd = (long)command.ExecuteScalar();
+
+        if (qtd == 0)
+        {
+            command.CommandText = @$"CREATE DATABASE {this.DatabaseToCreate} 
                             WITH 
                             OWNER = {this.AppUser.UserName}
                             ENCODING = 'UTF8'
                             CONNECTION LIMIT = -1;";
 
-        command.ExecuteNonQuery();
+            command.ExecuteNonQuery();
+        }
+
     }
 
 }
