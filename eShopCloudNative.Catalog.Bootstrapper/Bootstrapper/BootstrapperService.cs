@@ -9,19 +9,19 @@ public class BootstrapperService: IBootstrapperService
 {
     public List<IBootstrapperService> Services { get; set; }
 
-    public void Initialize()
+    public async Task InitializeAsync()
     {
         foreach (var service in this.Services)
         {
-            service.Initialize();
+            await service.InitializeAsync();
         }
     }
 
-    public void Execute()
+    public async Task ExecuteAsync()
     {
         foreach (var service in this.Services)
         {
-            service.Execute();
+            await service.ExecuteAsync();
         }
     }
 

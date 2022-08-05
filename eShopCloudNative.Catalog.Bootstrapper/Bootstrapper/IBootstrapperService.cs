@@ -8,8 +8,8 @@ namespace eShopCloudNative.Catalog.Bootstrapper;
 
 public interface IBootstrapperService
 {
-    void Initialize();
+    Task InitializeAsync();
 
-    void Execute();
+    Task ExecuteAsync();
 
 }

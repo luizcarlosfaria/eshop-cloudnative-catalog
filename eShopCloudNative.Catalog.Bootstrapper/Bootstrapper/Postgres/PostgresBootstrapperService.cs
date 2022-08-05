@@ -17,7 +17,7 @@ public class PostgresBootstrapperService : IBootstrapperService
     public string InitialDatabase { get; set; }
 
 
-    public void Initialize()
+    public Task InitializeAsync()
     {
         if (this.SysAdminUser is null)
             throw new InvalidOperationException("SysAdminUser can't be null");
@@ -34,32 +34,33 @@ public class PostgresBootstrapperService : IBootstrapperService
         if (this.InitialDatabase is null)
             throw new InvalidOperationException("InitialDatabase can't be null");
 
+        return Task.CompletedTask;
     }
 
-    public void Execute()
+    public async Task ExecuteAsync()
     {
         using var connection = new NpgsqlConnection($"server={this.ServerEndpoint?.Host ?? "localhost"};Port={this.ServerEndpoint?.Port};Database={this.InitialDatabase};User Id={this.SysAdminUser?.UserName};Password={this.SysAdminUser?.Password};");
-        connection.Open();
+        await connection.OpenAsync();
         try
         {
-            this.CreateAppUser(connection);
-            this.CreateDatabase(connection);
+            await this.CreateAppUser(connection);
+            await this.CreateDatabase(connection);
         }
         finally
         {
             if (connection != null)
-                connection.Close();
+                await connection.CloseAsync();
         }
     }
 
 
-    private void CreateAppUser(NpgsqlConnection connection)
+    private async Task CreateAppUser(NpgsqlConnection connection)
     {
         using var command = connection.CreateCommand();
 
         command.CommandText = @$"SELECT count(rolname) FROM pg_catalog.pg_roles WHERE  rolname = '{this.AppUser.UserName}'";
 
-        long qtd = (long)command.ExecuteScalar();
+        long qtd = (long) await command.ExecuteScalarAsync();
 
         if (qtd == 0)
         {
@@ -74,17 +75,17 @@ public class PostgresBootstrapperService : IBootstrapperService
 	                    CONNECTION LIMIT -1
 	                    PASSWORD '{this.AppUser.Password}';";
 
-            command.ExecuteNonQuery();
+            await command.ExecuteNonQueryAsync();
         }
     }
 
-    private void CreateDatabase(NpgsqlConnection connection)
+    private async Task CreateDatabase(NpgsqlConnection connection)
     {
         using var command = connection.CreateCommand();
 
         command.CommandText = @$"SELECT count(datname) FROM pg_database WHERE datname = '{this.DatabaseToCreate}'";
 
-        long qtd = (long)command.ExecuteScalar();
+        long qtd = (long) await command.ExecuteScalarAsync();
 
         if (qtd == 0)
         {
@@ -94,7 +95,7 @@ public class PostgresBootstrapperService : IBootstrapperService
                             ENCODING = 'UTF8'
                             CONNECTION LIMIT = -1;";
 
-            command.ExecuteNonQuery();
+            await command.ExecuteNonQueryAsync();
         }
 
     }

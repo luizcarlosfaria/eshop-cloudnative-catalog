@@ -20,18 +20,18 @@ public class MinioBootstrapperService : IBootstrapperService
 
     protected List<Bucket> oldBuckets;
 
-    public void Execute()
+    public async Task ExecuteAsync()
     {
         foreach (var bucketName in this.BucketsToCreate)
         {
             if (oldBuckets.Any(it => it.Name == bucketName) == false)
             {
-                this.minio.MakeBucketAsync(new MakeBucketArgs().WithBucket(bucketName)).GetAwaiter().GetResult();
+                await this.minio.MakeBucketAsync(new MakeBucketArgs().WithBucket(bucketName));
             }
         }
     }
 
-    public void Initialize()
+    public async Task InitializeAsync()
     {
         this.minio = new MinioClient()
             .WithEndpoint(this.ServerEndpoint.Host, this.ServerEndpoint.Port)
@@ -44,6 +44,6 @@ public class MinioBootstrapperService : IBootstrapperService
 
         this.minio = this.minio.Build();
 
-        this.oldBuckets = this.minio.ListBucketsAsync().GetAwaiter().GetResult().Buckets;
+        this.oldBuckets = (await this.minio.ListBucketsAsync()).Buckets;
     }
 }
