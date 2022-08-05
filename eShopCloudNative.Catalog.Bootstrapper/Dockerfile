@@ -5,10 +5,10 @@ WORKDIR /app
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
-COPY ["catalog/eShopCloudNative.Catalog.Bootstrapper/eShopCloudNative.Catalog.Bootstrapper.csproj", "catalog/eShopCloudNative.Catalog.Bootstrapper/"]
-RUN dotnet restore "catalog/eShopCloudNative.Catalog.Bootstrapper/eShopCloudNative.Catalog.Bootstrapper.csproj"
+COPY ["eShopCloudNative.Catalog.Bootstrapper/eShopCloudNative.Catalog.Bootstrapper.csproj", "eShopCloudNative.Catalog.Bootstrapper/"]
+RUN dotnet restore "eShopCloudNative.Catalog.Bootstrapper/eShopCloudNative.Catalog.Bootstrapper.csproj"
 COPY . .
-WORKDIR "/src/catalog/eShopCloudNative.Catalog.Bootstrapper"
+WORKDIR "/src/eShopCloudNative.Catalog.Bootstrapper"
 RUN dotnet build "eShopCloudNative.Catalog.Bootstrapper.csproj" -c Release -o /app/build
 
 FROM build AS publish
