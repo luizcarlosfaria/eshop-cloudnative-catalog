@@ -1,9 +1,13 @@
-﻿using Npgsql;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Npgsql;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using FluentMigrator.Runner;
+using FluentMigrator.Runner.Initialization;
+using eShopCloudNative.Catalog.Bootstrapper.Postgres.Migrations;
 
 namespace eShopCloudNative.Catalog.Bootstrapper.Postgres;
 
@@ -39,12 +43,13 @@ public class PostgresBootstrapperService : IBootstrapperService
 
     public async Task ExecuteAsync()
     {
-        using var connection = new NpgsqlConnection($"server={this.ServerEndpoint?.Host ?? "localhost"};Port={this.ServerEndpoint?.Port};Database={this.InitialDatabase};User Id={this.SysAdminUser?.UserName};Password={this.SysAdminUser?.Password};");
+        using var connection = new NpgsqlConnection(this.BuildConnectionString(this.InitialDatabase));
         await connection.OpenAsync();
         try
         {
             await this.CreateAppUser(connection);
             await this.CreateDatabase(connection);
+            await this.ApplyMigrations();
         }
         finally
         {
@@ -52,6 +57,7 @@ public class PostgresBootstrapperService : IBootstrapperService
                 await connection.CloseAsync();
         }
     }
+
 
 
     private async Task CreateAppUser(NpgsqlConnection connection)
@@ -98,6 +104,31 @@ public class PostgresBootstrapperService : IBootstrapperService
             await command.ExecuteNonQueryAsync();
         }
 
+    }
+
+    private string BuildConnectionString(string database) => $"server={this.ServerEndpoint?.Host ?? "localhost"};Port={this.ServerEndpoint?.Port};Database={database};User Id={this.SysAdminUser?.UserName};Password={this.SysAdminUser?.Password};";
+
+    private Task ApplyMigrations()
+    {
+        var serviceProvider = new ServiceCollection()
+                .AddFluentMigratorCore()
+                .ConfigureRunner(rb => rb
+                    .AddPostgres()
+                    .WithGlobalConnectionString(this.BuildConnectionString(this.DatabaseToCreate))
+                    .ScanIn(typeof(Migration0001).Assembly).For.Migrations())
+                .AddLogging(lb => lb.AddFluentMigratorConsole())
+                .BuildServiceProvider(false);
+
+        using (var scope = serviceProvider.CreateScope())
+        {
+            // Instantiate the runner
+            var runner = scope.ServiceProvider.GetRequiredService<IMigrationRunner>();
+
+            // Execute the migrations
+            runner.MigrateUp();
+        }
+
+        return Task.CompletedTask;
     }
 
 }
