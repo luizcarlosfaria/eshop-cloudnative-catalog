@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace eShopCloudNative.Catalog.WebUI.Controllers;
+namespace eShopCloudNative.Catalog.Controllers;
 public class ImageController : Controller
 {
     public IActionResult Index()

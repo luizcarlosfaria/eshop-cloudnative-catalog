@@ -1,8 +1,8 @@
-﻿using eShopCloudNative.Catalog.WebUI.Models;
+﻿using eShopCloudNative.Catalog.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
-namespace eShopCloudNative.Catalog.WebUI.Controllers;
+namespace eShopCloudNative.Catalog.Controllers;
 public class CatalogController : Controller
 {
     private readonly ILogger<CatalogController> _logger;

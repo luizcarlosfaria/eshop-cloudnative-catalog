@@ -21,7 +21,7 @@ public class Migration00001 : Migration
            .WithColumn("CategoryId").AsInt32().PrimaryKey().Identity()
            .WithColumn("ParentCategoryId").AsInt32().Nullable()
                .ForeignKey("FK_Category_TO_Category", "Catalog", "Category", "CategoryId")
-           .WithColumn("Name").AsString(50).NotNullable()
+           .WithColumn("Name"). AsString(50).NotNullable()
            .WithColumn("Slug").AsString(300).NotNullable()
            .WithColumn("Active").AsBoolean().NotNullable();
 

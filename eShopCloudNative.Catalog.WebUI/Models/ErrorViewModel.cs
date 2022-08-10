@@ -1,4 +1,4 @@
-namespace eShopCloudNative.Catalog.WebUI.Models;
+namespace eShopCloudNative.Catalog.Models;
 
 public class ErrorViewModel
 {
