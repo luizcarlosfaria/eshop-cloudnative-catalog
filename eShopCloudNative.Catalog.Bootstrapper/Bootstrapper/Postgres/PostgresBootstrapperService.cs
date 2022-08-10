@@ -115,7 +115,7 @@ public class PostgresBootstrapperService : IBootstrapperService
                 .ConfigureRunner(rb => rb
                     .AddPostgres()
                     .WithGlobalConnectionString(this.BuildConnectionString(this.DatabaseToCreate))
-                    .ScanIn(typeof(Migration0001).Assembly).For.Migrations())
+                    .ScanIn(typeof(Migration00001).Assembly).For.Migrations())
                 .AddLogging(lb => lb.AddFluentMigratorConsole())
                 .BuildServiceProvider(false);
 
