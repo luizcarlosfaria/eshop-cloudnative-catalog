@@ -36,18 +36,30 @@ public class Migration00001 : Migration
            .WithColumn("Active").AsBoolean().NotNullable();
 
         this.Create
-           .Table("Product_Category").InSchema("Catalog")
-           .WithColumn("ProductId").AsInt32().PrimaryKey().NotNullable()
-                .ForeignKey("FK_Product_TO_Product_Category", "Catalog", "Product", "ProductId")
-           .WithColumn("CategoryId").AsInt32().PrimaryKey().NotNullable()
-               .ForeignKey("FK_Category_TO_Product_Category", "Catalog", "Category", "CategoryId");
-          
+           .Table("ImageStatus").InSchema("Catalog")
+           .WithColumn("ImageStatusId").AsInt32().PrimaryKey()
+           .WithColumn("Name").AsString(300).NotNullable()
+           .WithColumn("Description").AsString(8000).Nullable()
+           .WithColumn("EnableOnCatalog").AsBoolean().NotNullable();
+
+        this.Create
+           .Table("Image").InSchema("Catalog")
+           .WithColumn("ImageId").AsInt32().PrimaryKey().Identity()
+           .WithColumn("ProductId").AsInt32().Nullable()
+               .ForeignKey("FK_Product_TO_Images", "Catalog", "Product", "ProductId")
+           .WithColumn("ImageStatusId").AsInt32().Nullable()
+               .ForeignKey("FK_ImageStatus_TO_Images", "Catalog", "ImageStatus", "ImageStatusId")
+           .WithColumn("Bucket").AsString(300).NotNullable()
+           .WithColumn("Name").AsString(300).NotNullable()
+           .WithColumn("Active").AsBoolean().NotNullable();
 
     }
 
     public override void Down()
     {
-        this.Delete.Table("Product_Category").InSchema("Catalog");
+        this.Delete.Table("Image").InSchema("Catalog");
+
+        this.Delete.Table("ImageStatus").InSchema("Catalog");
 
         this.Delete.Table("Product").InSchema("Catalog");
 
