@@ -6,17 +6,23 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace eShopCloudNative.Catalog.Services;
-public class ProductService: IProductService
+public class ProductService : IProductService
 {
-    public IEnumerable<ProductDto> GetProducts()
+    public Task<IEnumerable<Product>> GetProducts()
     {
-        return Enumerable.Range(1, 5).Select(index => new ProductDto
+        var returnValue = Enumerable.Range(1, 5).Select(index => new Product
         {
             ProductId = index,
             Name = $"Produto {index}",
-            Images = new List<ImageDto> { new ImageDto() { Name = "", ImageId = 0, Bucket = "" } }
-        })
-        .ToArray();
+            Images = new List<Image> {
+                new Image() {
+                    Name = "",
+                    ImageId = 0,
+                    Bucket = ""
+                }
+            }
+        });
+        return Task.FromResult(returnValue);
     }
 
 }

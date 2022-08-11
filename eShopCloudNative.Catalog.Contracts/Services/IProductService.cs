@@ -9,5 +9,5 @@ namespace eShopCloudNative.Catalog.Services;
 
 public interface IProductService
 {
-    IEnumerable<ProductDto> GetProducts();
+    Task<IEnumerable<Product>> GetProducts();
 }

@@ -1,8 +1,8 @@
 namespace eShopCloudNative.Catalog.Dto;
 
-public class ProductDto
+public class Product
 {
     public int ProductId { get; set; }
     public string? Name { get; set; }
-    public IList<ImageDto>? Images { get; set; }
+    public IList<Image>? Images { get; set; }
 }
