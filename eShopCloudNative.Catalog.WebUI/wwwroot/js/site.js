@@ -2,3 +2,15 @@
 // for details on configuring this project to bundle and minify static web assets.
 
 // Write your JavaScript code.
+
+const { createApp } = Vue
+
+createApp({
+    data() {
+        return {
+            message: 'Hello Vue!'
+        }
+    }
+}).mount('#full-page')
+
+ 
