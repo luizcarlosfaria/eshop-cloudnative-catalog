@@ -8,8 +8,11 @@ using System.Threading.Tasks;
 
 namespace eShopCloudNative.Catalog.Services;
 
+
+
 public interface IProductService
 {
+    
     [Get("/Products")]
     Task<IEnumerable<Product>> GetProducts();
 }

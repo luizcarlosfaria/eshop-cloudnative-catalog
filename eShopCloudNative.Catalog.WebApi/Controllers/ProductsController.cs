@@ -14,6 +14,6 @@ public class ProductsController : ControllerBase, IProductService
         this.productService = productService;
     }
 
-    [HttpGet(Name = "GetHome")]
+    [HttpGet(Name = "Products")]
     public async Task<IEnumerable<Product>> GetProducts() => await this.productService.GetProducts();
 }
