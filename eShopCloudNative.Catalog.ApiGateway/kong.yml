@@ -1,0 +1,41 @@
+_format_version: "1.1"
+
+services:
+  - name: catalog
+    url: http://eShopCloudNative.Catalog.WebApi
+    routes:
+      - name: my-route
+        paths:
+          - /
+
+plugins:
+  - name: proxy-cache
+    service: catalog
+    config:
+      response_code:
+        - 200
+      request_method:
+        - GET
+        - HEAD
+      content_type:
+        - "text/plain"
+        - "application/json; charset=utf-8"
+        - "application/json"
+      cache_ttl: 300
+      strategy: memory
+
+  - name: key-auth
+    service: catalog
+    config:
+      key_names:
+        - apikey
+
+  - name: file-log
+    service: catalog
+    config:
+      path: /tmp/file.log
+
+consumers:
+  - username: catalog-web-ui
+    keyauth_credentials:
+      - key: catalog-web-ui-ba61c23c
