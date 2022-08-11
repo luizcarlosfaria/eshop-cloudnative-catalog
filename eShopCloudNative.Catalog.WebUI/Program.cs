@@ -1,7 +1,14 @@
+using eShopCloudNative.Catalog.Services;
+using Refit;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Services
+    .AddRefitClient<IProductService>()
+    .ConfigureHttpClient(c => c.BaseAddress = new Uri("http://eShopCloudNative.Catalog.WebApi"));
 
 var app = builder.Build();
 

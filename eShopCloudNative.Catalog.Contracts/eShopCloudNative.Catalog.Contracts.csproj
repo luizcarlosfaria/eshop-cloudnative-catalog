@@ -7,4 +7,8 @@
     <RootNamespace>eShopCloudNative.Catalog</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Refit" Version="6.3.2" />
+  </ItemGroup>
+
 </Project>

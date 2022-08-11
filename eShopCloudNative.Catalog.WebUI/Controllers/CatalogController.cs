@@ -1,4 +1,5 @@
 ﻿using eShopCloudNative.Catalog.Models;
+using eShopCloudNative.Catalog.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -6,14 +7,18 @@ namespace eShopCloudNative.Catalog.Controllers;
 public class CatalogController : Controller
 {
     private readonly ILogger<CatalogController> _logger;
+    private readonly IProductService productService;
 
-    public CatalogController(ILogger<CatalogController> logger)
+    public CatalogController(ILogger<CatalogController> logger, IProductService productService)
     {
         this._logger = logger;
+        this.productService = productService;
     }
 
-    public IActionResult Index()
+    public async Task<IActionResult> IndexAsync()
     {
+        var model = await this.productService.GetProducts();
+
         return this.View();
     }
 
