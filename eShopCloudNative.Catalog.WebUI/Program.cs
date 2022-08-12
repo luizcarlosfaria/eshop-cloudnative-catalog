@@ -11,7 +11,7 @@ builder.Services
     .ConfigureHttpClient(c =>
     {
         c.BaseAddress = new Uri("http://eShopCloudNative.Catalog.ApiGateway:8000");
-        c.DefaultRequestHeaders.Add("apikey", "catalog-web-ui-ba61c23c");
+        c.DefaultRequestHeaders.Add("apikey", "catalog-web-ba61c23c");
     });
 
 var app = builder.Build();
