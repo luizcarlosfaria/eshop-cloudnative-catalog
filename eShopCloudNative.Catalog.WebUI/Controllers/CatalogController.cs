@@ -17,9 +17,9 @@ public class CatalogController : Controller
 
     public async Task<IActionResult> IndexAsync()
     {
-        var model = await this.productService.GetProducts();
+        var productsForHome = await this.productService.GetHomeCatalog();
 
-        return this.View();
+        return this.View(productsForHome);
     }
 
     public IActionResult Privacy()
