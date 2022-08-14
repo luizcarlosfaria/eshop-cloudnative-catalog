@@ -10,8 +10,8 @@ builder.Services
     .AddRefitClient<IProductService>()
     .ConfigureHttpClient(c =>
     {
-        c.BaseAddress = new Uri("http://eShopCloudNative.Catalog.ApiGateway:8000");
-        c.DefaultRequestHeaders.Add("apikey", "catalog-web-ba61c23c");
+        c.BaseAddress = new Uri(builder.Configuration.GetValue<string>("eshop-cloudnative:global:api-gateway"));
+        c.DefaultRequestHeaders.Add("apikey", builder.Configuration.GetValue<string>("eshop-cloudnative:global:apikey"));
     });
 
 var app = builder.Build();
