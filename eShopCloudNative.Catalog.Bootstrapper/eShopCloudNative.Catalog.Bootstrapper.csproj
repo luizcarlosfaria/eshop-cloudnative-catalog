@@ -22,6 +22,10 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\eShopCloudNative.Catalog.Architecture\eShopCloudNative.Catalog.Architecture.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
         <None Update="bootstrapper.xml">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>

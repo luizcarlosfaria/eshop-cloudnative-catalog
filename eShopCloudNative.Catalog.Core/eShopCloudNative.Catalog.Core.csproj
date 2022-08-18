@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+        <ProjectReference Include="..\eShopCloudNative.Catalog.Architecture\eShopCloudNative.Catalog.Architecture.csproj" />
     <ProjectReference Include="..\eShopCloudNative.Catalog.Contracts\eShopCloudNative.Catalog.Contracts.csproj" />
   </ItemGroup>
 
