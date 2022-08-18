@@ -1,6 +1,6 @@
 ﻿namespace eShopCloudNative.Catalog.Dto;
 
-public class Image
+public class ImageDto
 {
     public int ImageId { get; set; }
     public string? Bucket { get; set; }
