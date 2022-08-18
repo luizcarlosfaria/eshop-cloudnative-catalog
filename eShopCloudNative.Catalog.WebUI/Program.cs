@@ -12,6 +12,7 @@ builder.Services
     {
         c.BaseAddress = new Uri(builder.Configuration.GetValue<string>("eshop-cloudnative:global:api-gateway"));
         c.DefaultRequestHeaders.Add("apikey", builder.Configuration.GetValue<string>("eshop-cloudnative:global:apikey"));
+        //TODO: Adicionar versão atual!
     });
 
 var app = builder.Build();

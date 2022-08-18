@@ -6,12 +6,12 @@ using System.Diagnostics;
 namespace eShopCloudNative.Catalog.Controllers;
 public class CatalogController : Controller
 {
-    private readonly ILogger<CatalogController> _logger;
+    private readonly ILogger<CatalogController> logger;
     private readonly IProductService productService;
 
     public CatalogController(ILogger<CatalogController> logger, IProductService productService)
     {
-        this._logger = logger;
+        this.logger = logger;
         this.productService = productService;
     }
 

@@ -1,5 +1,5 @@
 ﻿@using eShopCloudNative.Catalog.Dto
-@model IEnumerable<Product>
+@model IEnumerable<ProductDto>
 
 @{
     ViewData["Title"] = "Home Page";
@@ -60,7 +60,7 @@
                             </div>
                             <p class="mt-1 text-sm text-gray-500">38 reviews</p>
                         </div>*@
-                        <p class="mt-4 text-base font-medium text-gray-900">$149</p>
+                        <p class="mt-4 text-base font-medium text-gray-900">R$ @product.Price</p>
                     </div>
                 </div>
             }
