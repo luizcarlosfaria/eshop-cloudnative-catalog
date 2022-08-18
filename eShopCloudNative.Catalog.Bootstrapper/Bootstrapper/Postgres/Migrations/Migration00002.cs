@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 namespace eShopCloudNative.Catalog.Bootstrapper.Postgres.Migrations;
 
 [Migration(202208_000002)]
+[Tags("blue", "green")]
 public class Migration00002 : Migration
 {
     public override void Up()

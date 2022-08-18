@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using FluentMigrator.Runner;
 using FluentMigrator.Runner.Initialization;
 using eShopCloudNative.Catalog.Bootstrapper.Postgres.Migrations;
+using FluentMigrator.Runner.VersionTableInfo;
+using eShopCloudNative.Catalog.Architecture.Data;
 
 namespace eShopCloudNative.Catalog.Bootstrapper.Postgres;
 
@@ -43,19 +45,32 @@ public class PostgresBootstrapperService : IBootstrapperService
 
     public async Task ExecuteAsync()
     {
-        using var connection = new NpgsqlConnection(this.BuildConnectionString(this.InitialDatabase));
-        await connection.OpenAsync();
+        using var rootConnection = new NpgsqlConnection(this.BuildConnectionString(this.InitialDatabase, this.SysAdminUser));
+        await rootConnection.OpenAsync();
         try
         {
-            await this.CreateAppUser(connection);
-            await this.CreateDatabase(connection);
+            await this.CreateAppUser(rootConnection);
+            await this.CreateDatabase(rootConnection);
             await this.ApplyMigrations();
         }
         finally
         {
-            if (connection != null)
-                await connection.CloseAsync();
+            if (rootConnection != null && rootConnection.State == System.Data.ConnectionState.Open)
+                await rootConnection.CloseAsync();
         }
+
+        using var databaseConnection = new NpgsqlConnection(this.BuildConnectionString(this.DatabaseToCreate, this.SysAdminUser));
+        await databaseConnection.OpenAsync();
+        try
+        {
+            await this.SetPermissions(databaseConnection);
+        }
+        finally
+        {
+            if (databaseConnection != null && databaseConnection.State == System.Data.ConnectionState.Open)
+                await databaseConnection.CloseAsync();
+        }
+
     }
 
 
@@ -71,7 +86,8 @@ public class PostgresBootstrapperService : IBootstrapperService
         if (qtd == 0)
         {
 
-            command.CommandText = @$"CREATE ROLE {this.AppUser.UserName} WITH
+            command.CommandText = @$"
+                    CREATE ROLE {this.AppUser.UserName} WITH
 	                    LOGIN
 	                    NOSUPERUSER
 	                    NOCREATEDB
@@ -79,7 +95,7 @@ public class PostgresBootstrapperService : IBootstrapperService
 	                    INHERIT
 	                    NOREPLICATION
 	                    CONNECTION LIMIT -1
-	                    PASSWORD '{this.AppUser.Password}';";
+	                    PASSWORD '{this.AppUser.Password}'; ";
 
             await command.ExecuteNonQueryAsync();
         }
@@ -95,28 +111,48 @@ public class PostgresBootstrapperService : IBootstrapperService
 
         if (qtd == 0)
         {
-            command.CommandText = @$"CREATE DATABASE {this.DatabaseToCreate} 
+            command.CommandText = @$"
+                        CREATE DATABASE {this.DatabaseToCreate} 
                             WITH 
                             OWNER = {this.AppUser.UserName}
                             ENCODING = 'UTF8'
-                            CONNECTION LIMIT = -1;";
-
+                            CONNECTION LIMIT = -1; ";
             await command.ExecuteNonQueryAsync();
         }
 
     }
 
-    private string BuildConnectionString(string database) => $"server={this.ServerEndpoint?.Host ?? "localhost"};Port={this.ServerEndpoint?.Port};Database={database};User Id={this.SysAdminUser?.UserName};Password={this.SysAdminUser?.Password};";
+    private async Task SetPermissions(NpgsqlConnection connection)
+    {
+        using var command = connection.CreateCommand();
+
+        command.CommandText = $"GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA {Constants.Schema} TO {this.AppUser.UserName};";
+        await command.ExecuteNonQueryAsync();
+
+        command.CommandText = $"GRANT UPDATE, USAGE, SELECT ON ALL SEQUENCES IN SCHEMA {Constants.Schema} TO {this.AppUser.UserName};";
+        await command.ExecuteNonQueryAsync();
+
+        command.CommandText = $"ALTER DEFAULT PRIVILEGES FOR ROLE {this.SysAdminUser.UserName} GRANT ALL ON TABLES TO {this.AppUser.UserName};";
+        await command.ExecuteNonQueryAsync();
+
+    }
+
+
+    private string BuildConnectionString(string database, System.Net.NetworkCredential credential) => $"server={this.ServerEndpoint?.Host ?? "localhost"};Port={this.ServerEndpoint?.Port};Database={database};User Id={credential.UserName};Password={credential.Password};";
 
     private Task ApplyMigrations()
     {
         var serviceProvider = new ServiceCollection()
                 .AddFluentMigratorCore()
                 .ConfigureRunner(rb => rb
-                    .AddPostgres()
-                    .WithGlobalConnectionString(this.BuildConnectionString(this.DatabaseToCreate))
+                    .AddPostgres11_0()
+                    .WithGlobalConnectionString(this.BuildConnectionString(this.DatabaseToCreate, this.SysAdminUser))
                     .ScanIn(typeof(Migration00001).Assembly).For.Migrations())
                 .AddLogging(lb => lb.AddFluentMigratorConsole())
+                .Configure<RunnerOptions>(opt =>
+                {
+                    opt.Tags = new[] { "blue" };
+                })
                 .BuildServiceProvider(false);
 
         using (var scope = serviceProvider.CreateScope())
