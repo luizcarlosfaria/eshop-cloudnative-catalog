@@ -1,15 +1,56 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-    <RootNamespace>eShopCloudNative.Catalog</RootNamespace>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <RootNamespace>eShopCloudNative.Catalog</RootNamespace>
+    </PropertyGroup>
 
-  <ItemGroup>
+    <ItemGroup>
+      <PackageReference Include="NHibernate" Version="5.3.12" />
+      <PackageReference Include="Npgsql" Version="6.0.6" />
+    </ItemGroup>
+
+    <ItemGroup>
         <ProjectReference Include="..\eShopCloudNative.Catalog.Architecture\eShopCloudNative.Catalog.Architecture.csproj" />
-    <ProjectReference Include="..\eShopCloudNative.Catalog.Contracts\eShopCloudNative.Catalog.Contracts.csproj" />
-  </ItemGroup>
+        <ProjectReference Include="..\eShopCloudNative.Catalog.Contracts\eShopCloudNative.Catalog.Contracts.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+
+        <Compile Update="**\*.Data.cs">
+            <DependentUpon>$([System.String]::Copy(%(Filename)).Replace('.Data', '.cs'))</DependentUpon>
+        </Compile>
+
+        <Compile Update="**\*.Mapping.cs">
+            <DependentUpon>$([System.String]::Copy(%(Filename)).Replace('.Mapping', '.cs'))</DependentUpon>
+        </Compile>
+
+        <Compile Update="**\*.Validation.cs">
+            <DependentUpon>$([System.String]::Copy(%(Filename)).Replace('.Validation', '.cs'))</DependentUpon>
+        </Compile>
+
+        <Compile Update="**\*.QueryRepository.cs">
+            <DependentUpon>$([System.String]::Copy(%(Filename)).Replace('.QueryRepository', '.cs'))</DependentUpon>
+        </Compile>
+        
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="Entities\Category.Data.cs">
+        <DependentUpon>$([System.String]::Copy(%(Filename)).Replace('.Data', '.cs'))</DependentUpon>
+      </Compile>
+      <Compile Update="Entities\Category.Mapping.cs">
+        <DependentUpon>Category.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Entities\Category.QueryRepository.cs">
+        <DependentUpon>Category.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Entities\Category.Validation.cs">
+        <DependentUpon>Category.cs</DependentUpon>
+      </Compile>
+    </ItemGroup>
+
 
 </Project>
