@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace eShopCloudNative.Catalog.Entities;
 internal class CategoryQueryRepository : QueryRepository<Category>
 {
-    public CategoryQueryRepository(ISession session) : base(session)
+    public CategoryQueryRepository(IStatelessSession session) : base(session)
     {
     }
 
