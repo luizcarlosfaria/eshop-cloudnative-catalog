@@ -27,7 +27,7 @@ public class CategoryMapping : ClassMap<Category>
         this.Map(it => it.Active, "active").Not.Nullable();
 
         this.HasMany(it => it.Children)
-            .KeyColumns.Add("category_id")
+            .KeyColumns.Add("parent_category_id")
             .Inverse()
             .Cascade.Delete()
             .LazyLoad()

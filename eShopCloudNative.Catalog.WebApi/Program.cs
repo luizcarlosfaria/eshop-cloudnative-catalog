@@ -59,7 +59,13 @@ var session = app.Services.GetRequiredService<ISessionFactory>().OpenSession();
 var item = session.Query<Category>().Where(it=> it.CategoryId == 1).SingleOrDefault();
 if (item != null)
 {
-    var x = item.Children.ToList();
+    Console.WriteLine($"Root {item.CategoryId}");
+    Console.WriteLine($"BEGIN Children of {item.CategoryId}");
+    foreach (var child in item.Children)
+    {
+        Console.WriteLine($"    Child {child.CategoryId}");
+    }
+    Console.WriteLine($"END Children of {item.CategoryId}");
 }
 
 var categoryToCreate = new Category() { Name = "Teste", Slug = "teste", Active = true, Description = "" };
