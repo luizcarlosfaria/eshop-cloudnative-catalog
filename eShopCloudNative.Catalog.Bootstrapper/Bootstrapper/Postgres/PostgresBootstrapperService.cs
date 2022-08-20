@@ -132,10 +132,7 @@ public class PostgresBootstrapperService : IBootstrapperService
         command.CommandText = $"GRANT UPDATE, USAGE, SELECT ON ALL SEQUENCES IN SCHEMA {Constants.Schema} TO {this.AppUser.UserName};";
         await command.ExecuteNonQueryAsync();
 
-        command.CommandText = $"ALTER DEFAULT PRIVILEGES FOR ROLE {this.SysAdminUser.UserName} GRANT ALL ON TABLES TO {this.AppUser.UserName};";
-        await command.ExecuteNonQueryAsync();
-
-    }
+    } 
 
 
     private string BuildConnectionString(string database, System.Net.NetworkCredential credential) => $"server={this.ServerEndpoint?.Host ?? "localhost"};Port={this.ServerEndpoint?.Port};Database={database};User Id={credential.UserName};Password={credential.Password};";
