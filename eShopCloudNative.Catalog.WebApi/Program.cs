@@ -50,6 +50,10 @@ builder.Services.AddSingleton(sp =>
     return sessionFactory;
 });
 
+builder.Services.AddScoped(sp => sp.GetRequiredService<ISessionFactory>().OpenSession());
+
+builder.Services.AddScoped(sp => sp.GetRequiredService<ISessionFactory>().OpenStatelessSession());
+
 builder.Services.AddScoped<IProductService, ProductService>();
 
 builder.Services.AddEndpointsApiExplorer();
@@ -68,11 +72,12 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-//var session = app.Services.GetRequiredService<ISessionFactory>().OpenSession();
 
-//session.Query<Category>().ToList();
+var session = app.Services.GetRequiredService<ISessionFactory>().OpenSession();
 
-//session.Save(new Category() { Name = "Teste", Slug = "teste", Active = true, Description = "" });
-//session.Flush();
+session.Query<Category>().ToList();
+
+session.Save(new Category() { Name = "Teste", Slug = "teste", Active = true, Description = "" });
+session.Flush();
 
 app.Run();
