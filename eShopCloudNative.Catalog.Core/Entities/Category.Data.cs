@@ -11,9 +11,9 @@ public partial class Category
     public virtual string? Name { get; set; }
 
     public virtual Category? Parent { get; set; }
-    public virtual List<Category>? Children { get; set; }
+    public virtual IList<Category>? Children { get; set; }
 
-    public virtual List<Product>? Products { get; set; }
+    public virtual IList<Product>? Products { get; set; }
 
     public virtual string? Description { get; set; }
     public virtual string? Slug { get; set; }

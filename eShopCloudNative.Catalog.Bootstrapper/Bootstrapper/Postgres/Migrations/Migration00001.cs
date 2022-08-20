@@ -26,7 +26,7 @@ public class Migration00001 : Migration
            .WithColumn("category_id").AsInt32().PrimaryKey()
            .WithColumn("parent_category_id").AsInt32().Nullable()
                .ForeignKey("fk_category_to_category", Constants.Schema, "category", "category_id")
-           .WithColumn("name"). AsString(50).NotNullable()
+           .WithColumn("name"). AsString(300).NotNullable()
            .WithColumn("description").AsString(8000).Nullable()
            .WithColumn("slug").AsString(300).NotNullable()
            .WithColumn("active").AsBoolean().NotNullable();

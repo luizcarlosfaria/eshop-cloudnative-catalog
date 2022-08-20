@@ -1,6 +1,8 @@
 using eShopCloudNative.Catalog.Architecture.Data;
 using eShopCloudNative.Catalog.Entities;
 using eShopCloudNative.Catalog.Services;
+using FluentNHibernate.Cfg;
+using FluentNHibernate.Cfg.Db;
 using NHibernate;
 using NHibernate.Cfg;
 using NHibernate.Driver;
@@ -18,36 +20,15 @@ builder.Services.AddSingleton(sp =>
 {
     var aspnetConfiguration = sp.GetRequiredService<IConfiguration>();
 
-    var configuration = new Configuration()
-    .DataBaseIntegration(db =>
-    {
-        db.ConnectionString = aspnetConfiguration.GetConnectionString("catalog");
-        db.Dialect<PostgreSQL84Dialect>();
-        db.KeywordsAutoImport = Hbm2DDLKeyWords.AutoQuote;
-        db.IsolationLevel = IsolationLevel.ReadCommitted;
-        db.LogSqlInConsole = true;
-        db.LogFormattedSql = true;
-        db.AutoCommentSql = true;
-        db.ConnectionReleaseMode = ConnectionReleaseMode.OnClose;
-        db.ThrowOnSchemaUpdate = true;
-        db.Driver<NpgsqlDriver>();
-    });
-
-    var mapper = new ModelMapper();
-
-    mapper.AddMappings(typeof(CategoryMapping).Assembly.GetTypes().Where(it => it.IsClass && it.BaseType!.Name.EndsWith("ClassMapping`1")));
-
-    configuration.AddMapping(mapper.CompileMappingForAllExplicitlyAddedEntities());
-
-    configuration.SessionFactory().GenerateStatistics();
-
-    var sessionFactory = configuration.BuildSessionFactory();
-
-    //(new SchemaExport(configuration)).Create(true, true);
-    //(new SchemaUpdate(configuration)).Execute(true, true);
-    //(new SchemaValidator(configuration)).Validate();
-
-    return sessionFactory;
+    return Fluently.Configure()
+     .Database(
+         PostgreSQLConfiguration.PostgreSQL82
+             .ConnectionString(aspnetConfiguration.GetConnectionString("catalog"))
+             .ShowSql()
+             .DefaultSchema(Constants.Schema)
+         )
+     .Mappings(it => it.FluentMappings.AddFromAssemblyOf<CategoryMapping>())
+     .BuildSessionFactory();
 });
 
 builder.Services.AddScoped(sp => sp.GetRequiredService<ISessionFactory>().OpenSession());
@@ -75,7 +56,11 @@ app.MapControllers();
 
 var session = app.Services.GetRequiredService<ISessionFactory>().OpenSession();
 
-session.Query<Category>().ToList();
+var item = session.Query<Category>().Where(it=> it.CategoryId == 1).SingleOrDefault();
+if (item != null)
+{
+    var x = item.Children.ToList();
+}
 
 session.Save(new Category() { Name = "Teste", Slug = "teste", Active = true, Description = "" });
 session.Flush();

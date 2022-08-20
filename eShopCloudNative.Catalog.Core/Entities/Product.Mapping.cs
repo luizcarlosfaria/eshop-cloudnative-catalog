@@ -12,13 +12,13 @@ public class ProductMapping : NHibernate.Mapping.ByCode.Conformist.ClassMapping<
 {
     public ProductMapping()
     {
-        this.Configure("product", Constants.Schema);
-        this.MapSequenceId(it => it.ProductId, "product_id", "product_seq");
-        this.Map(it => it.Name, false, 50, "name");
-        this.MapClob(it => it.Description, false, "description");
-        this.Map(it => it.Slug, false, 300, "slug");
-        this.Map(it => it.Price, false, columnName: "price");
-        this.Map(it => it.Active, false, "active");
+        //this.Configure("product", Constants.Schema);
+        //this.MapSequenceId(it => it.ProductId, "product_id", "product_seq");
+        //this.Map(it => it.Name, false, 50, "name");
+        //this.MapClob(it => it.Description, false, "description");
+        //this.Map(it => it.Slug, false, 300, "slug");
+        //this.Map(it => it.Price, false, columnName: "price");
+        //this.Map(it => it.Active, false, "active");
 
     }
 }
