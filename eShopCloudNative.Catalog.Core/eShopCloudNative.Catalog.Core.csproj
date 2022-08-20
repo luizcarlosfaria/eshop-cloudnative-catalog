@@ -38,20 +38,6 @@
         
     </ItemGroup>
 
-    <ItemGroup>
-      <Compile Update="Entities\Category.Data.cs">
-        <DependentUpon>$([System.String]::Copy(%(Filename)).Replace('.Data', '.cs'))</DependentUpon>
-      </Compile>
-      <Compile Update="Entities\Category.Mapping.cs">
-        <DependentUpon>Category.cs</DependentUpon>
-      </Compile>
-      <Compile Update="Entities\Category.QueryRepository.cs">
-        <DependentUpon>Category.cs</DependentUpon>
-      </Compile>
-      <Compile Update="Entities\Category.Validation.cs">
-        <DependentUpon>Category.cs</DependentUpon>
-      </Compile>
-    </ItemGroup>
-
+    
 
 </Project>
