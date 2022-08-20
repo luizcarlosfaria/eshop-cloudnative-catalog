@@ -62,7 +62,17 @@ if (item != null)
     var x = item.Children.ToList();
 }
 
-session.Save(new Category() { Name = "Teste", Slug = "teste", Active = true, Description = "" });
+var categoryToCreate = new Category() { Name = "Teste", Slug = "teste", Active = true, Description = "" };
+var productToCreate = new Product() { Name = "Teste", Slug = "teste", Active = true, Description = "", Price = 5, Categories = new List<Category>() {  } };
+
+if(item != null && item.Children != null && item.Children.Count > 0 )
+{
+    productToCreate.Categories.Add(item.Children.First());
+}
+
+
+session.Save(categoryToCreate);
+session.Save(productToCreate);
 session.Flush();
 
 app.Run();

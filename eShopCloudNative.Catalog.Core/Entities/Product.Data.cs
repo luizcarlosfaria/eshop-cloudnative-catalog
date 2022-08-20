@@ -9,7 +9,7 @@ public partial class Product
 {
     public virtual int ProductId { get; set; }
     public virtual string? Name { get; set; }
-    public virtual List<Category>? Categories { get; set; }
+    public virtual IList<Category>? Categories { get; set; }
     public virtual string? Description { get; set; }
     public virtual string? Slug { get; set; }
     public virtual decimal Price { get; set; }
