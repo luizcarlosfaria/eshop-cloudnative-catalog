@@ -7,20 +7,20 @@ using System.Text;
 using System.Threading.Tasks;
 using NH = NHibernate;
 
-namespace eShopCloudNative.Catalog.Infrastructure.Repositories;
+namespace eShopCloudNative.Catalog.Architecture.Data.Repositories;
 internal class PersistenseRepository
 {
-   
+
     public PersistenseRepository(ISession session)
     {
         this.Session = session;
     }
 
-    protected NH.ISession Session { get; }
+    protected ISession Session { get; }
 
 
     public async Task SaveAsync(IBaseEntity entity)
-    { 
+    {
         await this.Session.SaveAsync(entity);
     }
 

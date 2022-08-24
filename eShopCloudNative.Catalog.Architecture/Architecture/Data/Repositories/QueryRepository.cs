@@ -8,16 +8,16 @@ using System.Threading.Tasks;
 using NH = NHibernate;
 
 
-namespace eShopCloudNative.Catalog.Infrastructure.Repositories;
+namespace eShopCloudNative.Catalog.Architecture.Data.Repositories;
 public abstract class QueryRepository<T>
     where T : class, IBaseEntity
 {
-    protected QueryRepository(NH.IStatelessSession session)
+    protected QueryRepository(IStatelessSession session)
     {
         this.Session = session;
     }
 
-    protected NH.IStatelessSession Session { get; }
+    protected IStatelessSession Session { get; }
 
     protected IQueryOver<T, T> QueryOver => this.Session.QueryOver<T>();
 

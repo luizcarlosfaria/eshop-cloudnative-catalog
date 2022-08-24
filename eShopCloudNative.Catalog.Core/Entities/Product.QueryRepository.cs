@@ -1,4 +1,4 @@
-﻿using eShopCloudNative.Catalog.Infrastructure.Repositories;
+﻿using eShopCloudNative.Catalog.Architecture.Data.Repositories;
 using NHibernate;
 using System;
 using System.Collections.Generic;

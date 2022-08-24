@@ -9,16 +9,16 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace eShopCloudNative.Catalog.Architecture.Data;
+namespace eShopCloudNative.Catalog.Architecture;
 public static class MappingExtensions
 {
-    public static ICreateTableWithColumnSyntax Table(this ICreateExpressionRoot it, string tableName, string schema) 
+    public static ICreateTableWithColumnSyntax Table(this ICreateExpressionRoot it, string tableName, string schema)
         => it.Table(tableName.UnderQuotes()).InSchema(schema.UnderQuotes());
 
     public static string UnderQuotes(this string text) => $"\"{text}\"";
 
     public static ICreateTableColumnOptionOrWithColumnSyntax Map<T>(this ICreateTableWithColumnSyntax it, Expression<Func<T, int>> memberExpression)
-        => 
+        =>
         it.WithColumn(memberExpression.GetPropertyName().UnderQuotes())
         .AsInt32();
 
@@ -42,19 +42,19 @@ public static class MappingExtensions
        it.WithColumn(memberExpression.GetPropertyName().UnderQuotes())
        .AsDecimal(size, precision);
 
-    private static string GetPropertyName<T1,T2>(this Expression<Func<T1, T2>> property)
+    private static string GetPropertyName<T1, T2>(this Expression<Func<T1, T2>> property)
     {
-        LambdaExpression lambda = (LambdaExpression)property;
+        var lambda = (LambdaExpression)property;
         MemberExpression memberExpression;
 
         if (lambda.Body is UnaryExpression)
         {
-            UnaryExpression unaryExpression = (UnaryExpression)(lambda.Body);
-            memberExpression = (MemberExpression)(unaryExpression.Operand);
+            var unaryExpression = (UnaryExpression)lambda.Body;
+            memberExpression = (MemberExpression)unaryExpression.Operand;
         }
         else
         {
-            memberExpression = (MemberExpression)(lambda.Body);
+            memberExpression = (MemberExpression)lambda.Body;
         }
 
         return ((PropertyInfo)memberExpression.Member).Name;
