@@ -16,30 +16,12 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
-builder.Services.AddSingleton(sp =>
-{
-    var aspnetConfiguration = sp.GetRequiredService<IConfiguration>();
-
-    return Fluently
-     .Configure(new Configuration().SetNamingStrategy(PostgresNamingStragegy.Instance))
-     .Database(
-         PostgreSQLConfiguration.PostgreSQL82
-             .ConnectionString(aspnetConfiguration.GetConnectionString("catalog"))
-             .ShowSql()
-             .DefaultSchema(Constants.Schema)
-         )
-     .Mappings(it => it.FluentMappings.AddFromAssemblyOf<CategoryMapping>())
-     .ExposeConfiguration(it => it.SetProperty("hbm2ddl.keywords", "auto-quote"))
-     .BuildSessionFactory();
-});
-
-builder.Services.AddScoped(sp => sp.GetRequiredService<ISessionFactory>().OpenSession());
-
-builder.Services.AddScoped(sp => sp.GetRequiredService<ISessionFactory>().OpenStatelessSession());
+builder.Services.AddNHibernate<CategoryMapping>(Constants.Schema, "catalog");
 
 builder.Services.AddScoped<IProductService, ProductService>();
 
 builder.Services.AddEndpointsApiExplorer();
+
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
