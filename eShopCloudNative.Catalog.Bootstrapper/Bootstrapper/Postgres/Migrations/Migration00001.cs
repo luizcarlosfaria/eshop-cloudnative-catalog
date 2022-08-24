@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using eShopCloudNative.Catalog.Architecture.Data;
 using eShopCloudNative.Catalog.Entities;
+using eShopCloudNative.Catalog.Architecture;
 
 namespace eShopCloudNative.Catalog.Bootstrapper.Postgres.Migrations;
 
@@ -39,6 +40,7 @@ public class Migration00001 : Migration
                .ForeignKey("FK_CATEGORYTYPE_TO_CATEGORY", Constants.Schema, nameof(CategoryType), nameof(CategoryType.CategoryTypeId))
            .Map<Category>(it => it.Name, 300).NotNullable()
            .Map<Category>(it => it.Description, 8000).Nullable()
+           .Map<Category>(it => it.Icon, 100).Nullable()
            .Map<Category>(it => it.Slug, 300).NotNullable()
            .Map<Category>(it => it.Active).NotNullable();
 
