@@ -10,7 +10,7 @@ using NH = NHibernate;
 
 namespace eShopCloudNative.Catalog.Architecture.Data.Repositories;
 public abstract class QueryRepository<T>
-    where T : class, IBaseEntity
+    where T : class, ICatalogBaseEntity
 {
     protected QueryRepository(IStatelessSession session)
     {

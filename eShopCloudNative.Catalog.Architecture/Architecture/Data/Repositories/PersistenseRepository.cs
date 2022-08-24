@@ -19,17 +19,17 @@ internal class PersistenseRepository
     protected ISession Session { get; }
 
 
-    public async Task SaveAsync(IBaseEntity entity)
+    public async Task SaveAsync(ICatalogBaseEntity entity)
     {
         await this.Session.SaveAsync(entity);
     }
 
-    public async Task UpdateAsync(IBaseEntity entity)
+    public async Task UpdateAsync(ICatalogBaseEntity entity)
     {
         await this.Session.UpdateAsync(entity);
     }
 
-    public async Task DeleteAsync(IBaseEntity entity)
+    public async Task DeleteAsync(ICatalogBaseEntity entity)
     {
         await this.Session.DeleteAsync(entity);
     }
