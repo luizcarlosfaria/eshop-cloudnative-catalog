@@ -1,4 +1,5 @@
-﻿using Minio;
+﻿using Microsoft.Extensions.Configuration;
+using Minio;
 using Minio.DataModel;
 using System;
 using System.Collections.Generic;
@@ -20,30 +21,45 @@ public class MinioBootstrapperService : IBootstrapperService
 
     protected List<Bucket> oldBuckets;
 
-    public async Task ExecuteAsync()
+    public async Task InitializeAsync(IConfiguration configuration)
     {
-        foreach (var bucketName in this.BucketsToCreate)
+        if (configuration.GetValue<bool>("boostrap:minio"))
         {
-            if (oldBuckets.Any(it => it.Name == bucketName) == false)
+            this.minio = new MinioClient()
+                .WithEndpoint(this.ServerEndpoint.Host, this.ServerEndpoint.Port)
+                .WithCredentials(this.Credentials.UserName, this.Credentials.Password);
+
+            if (this.WithSSL)
             {
-                await this.minio.MakeBucketAsync(new MakeBucketArgs().WithBucket(bucketName));
+                this.minio = this.minio.WithSSL();
+            }
+
+            this.minio = this.minio.Build();
+
+            this.oldBuckets = (await this.minio.ListBucketsAsync()).Buckets;
+        }
+        else
+        {
+            //TODO: Logar dizendo que está ignorando
+        }
+    }
+
+    public async Task ExecuteAsync(IConfiguration configuration)
+    {
+        if (configuration.GetValue<bool>("boostrap:minio"))
+        {
+            foreach (var bucketName in this.BucketsToCreate)
+            {
+                if (oldBuckets.Any(it => it.Name == bucketName) == false)
+                {
+                    await this.minio.MakeBucketAsync(new MakeBucketArgs().WithBucket(bucketName));
+                }
             }
         }
-    }
-
-    public async Task InitializeAsync()
-    {
-        this.minio = new MinioClient()
-            .WithEndpoint(this.ServerEndpoint.Host, this.ServerEndpoint.Port)
-            .WithCredentials(this.Credentials.UserName, this.Credentials.Password);
-
-        if (this.WithSSL)
+        else
         {
-            this.minio = this.minio.WithSSL();
+            //TODO: Logar dizendo que está ignorando
         }
-
-        this.minio = this.minio.Build();
-
-        this.oldBuckets = (await this.minio.ListBucketsAsync()).Buckets;
     }
+
 }

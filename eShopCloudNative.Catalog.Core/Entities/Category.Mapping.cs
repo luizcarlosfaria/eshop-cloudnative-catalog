@@ -13,21 +13,16 @@ public class CategoryMapping : ClassMap<Category>
     public CategoryMapping()
     {
         this.DynamicUpdate();
-        this.Table("category");
+        this.Table(nameof(Category));
         this.Schema(Constants.Schema);
 
-        this.Id(it => it.CategoryId, "category_id").GeneratedBy.Sequence("category_seq");
-
-        this.Map(it => it.Name, "name").Length(300).Not.Nullable();
-
-        this.Map(it => it.Description, "description").Length(8000).Nullable().LazyLoad();
-
-        this.Map(it => it.Slug, "slug").Length(300).Not.Nullable();
-
-        this.Map(it => it.Active, "active").Not.Nullable();
-
+        this.Id(it => it.CategoryId).GeneratedBy.Sequence("category_seq");
+        this.Map(it => it.Name).Length(300).Not.Nullable();
+        this.Map(it => it.Description).Length(8000).Nullable().LazyLoad();
+        this.Map(it => it.Slug).Length(300).Not.Nullable();
+        this.Map(it => it.Active).Not.Nullable();
         this.HasMany(it => it.Children)
-            .KeyColumns.Add("parent_category_id")
+            .KeyColumns.Add($"Parent{nameof(Category.CategoryId)}")
             .Inverse()
             .Cascade.Delete()
             .LazyLoad()
@@ -35,22 +30,26 @@ public class CategoryMapping : ClassMap<Category>
             .AsBag();
 
         this.References(it => it.Parent)
-            .Column("parent_category_id")
+            .Column($"Parent{nameof(Category.CategoryId)}")
             .Nullable()
+            .LazyLoad()
+            .Fetch.Select()
+            .Cascade.None();
+
+        this.References(it => it.Type)
+            .Column(nameof(CategoryType.CategoryTypeId))
+            .Not.Nullable()
             .Fetch.Join()
             .Cascade.None();
 
         this.HasManyToMany(it => it.Products)
-            .ParentKeyColumns.Add("category_id", p => p.UniqueKey("pk_product_category"))
-            .Table("product_category")
-            .ChildKeyColumns.Add("product_id", p => p.UniqueKey("pk_product_category"))
+            .ParentKeyColumns.Add(nameof(Category.CategoryId), p => p.UniqueKey("pk_product_category"))
+            .Table("Product_Category")
+            .ChildKeyColumns.Add(nameof(Product.ProductId), p => p.UniqueKey("pk_product_category"))
             .ForeignKeyConstraintNames("fk_category_to_product_category", "fk_product_to_product_category")
             .LazyLoad()
             .Fetch.Select()
             .AsBag();
-
-        //this.MapManyToOne(it => it.Parent, true, "FK_Category_TO_Category", "ParentCategoryId");
-        //this.MapOneToMany(it => it.Children, it => it.CategoryId, "CategoryId");
-        //this.MapOneToMany(it => it.Products, it => it.CategoryId, "CategoryId");
+        
     }
 }

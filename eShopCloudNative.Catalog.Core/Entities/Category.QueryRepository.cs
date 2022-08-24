@@ -16,11 +16,5 @@ internal class CategoryQueryRepository : QueryRepository<Category>
     public async Task<Category> GetCategoryAsync(int categoryId)
         => await this.QueryOver.Where(it => it.CategoryId == categoryId).SingleOrDefaultAsync();
 
-    public async Task<IEnumerable<Category>> GetProductsByCategoryAsync(int categoryId)
-        => await this.QueryOver.Where(p => 
-            p.Children != null 
-            && 
-            p.Children.Any(c => c.CategoryId == categoryId)
-        ).ListAsync();
 
 }

@@ -1,11 +1,20 @@
 ﻿using eShopCloudNative.Catalog.Bootstrapper;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Spring.Context.Support;
+
+var configuration = new ConfigurationBuilder()
+        .AddJsonFile("appsettings.json")
+        .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json", optional: true)
+        .AddEnvironmentVariables()
+        .AddCommandLine(args)
+        .Build();
 
 XmlApplicationContext context = new XmlApplicationContext("./bootstrapper.xml");
 
+var bootstrapperService = context.GetObject<BootstrapperService>("BootstrapperService");
 
-var init = context.GetObject<IBootstrapperService>("BootstrapperService");
+await bootstrapperService.InitializeAsync(configuration);
 
-await init.InitializeAsync();
-await init.ExecuteAsync();
-
+await bootstrapperService.ExecuteAsync(configuration);

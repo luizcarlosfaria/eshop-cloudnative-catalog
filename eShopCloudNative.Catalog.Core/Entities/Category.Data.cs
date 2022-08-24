@@ -8,12 +8,15 @@ namespace eShopCloudNative.Catalog.Entities;
 public partial class Category
 {
     public virtual int CategoryId { get; set; }
-    public virtual string? Name { get; set; }
+    public virtual string Name { get; set; }
 
-    public virtual Category? Parent { get; set; }
-    public virtual IList<Category>? Children { get; set; }
+    public virtual Category Parent { get; set; }
 
-    public virtual IList<Product>? Products { get; set; }
+    public virtual CategoryType Type { get; set; }
+
+    public virtual IList<Category> Children { get; set; }
+
+    public virtual IList<Product> Products { get; set; }
 
     public virtual string? Description { get; set; }
     public virtual string? Slug { get; set; }

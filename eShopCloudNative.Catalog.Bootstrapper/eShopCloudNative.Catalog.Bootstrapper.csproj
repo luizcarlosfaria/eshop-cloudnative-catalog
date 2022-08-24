@@ -15,6 +15,7 @@
         <PackageReference Include="FluentMigrator" Version="3.3.2" />
         <PackageReference Include="FluentMigrator.Runner" Version="3.3.2" />
         <PackageReference Include="FluentMigrator.Runner.Postgres" Version="3.3.2" />
+        <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
         <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.16.1" />
         <PackageReference Include="Minio" Version="4.0.5" />
         <PackageReference Include="Npgsql" Version="6.0.6" />
@@ -23,9 +24,13 @@
 
     <ItemGroup>
       <ProjectReference Include="..\eShopCloudNative.Catalog.Architecture\eShopCloudNative.Catalog.Architecture.csproj" />
+      <ProjectReference Include="..\eShopCloudNative.Catalog.Core\eShopCloudNative.Catalog.Core.csproj" />
     </ItemGroup>
 
     <ItemGroup>
+        <None Update="appsettings.json">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
         <None Update="bootstrapper.xml">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using eShopCloudNative.Catalog.Architecture.Data;
+using eShopCloudNative.Catalog.Entities;
 
 namespace eShopCloudNative.Catalog.Bootstrapper.Postgres.Migrations;
 
@@ -18,36 +19,45 @@ public class Migration00001 : Migration
     {
         this.Execute.Sql($"CREATE SCHEMA {Constants.Schema} AUTHORIZATION catalog_user;");
 
-       
+        this.Create
+           .Table(nameof(CategoryType), Constants.Schema)
+           .Map<CategoryType>(it => it.CategoryTypeId).PrimaryKey()
+           .Map<CategoryType>(it => it.Name, 300).NotNullable()
+           .Map<CategoryType>(it => it.Description, 8000).Nullable()
+           .Map<CategoryType>(it => it.ShowOnMenu).NotNullable()
+           .Map<CategoryType>(it => it.IsHomeShowCase).NotNullable() 
+           ;
+
 
         this.Create.Sequence("category_seq").InSchema(Constants.Schema);
         this.Create
-           .Table("category").InSchema(Constants.Schema)
-           .WithColumn("category_id").AsInt32().PrimaryKey()
-           .WithColumn("parent_category_id").AsInt32().Nullable()
-               .ForeignKey("fk_category_to_category", Constants.Schema, "category", "category_id")
-           .WithColumn("name"). AsString(300).NotNullable()
-           .WithColumn("description").AsString(8000).Nullable()
-           .WithColumn("slug").AsString(300).NotNullable()
-           .WithColumn("active").AsBoolean().NotNullable();
+           .Table(nameof(Category), Constants.Schema)
+           .Map<Category>(it => it.CategoryId).PrimaryKey()
+           .WithColumn($"Parent{nameof(Category.CategoryId)}").AsInt32().Nullable()
+               .ForeignKey("FK_CATEGORY_TO_CATEGORY", Constants.Schema, nameof(Category), nameof(Category.CategoryId))
+           .WithColumn(nameof(CategoryType.CategoryTypeId)).AsInt32().NotNullable()
+               .ForeignKey("FK_CATEGORYTYPE_TO_CATEGORY", Constants.Schema, nameof(CategoryType), nameof(CategoryType.CategoryTypeId))
+           .Map<Category>(it => it.Name, 300).NotNullable()
+           .Map<Category>(it => it.Description, 8000).Nullable()
+           .Map<Category>(it => it.Slug, 300).NotNullable()
+           .Map<Category>(it => it.Active).NotNullable();
 
         this.Create.Sequence("product_seq").InSchema(Constants.Schema);
         this.Create
-           .Table("product").InSchema(Constants.Schema)
-           .WithColumn("product_id").AsInt32().PrimaryKey()
-           .WithColumn("name").AsString(300).NotNullable()
-           .WithColumn("description").AsString(8000).Nullable()
-           .WithColumn("slug").AsString(300).NotNullable()
-           .WithColumn("price").AsDecimal(8,2).NotNullable()
-           .WithColumn("active").AsBoolean().NotNullable();
+           .Table(nameof(Product), Constants.Schema)
+           .Map<Product>(it => it.ProductId).PrimaryKey()
+           .Map<Product>(it => it.Name, 300).NotNullable()
+           .Map<Product>(it => it.Description, 8000).Nullable()
+           .Map<Product>(it => it.Slug, 300).NotNullable()
+           .Map<Product>(it => it.Price, 8, 2).NotNullable()
+           .Map<Product>(it => it.Active).NotNullable();
 
         this.Create
-           .Table("product_category")
-           .InSchema(Constants.Schema)
-           .WithColumn("category_id").AsInt32().Nullable()
-               .ForeignKey("fk_category_to_product_category", Constants.Schema, "category", "category_id")
-           .WithColumn("product_id").AsInt32().Nullable()
-               .ForeignKey("fk_product_to_product_category", Constants.Schema, "product", "product_id");
+           .Table("Product_Category", Constants.Schema)
+           .WithColumn(nameof(Category.CategoryId)).AsInt32().Nullable()
+               .ForeignKey("FK_CATEGORY_TO_PRODUCT_CATEGORY", Constants.Schema, nameof(Category), nameof(Category.CategoryId))
+           .WithColumn(nameof(Product.ProductId)).AsInt32().Nullable()
+               .ForeignKey("FK_PRODUCT_TO_PRODUCT_CATEGORY", Constants.Schema, nameof(Product), nameof(Product.ProductId));
 
 
         //this.Create
@@ -68,7 +78,7 @@ public class Migration00001 : Migration
         //   .WithColumn("Name").AsString(300).NotNullable()
         //   .WithColumn("Active").AsBoolean().NotNullable();
 
-        
+
 
     }
 

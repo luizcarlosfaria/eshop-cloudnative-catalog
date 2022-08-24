@@ -10,6 +10,7 @@ using FluentMigrator.Runner.Initialization;
 using eShopCloudNative.Catalog.Bootstrapper.Postgres.Migrations;
 using FluentMigrator.Runner.VersionTableInfo;
 using eShopCloudNative.Catalog.Architecture.Data;
+using Microsoft.Extensions.Configuration;
 
 namespace eShopCloudNative.Catalog.Bootstrapper.Postgres;
 
@@ -23,57 +24,67 @@ public class PostgresBootstrapperService : IBootstrapperService
     public string InitialDatabase { get; set; }
 
 
-    public Task InitializeAsync()
+    public Task InitializeAsync(IConfiguration configuration)
     {
-        if (this.SysAdminUser is null)
-            throw new InvalidOperationException("SysAdminUser can't be null");
+        if (configuration.GetValue<bool>("boostrap:postgres"))
+        {
+            if (this.SysAdminUser is null)
+                throw new InvalidOperationException("SysAdminUser can't be null");
 
-        if (this.ServerEndpoint is null)
-            throw new InvalidOperationException("ServerEndpoint can't be null");
+            if (this.ServerEndpoint is null)
+                throw new InvalidOperationException("ServerEndpoint can't be null");
 
-        if (this.AppUser is null)
-            throw new InvalidOperationException("AppUser can't be null");
+            if (this.AppUser is null)
+                throw new InvalidOperationException("AppUser can't be null");
 
-        if (this.DatabaseToCreate is null)
-            throw new InvalidOperationException("DatabaseToCreate can't be null");
+            if (this.DatabaseToCreate is null)
+                throw new InvalidOperationException("DatabaseToCreate can't be null");
 
-        if (this.InitialDatabase is null)
-            throw new InvalidOperationException("InitialDatabase can't be null");
-
+            if (this.InitialDatabase is null)
+                throw new InvalidOperationException("InitialDatabase can't be null");
+        }
+        else
+        {
+            //TODO: Logar dizendo que está ignorando
+        }
         return Task.CompletedTask;
     }
 
-    public async Task ExecuteAsync()
+    public async Task ExecuteAsync(IConfiguration configuration)
     {
-        using var rootConnection = new NpgsqlConnection(this.BuildConnectionString(this.InitialDatabase, this.SysAdminUser));
-        await rootConnection.OpenAsync();
-        try
+        if (configuration.GetValue<bool>("boostrap:postgres"))
         {
-            await this.CreateAppUser(rootConnection);
-            await this.CreateDatabase(rootConnection);
-            await this.ApplyMigrations();
-        }
-        finally
-        {
-            if (rootConnection != null && rootConnection.State == System.Data.ConnectionState.Open)
-                await rootConnection.CloseAsync();
-        }
+            using var rootConnection = new NpgsqlConnection(this.BuildConnectionString(this.InitialDatabase, this.SysAdminUser));
+            await rootConnection.OpenAsync();
+            try
+            {
+                await this.CreateAppUser(rootConnection);
+                await this.CreateDatabase(rootConnection);
+                await this.ApplyMigrations();
+            }
+            finally
+            {
+                if (rootConnection != null && rootConnection.State == System.Data.ConnectionState.Open)
+                    await rootConnection.CloseAsync();
+            }
 
-        using var databaseConnection = new NpgsqlConnection(this.BuildConnectionString(this.DatabaseToCreate, this.SysAdminUser));
-        await databaseConnection.OpenAsync();
-        try
-        {
-            await this.SetPermissions(databaseConnection);
+            using var databaseConnection = new NpgsqlConnection(this.BuildConnectionString(this.DatabaseToCreate, this.SysAdminUser));
+            await databaseConnection.OpenAsync();
+            try
+            {
+                await this.SetPermissions(databaseConnection);
+            }
+            finally
+            {
+                if (databaseConnection != null && databaseConnection.State == System.Data.ConnectionState.Open)
+                    await databaseConnection.CloseAsync();
+            }
         }
-        finally
+        else 
         {
-            if (databaseConnection != null && databaseConnection.State == System.Data.ConnectionState.Open)
-                await databaseConnection.CloseAsync();
+            //TODO: Logar dizendo que está ignorando
         }
-
     }
-
-
 
     private async Task CreateAppUser(NpgsqlConnection connection)
     {
@@ -121,7 +132,7 @@ public class PostgresBootstrapperService : IBootstrapperService
         }
 
     }
-
+    
     private async Task SetPermissions(NpgsqlConnection connection)
     {
         using var command = connection.CreateCommand();

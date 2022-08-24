@@ -20,7 +20,8 @@ builder.Services.AddSingleton(sp =>
 {
     var aspnetConfiguration = sp.GetRequiredService<IConfiguration>();
 
-    return Fluently.Configure()
+    return Fluently
+     .Configure(new Configuration().SetNamingStrategy(PostgresNamingStragegy.Instance))
      .Database(
          PostgreSQLConfiguration.PostgreSQL82
              .ConnectionString(aspnetConfiguration.GetConnectionString("catalog"))
@@ -28,6 +29,7 @@ builder.Services.AddSingleton(sp =>
              .DefaultSchema(Constants.Schema)
          )
      .Mappings(it => it.FluentMappings.AddFromAssemblyOf<CategoryMapping>())
+     .ExposeConfiguration(it => it.SetProperty("hbm2ddl.keywords", "auto-quote"))
      .BuildSessionFactory();
 });
 
@@ -56,22 +58,31 @@ app.MapControllers();
 
 var session = app.Services.GetRequiredService<ISessionFactory>().OpenSession();
 
+var categoryType = session.Query<CategoryType>().Where(it=> it.CategoryTypeId == 1).SingleOrDefault();
+if (categoryType == null)
+{
+    categoryType = new CategoryType() { CategoryTypeId = 1, Name = "CategoryTypeId 1", IsHomeShowCase = true, ShowOnMenu = false };
+    session.Save(categoryType);
+}
+
+
 var item = session.Query<Category>().Where(it=> it.CategoryId == 1).SingleOrDefault();
 if (item != null)
 {
     Console.WriteLine($"Root {item.CategoryId}");
     Console.WriteLine($"BEGIN Children of {item.CategoryId}");
-    foreach (var child in item.Children)
-    {
-        Console.WriteLine($"    Child {child.CategoryId}");
-    }
+    if (item.Children != null)
+        foreach (var child in item.Children)
+        {
+            Console.WriteLine($"    Child {child.CategoryId}");
+        }
     Console.WriteLine($"END Children of {item.CategoryId}");
 }
 
-var categoryToCreate = new Category() { Name = "Teste", Slug = "teste", Active = true, Description = "" };
-var productToCreate = new Product() { Name = "Teste", Slug = "teste", Active = true, Description = "", Price = 5, Categories = new List<Category>() {  } };
+var categoryToCreate = new Category() { Name = "Category Teste 1", Slug = "teste", Type = categoryType, Active = true, Description = "" };
+var productToCreate = new Product() { Name = "Product Teste 1", Slug = "teste", Active = true, Description = "", Price = 5, Categories = new List<Category>() {  } };
 
-if(item != null && item.Children != null && item.Children.Count > 0 )
+if (item != null && item.Children != null && item.Children.Count > 0)
 {
     productToCreate.Categories.Add(item.Children.First());
 }
