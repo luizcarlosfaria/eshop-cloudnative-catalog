@@ -12,43 +12,21 @@ public class PostgresNamingStragegy : INamingStrategy
     private static readonly INamingStrategy improvedNamingStrategy = NHibernate.Cfg.ImprovedNamingStrategy.Instance;
 
     private static PostgresNamingStragegy instance;
-    public static INamingStrategy Instance
-    {
-        get { return instance ?? (instance = new PostgresNamingStragegy()); }
-    }
 
-    protected PostgresNamingStragegy()
-    {
-    }
+    public static INamingStrategy Instance { get { return instance ?? (instance = new PostgresNamingStragegy()); } }
 
-    public string ClassToTableName(string className)
-    {
-        return improvedNamingStrategy.ClassToTableName(className);
-    }
+    protected PostgresNamingStragegy() { }
 
-    public string ColumnName(string columnName)
-    {
-        return "\"" + columnName + "\"";
-    }
-    public string TableName(string tableName)
-    {
-        return "\"" + tableName + "\"";
-    }
+    public string ClassToTableName(string className) => improvedNamingStrategy.ClassToTableName(className);
 
-    public string LogicalColumnName(string columnName, string propertyName)
-    {
-        return improvedNamingStrategy.LogicalColumnName(columnName, propertyName);
-    }
+    public string ColumnName(string columnName) => columnName.UnderQuotes();
 
-    public string PropertyToColumnName(string propertyName)
-    {
-        return improvedNamingStrategy.PropertyToColumnName(propertyName);
-    }
+    public string TableName(string tableName) => tableName.UnderQuotes();
 
-    public string PropertyToTableName(string className, string propertyName)
-    {
-        return improvedNamingStrategy.PropertyToTableName(className, propertyName);
-    }
+    public string LogicalColumnName(string columnName, string propertyName) => improvedNamingStrategy.LogicalColumnName(columnName, propertyName);
 
-   
+    public string PropertyToColumnName(string propertyName) => improvedNamingStrategy.PropertyToColumnName(propertyName);
+
+    public string PropertyToTableName(string className, string propertyName) => improvedNamingStrategy.PropertyToTableName(className, propertyName);
+
 }
