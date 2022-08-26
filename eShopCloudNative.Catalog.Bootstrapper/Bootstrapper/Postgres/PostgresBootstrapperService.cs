@@ -56,31 +56,18 @@ public class PostgresBootstrapperService : IBootstrapperService
         {
             using var rootConnection = new NpgsqlConnection(this.BuildConnectionString(this.InitialDatabase, this.SysAdminUser));
             await rootConnection.OpenAsync();
-            try
-            {
-                await this.CreateAppUser(rootConnection);
-                await this.CreateDatabase(rootConnection);
-                await this.ApplyMigrations();
-            }
-            finally
-            {
-                if (rootConnection != null && rootConnection.State == System.Data.ConnectionState.Open)
-                    await rootConnection.CloseAsync();
-            }
+
+            await this.CreateAppUser(rootConnection);
+            await this.CreateDatabase(rootConnection);
+            await this.ApplyMigrations();
 
             using var databaseConnection = new NpgsqlConnection(this.BuildConnectionString(this.DatabaseToCreate, this.SysAdminUser));
             await databaseConnection.OpenAsync();
-            try
-            {
-                await this.SetPermissions(databaseConnection);
-            }
-            finally
-            {
-                if (databaseConnection != null && databaseConnection.State == System.Data.ConnectionState.Open)
-                    await databaseConnection.CloseAsync();
-            }
+            await this.SetPermissions(databaseConnection);
+
+
         }
-        else 
+        else
         {
             //TODO: Logar dizendo que está ignorando
         }
@@ -132,7 +119,7 @@ public class PostgresBootstrapperService : IBootstrapperService
         }
 
     }
-    
+
     private async Task SetPermissions(NpgsqlConnection connection)
     {
         using var command = connection.CreateCommand();
@@ -143,9 +130,8 @@ public class PostgresBootstrapperService : IBootstrapperService
         command.CommandText = $"GRANT UPDATE, USAGE, SELECT ON ALL SEQUENCES IN SCHEMA {Constants.Schema} TO {this.AppUser.UserName};";
         await command.ExecuteNonQueryAsync();
 
-    } 
-
-
+    }
+    
     private string BuildConnectionString(string database, System.Net.NetworkCredential credential) => $"server={this.ServerEndpoint?.Host ?? "localhost"};Port={this.ServerEndpoint?.Port};Database={database};User Id={credential.UserName};Password={credential.Password};";
 
     private Task ApplyMigrations()
