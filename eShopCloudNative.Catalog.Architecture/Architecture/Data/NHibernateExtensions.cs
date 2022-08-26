@@ -14,8 +14,7 @@ namespace eShopCloudNative.Catalog.Architecture.Data;
 public static class NHibernateExtensions
 {
     public static IServiceCollection AddNHibernate<MappingExample>(this IServiceCollection services, string schema, string connectionStringKey)
-    {
-        return services.AddSingleton(sp =>
+        => services.AddSingleton(sp =>
          {
              var aspnetConfiguration = sp.GetRequiredService<IConfiguration>();
 
@@ -32,7 +31,13 @@ public static class NHibernateExtensions
               .BuildSessionFactory();
 
          })
-         .AddScoped(sp => sp.GetRequiredService<ISessionFactory>().OpenSession())
-         .AddScoped(sp => sp.GetRequiredService<ISessionFactory>().OpenStatelessSession());
-    }
+         .AddSession()
+         .AddStatelessSession();
+
+    public static IServiceCollection AddSession(this IServiceCollection services)
+        => services.AddScoped(sp => sp.GetRequiredService<ISessionFactory>().OpenSession());
+
+    public static IServiceCollection AddStatelessSession(this IServiceCollection services)
+        => services.AddScoped(sp => sp.GetRequiredService<ISessionFactory>().OpenStatelessSession());
+
 }
