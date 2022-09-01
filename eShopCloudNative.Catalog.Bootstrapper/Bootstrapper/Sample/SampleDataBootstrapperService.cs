@@ -75,14 +75,20 @@ internal class SampleDataBootstrapperService : IBootstrapperService
             var categoryVitrine = new CategoryType() { CategoryTypeId = 2, Name = "Vitrine", IsHomeShowCase = true, ShowOnMenu = false };
             itensToSave.Add(categoryVitrine);
 
-            var catCamisas = new Category() { Name = "Camisas", Slug = "camisa", CategoryType = categoryTypeNormal, Active = true, Description = "" };
+            var catCamisas = new Category() { Name = "Camisas", Slug = "camisa", Icon="<i class=\"fa-sharp fa-solid fa-shirt\"></i>", CategoryType = categoryTypeNormal, Active = true, Description = "" };
             itensToSave.Add(catCamisas);
 
-            var catCamisasSelecao = new Category() { Parent = catCamisas, Name = "Camisas da Seleção", Slug = "selecao", CategoryType = categoryTypeNormal, Active = true, Description = "" };
+            var catCamisasSelecao = new Category() { Parent = catCamisas, Name = "Camisas da Seleção", Slug = "selecao", Icon="<i class=\"fa-sharp fa-solid fa-shirt\"></i>", CategoryType = categoryTypeNormal, Active = true, Description = "" };
             itensToSave.Add(catCamisasSelecao);
 
-            var catGames = new Category() { Name = "Games", Slug = "jogos", CategoryType = categoryTypeNormal, Active = true, Description = "" };
+            var catGames = new Category() { Name = "Games", Slug = "jogos", Icon = "<i class=\"fa-solid fa-gamepad-modern\"></i>", CategoryType = categoryTypeNormal, Active = true, Description = "" };
             itensToSave.Add(catGames);
+
+            itensToSave.Add(new Category() { Name = "Computadores", Slug = "computadores", Icon = "<i class=\"fa-solid fa-desktop\"></i>", CategoryType = categoryTypeNormal, Active = true, Description = "" });
+            itensToSave.Add(new Category() { Name = "Carro", Slug = "carros", Icon = "<i class=\"fa-solid fa-cars\"></i>", CategoryType = categoryTypeNormal, Active = true, Description = "" });
+            itensToSave.Add(new Category() { Name = "Moto", Slug = "motos", Icon = "<i class=\"fa-solid fa-motorcycle\"></i>", CategoryType = categoryTypeNormal, Active = true, Description = "" });
+            itensToSave.Add(new Category() { Name = "SmartWatch", Slug = "smartwatch", Icon = "<i class=\"fa-solid fa-watch-apple\"></i>", CategoryType = categoryTypeNormal, Active = true, Description = "" });
+            itensToSave.Add(new Category() { Name = "Biking", Slug = "biking", Icon = "<i class=\"fa-solid fa-person-biking\"></i>", CategoryType = categoryTypeNormal, Active = true, Description = "" });
 
 
             var catVitrine1 = new Category() { Name = "Vitrine1", Slug = "v1", CategoryType = categoryVitrine, Active = true, Description = "" };
@@ -122,11 +128,11 @@ internal class SampleDataBootstrapperService : IBootstrapperService
             {
                 itensToSave.Add(camisaSelecaoPreta);
 
-                var imagem1 = new Image() { Product = camisaSelecaoPreta, ImageId = Guid.NewGuid(), Index = 0,FileName = "camisa-brasil-preta1.jpg" };
+                var imagem1 = new Image() { Product = camisaSelecaoPreta, ImageId = Guid.NewGuid(), Index = 0,FileName = "camisa-brasil-preta1.jpeg" };
                 await this.UploadImage(imagem1);
                 itensToSave.Add(imagem1);
 
-                var imagem2 = new Image() { Product = camisaSelecaoPreta , ImageId = Guid.NewGuid(),Index = 1, FileName = "camisa-brasil-preta2.jpg" };
+                var imagem2 = new Image() { Product = camisaSelecaoPreta , ImageId = Guid.NewGuid(),Index = 1, FileName = "camisa-brasil-preta2.jpeg" };
                 await this.UploadImage(imagem2);
                 itensToSave.Add(imagem2);
             }
@@ -135,11 +141,11 @@ internal class SampleDataBootstrapperService : IBootstrapperService
             {
                 itensToSave.Add(controleXbox);
 
-                var imagem1 = new Image() { Product = controleXbox, ImageId = Guid.NewGuid(), Index = 0, FileName = "controle-xbox-elite-II-1.jpg" };
+                var imagem1 = new Image() { Product = controleXbox, ImageId = Guid.NewGuid(), Index = 0, FileName = "controle-xbox-elite-II-1.jpeg" };
                 await this.UploadImage(imagem1);
                 itensToSave.Add(imagem1);
 
-                var imagem2 = new Image() { Product = controleXbox , ImageId = Guid.NewGuid(),Index = 1, FileName = "controle-xbox-elite-II-2.jpg" };
+                var imagem2 = new Image() { Product = controleXbox , ImageId = Guid.NewGuid(),Index = 1, FileName = "controle-xbox-elite-II-2.jpeg" };
                 await this.UploadImage(imagem2);
                 itensToSave.Add(imagem2);
             }
@@ -155,6 +161,7 @@ internal class SampleDataBootstrapperService : IBootstrapperService
     {
         await this.minio.PutObjectAsync((new PutObjectArgs())
                     .WithBucket(this.BucketName)
+                    .WithContentType($"image/{Path.GetExtension(image.FileName).Substring(1)}")
                     .WithFileName($"/app/Assets/{image.FileName}")
                     .WithObject(image.ImageId.ToString())
                     );
