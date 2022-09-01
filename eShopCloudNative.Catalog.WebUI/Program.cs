@@ -1,5 +1,8 @@
+using eShopCloudNative.Catalog.Architecture.Configuration;
 using eShopCloudNative.Catalog.Services;
+using Minio;
 using Refit;
+using Endpoint = eShopCloudNative.Catalog.Architecture.Configuration.Endpoint;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +17,24 @@ builder.Services
         c.DefaultRequestHeaders.Add("apikey", builder.Configuration.GetValue<string>("eshop-cloudnative:global:apikey"));
         //TODO: Adicionar versão atual!
     });
+
+builder.Services
+    .AddSingleton(sp =>
+    {
+        var endpoint = builder.Configuration.Factory<Endpoint>("eshop-cloudnative:global:minio");
+        var credential = builder.Configuration.Factory<Credential>("eshop-cloudnative:global:minio");
+
+        var minio = new MinioClient()
+                    .WithEndpoint(endpoint.Host, endpoint.Port)
+                    .WithCredentials(credential.UserName, credential.Password);
+
+        if (endpoint.Encrypted)
+        {
+            minio = minio.WithSSL();
+        }
+        return minio;
+    });
+
 
 var app = builder.Build();
 

@@ -25,13 +25,13 @@ public class ProductMapping : ClassMap<Product>
         this.Map(it => it.Active).Not.Nullable();
 
         this.HasManyToMany(it => it.Categories)
-        .ParentKeyColumns.Add(nameof(Product.ProductId), p => p.UniqueKey("pk_product_category"))
-        .Table("Product_Category")
-        .ChildKeyColumns.Add(nameof(Category.CategoryId), p => p.UniqueKey("pk_product_category"))
-        .ForeignKeyConstraintNames("fk_product_to_product_category", "fk_category_to_product_category")
-        .LazyLoad()
-        .Fetch.Select()
-        .AsBag();
+            .ParentKeyColumns.Add(nameof(Product.ProductId), p => p.UniqueKey("pk_product_category"))
+            .Table("Product_Category")
+            .ChildKeyColumns.Add(nameof(Category.CategoryId), p => p.UniqueKey("pk_product_category"))
+            .ForeignKeyConstraintNames("fk_product_to_product_category", "fk_category_to_product_category")
+            .LazyLoad()
+            .Fetch.Select()
+            .AsBag();
 
         this.HasMany(it => it.Images)
             .KeyColumns.Add(nameof(Product.ProductId))
@@ -39,6 +39,6 @@ public class ProductMapping : ClassMap<Product>
             .Cascade.Delete()
             .LazyLoad()
             .Fetch.Select()
-            .AsBag();
+            .AsList();
     }
 }

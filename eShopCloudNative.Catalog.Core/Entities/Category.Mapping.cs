@@ -37,7 +37,7 @@ public class CategoryMapping : ClassMap<Category>
             .Fetch.Select()
             .Cascade.None();
 
-        this.References(it => it.Type)
+        this.References(it => it.CategoryType)
             .Column(nameof(CategoryType.CategoryTypeId))
             .Not.Nullable()
             .Fetch.Join()

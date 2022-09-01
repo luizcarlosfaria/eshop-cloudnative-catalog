@@ -60,6 +60,7 @@ public class Migration00001 : Migration
            .Table(nameof(Image), Constants.Schema)
            .Column<Image>(it => it.ImageId).PrimaryKey()
            .Column<Image>(it => it.FileName, 400).NotNullable()
+           .Column<Image>(it => it.Index).NotNullable()
            .WithColumn($"{nameof(Product.ProductId)}").AsInt32().NotNullable()
                .ForeignKey("FK_PRODUCT_TO_IMAGE", Constants.Schema, nameof(Product), nameof(Product.ProductId))
            ;

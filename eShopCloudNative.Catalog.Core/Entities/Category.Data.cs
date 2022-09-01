@@ -12,7 +12,7 @@ public partial class Category
 
     public virtual Category Parent { get; set; }
 
-    public virtual CategoryType Type { get; set; }
+    public virtual CategoryType CategoryType { get; set; }
 
     public virtual IList<Category> Children { get; set; }
 

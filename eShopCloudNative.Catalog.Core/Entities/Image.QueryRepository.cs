@@ -7,9 +7,9 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace eShopCloudNative.Catalog.Entities;
-internal class ImageQueryRepository : QueryRepository<Image>
+public class ImageQueryRepository : QueryRepository<Image>
 {
-    public ImageQueryRepository(IStatelessSession session) : base(session)
+    public ImageQueryRepository(ISession session) : base(session)
     {
     }
 

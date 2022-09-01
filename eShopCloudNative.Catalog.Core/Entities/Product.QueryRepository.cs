@@ -7,9 +7,9 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace eShopCloudNative.Catalog.Entities;
-internal class ProductQueryRepository : QueryRepository<Product>
+public class ProductQueryRepository : QueryRepository<Product>
 {
-    public ProductQueryRepository(IStatelessSession session) : base(session)
+    public ProductQueryRepository(ISession session) : base(session)
     {
     }
 

@@ -58,7 +58,7 @@ public class NHibernateConfigBuilder
             var aspnetConfiguration = sp.GetRequiredService<IConfiguration>();
 
             return Fluently
-             .Configure(new Configuration().SetNamingStrategy(PostgresNamingStragegy.Instance))
+             .Configure(new NHibernate.Cfg.Configuration().SetNamingStrategy(PostgresNamingStragegy.Instance))
              .Database(
                  PostgreSQLConfiguration.PostgreSQL82
                      .ConnectionString(aspnetConfiguration.GetConnectionString(connectionStringKey))

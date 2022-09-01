@@ -13,11 +13,13 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.16.1" />
+    <PackageReference Include="Minio" Version="4.0.5" />
     <PackageReference Include="Refit" Version="6.3.2" />
     <PackageReference Include="Refit.HttpClientFactory" Version="6.3.2" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\eShopCloudNative.Catalog.Architecture\eShopCloudNative.Catalog.Architecture.csproj" />
     <ProjectReference Include="..\eShopCloudNative.Catalog.Contracts\eShopCloudNative.Catalog.Contracts.csproj" />
   </ItemGroup>
 

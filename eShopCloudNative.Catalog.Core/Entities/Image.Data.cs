@@ -10,6 +10,7 @@ public partial class Image
     public virtual Guid ImageId { get; set; }    
     public virtual Product Product { get; set; }
     public virtual string FileName { get; set; }
+    public virtual int Index { get; set; }
 }
 
 

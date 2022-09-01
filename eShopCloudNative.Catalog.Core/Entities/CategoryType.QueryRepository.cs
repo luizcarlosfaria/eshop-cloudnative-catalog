@@ -7,14 +7,10 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace eShopCloudNative.Catalog.Entities;
-internal class CategoryTypeQueryRepository : QueryRepository<CategoryType>
+public class CategoryTypeQueryRepository : QueryRepository<CategoryType>
 {
-    public CategoryTypeQueryRepository(IStatelessSession session) : base(session)
+    public CategoryTypeQueryRepository(ISession session) : base(session)
     {
     }
-
-    public async Task<CategoryType> GetCategoryAsync(int categoryTypeId)
-        => await this.QueryOver.Where(it => it.CategoryTypeId == categoryTypeId).SingleOrDefaultAsync();
-
 
 }

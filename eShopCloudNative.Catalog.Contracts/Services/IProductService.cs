@@ -13,5 +13,5 @@ namespace eShopCloudNative.Catalog.Services;
 public interface IProductService
 {
     [Get("/Products/HomeCatalog")]
-    Task<IEnumerable<ProductDto>> GetHomeCatalog();
+    Task<IEnumerable<CategoryDto>> GetHomeCatalog();
 }

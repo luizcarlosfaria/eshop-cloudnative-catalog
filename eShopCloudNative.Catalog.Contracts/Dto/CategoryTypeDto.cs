@@ -10,7 +10,7 @@ public class CategoryTypeDto
 
     public IList<CategoryDto>? Categories { get; set; }
 
-    public bool? ShowOnMenu { get; set; }
+    public bool ShowOnMenu { get; set; }
 
-    public bool? IsHomeShowCase { get; set; }
+    public bool IsHomeShowCase { get; set; }
 }

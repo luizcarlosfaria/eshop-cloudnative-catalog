@@ -19,6 +19,7 @@ public class ImageMapping : ClassMap<Image>
 
         this.Id(it => it.ImageId).GeneratedBy.Assigned();
         this.Map(it => it.FileName).Length(400).Not.Nullable();
+        this.Map(it => it.Index).Not.Nullable();
 
         this.References(it => it.Product)
             .Column(nameof(Product.ProductId))

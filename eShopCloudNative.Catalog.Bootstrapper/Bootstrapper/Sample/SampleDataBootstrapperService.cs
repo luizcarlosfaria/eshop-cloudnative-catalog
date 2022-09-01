@@ -75,20 +75,20 @@ internal class SampleDataBootstrapperService : IBootstrapperService
             var categoryVitrine = new CategoryType() { CategoryTypeId = 2, Name = "Vitrine", IsHomeShowCase = true, ShowOnMenu = false };
             itensToSave.Add(categoryVitrine);
 
-            var catCamisas = new Category() { Name = "Camisas", Slug = "camisa", Type = categoryTypeNormal, Active = true, Description = "" };
+            var catCamisas = new Category() { Name = "Camisas", Slug = "camisa", CategoryType = categoryTypeNormal, Active = true, Description = "" };
             itensToSave.Add(catCamisas);
 
-            var catCamisasSelecao = new Category() { Parent = catCamisas, Name = "Camisas da Seleção", Slug = "selecao", Type = categoryTypeNormal, Active = true, Description = "" };
+            var catCamisasSelecao = new Category() { Parent = catCamisas, Name = "Camisas da Seleção", Slug = "selecao", CategoryType = categoryTypeNormal, Active = true, Description = "" };
             itensToSave.Add(catCamisasSelecao);
 
-            var catGames = new Category() { Name = "Games", Slug = "jogos", Type = categoryTypeNormal, Active = true, Description = "" };
+            var catGames = new Category() { Name = "Games", Slug = "jogos", CategoryType = categoryTypeNormal, Active = true, Description = "" };
             itensToSave.Add(catGames);
 
 
-            var catVitrine1 = new Category() { Name = "Vitrine1", Slug = "v1", Type = categoryVitrine, Active = true, Description = "" };
+            var catVitrine1 = new Category() { Name = "Vitrine1", Slug = "v1", CategoryType = categoryVitrine, Active = true, Description = "" };
             itensToSave.Add(catVitrine1);
 
-            var catVitrine2 = new Category() { Name = "Vitrine2", Slug = "v2", Type = categoryVitrine, Active = true, Description = "" };
+            var catVitrine2 = new Category() { Name = "Vitrine2", Slug = "v2", CategoryType = categoryVitrine, Active = true, Description = "" };
             itensToSave.Add(catVitrine2);
 
 
@@ -96,11 +96,11 @@ internal class SampleDataBootstrapperService : IBootstrapperService
             {
                 itensToSave.Add(camisaSelecaoAmarela);
 
-                var imagem1 = new Image() { Product = camisaSelecaoAmarela, ImageId = Guid.NewGuid(), FileName = "camisa-brasil-amarela1.webp" };
+                var imagem1 = new Image() { Product = camisaSelecaoAmarela, ImageId = Guid.NewGuid(), Index = 0, FileName = "camisa-brasil-amarela1.webp" };
                 await this.UploadImage(imagem1);
                 itensToSave.Add(imagem1);
 
-                var imagem2 = new Image() { Product = camisaSelecaoAmarela, ImageId = Guid.NewGuid(), FileName = "camisa-brasil-amarela2.webp" };
+                var imagem2 = new Image() { Product = camisaSelecaoAmarela, ImageId = Guid.NewGuid(), Index = 1,FileName = "camisa-brasil-amarela2.webp" };
                 await this.UploadImage(imagem2);
                 itensToSave.Add(imagem2);
             }
@@ -109,11 +109,11 @@ internal class SampleDataBootstrapperService : IBootstrapperService
             {
                 itensToSave.Add(camisaSelecaoAzul);
 
-                var imagem1 = new Image() { Product = camisaSelecaoAzul, ImageId = Guid.NewGuid(), FileName = "camisa-brasil-azul1.webp" };
+                var imagem1 = new Image() { Product = camisaSelecaoAzul, ImageId = Guid.NewGuid(), Index = 0, FileName = "camisa-brasil-azul1.webp" };
                 await this.UploadImage(imagem1);
                 itensToSave.Add(imagem1);
 
-                var imagem2 = new Image() { Product = camisaSelecaoAzul , ImageId = Guid.NewGuid(), FileName = "camisa-brasil-azul2.webp" };
+                var imagem2 = new Image() { Product = camisaSelecaoAzul , ImageId = Guid.NewGuid(),Index = 1, FileName = "camisa-brasil-azul2.webp" };
                 await this.UploadImage(imagem2);
                 itensToSave.Add(imagem2);
             }
@@ -122,11 +122,11 @@ internal class SampleDataBootstrapperService : IBootstrapperService
             {
                 itensToSave.Add(camisaSelecaoPreta);
 
-                var imagem1 = new Image() { Product = camisaSelecaoPreta, ImageId = Guid.NewGuid(), FileName = "camisa-brasil-preta1.jpg" };
+                var imagem1 = new Image() { Product = camisaSelecaoPreta, ImageId = Guid.NewGuid(), Index = 0,FileName = "camisa-brasil-preta1.jpg" };
                 await this.UploadImage(imagem1);
                 itensToSave.Add(imagem1);
 
-                var imagem2 = new Image() { Product = camisaSelecaoPreta , ImageId = Guid.NewGuid(), FileName = "camisa-brasil-preta2.jpg" };
+                var imagem2 = new Image() { Product = camisaSelecaoPreta , ImageId = Guid.NewGuid(),Index = 1, FileName = "camisa-brasil-preta2.jpg" };
                 await this.UploadImage(imagem2);
                 itensToSave.Add(imagem2);
             }
@@ -135,11 +135,11 @@ internal class SampleDataBootstrapperService : IBootstrapperService
             {
                 itensToSave.Add(controleXbox);
 
-                var imagem1 = new Image() { Product = controleXbox, ImageId = Guid.NewGuid(), FileName = "controle-xbox-elite-II-1.jpg" };
+                var imagem1 = new Image() { Product = controleXbox, ImageId = Guid.NewGuid(), Index = 0, FileName = "controle-xbox-elite-II-1.jpg" };
                 await this.UploadImage(imagem1);
                 itensToSave.Add(imagem1);
 
-                var imagem2 = new Image() { Product = controleXbox , ImageId = Guid.NewGuid(), FileName = "controle-xbox-elite-II-2.jpg" };
+                var imagem2 = new Image() { Product = controleXbox , ImageId = Guid.NewGuid(),Index = 1, FileName = "controle-xbox-elite-II-2.jpg" };
                 await this.UploadImage(imagem2);
                 itensToSave.Add(imagem2);
             }
