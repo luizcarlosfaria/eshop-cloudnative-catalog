@@ -7,6 +7,7 @@ public class ImageController : Controller
 
     public ImageController() { }
 
+    [ResponseCache(Duration = 180, Location = ResponseCacheLocation.Any, NoStore = false)]
     public async Task<IActionResult> IndexAsync(Guid id, [FromServices] MinioClient minioClient)
     {
         if (id != Guid.Empty)

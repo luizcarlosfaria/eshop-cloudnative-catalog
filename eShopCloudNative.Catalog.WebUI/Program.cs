@@ -8,6 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddResponseCaching();
 
 builder.Services
     .AddRefitClient<IProductService>()
@@ -50,6 +51,8 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+app.UseResponseCaching();
 
 app.UseAuthorization();
 

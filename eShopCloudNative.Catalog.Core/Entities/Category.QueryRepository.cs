@@ -36,7 +36,10 @@ public class CategoryQueryRepository : QueryRepository<Category>
             where categoryType.{nameof(CategoryType.IsHomeShowCase)} = true
             and image.{nameof(Image.Index)} = 0
         ";
-        var returnValue = await this.Session.CreateQuery(hql).SetResultTransformer(new DistinctRootEntityResultTransformer()).ListAsync<Category>();
+
+        var returnValue = await this.Session.CreateQuery(hql)
+            .SetResultTransformer(new DistinctRootEntityResultTransformer())
+            .ListAsync<Category>();
 
         return returnValue;
     }
