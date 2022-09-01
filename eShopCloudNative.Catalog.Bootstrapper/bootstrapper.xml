@@ -29,13 +29,26 @@
                     <property name="DatabaseToCreate" value="eshop_catalog_db" />
                 </object>
 
-
                 <object type="eShopCloudNative.Catalog.Bootstrapper.Minio.MinioBootstrapperService, eShopCloudNative.Catalog.Bootstrapper">
-                    
                     <property name="WithSSL" value="false" />
-
                     <property name="BucketsToCreate" value="catalog-images,catalog-assets" />
-                    
+                    <property name="ServerEndpoint">
+                        <object type="System.Net.DnsEndPoint, System.Net.Primitives">
+                            <constructor-arg name="host" value="minio" />
+                            <constructor-arg name="port" value="9000" />
+                        </object>
+                    </property>
+                    <property name="Credentials">
+                        <object type="System.Net.NetworkCredential, System.Net.Primitives">
+                            <constructor-arg name="userName" value="minioadmin" />
+                            <constructor-arg name="password" value="minioadmin" />
+                        </object>
+                    </property>
+                </object>
+
+                <object type="eShopCloudNative.Catalog.Bootstrapper.Sample.SampleDataBootstrapperService, eShopCloudNative.Catalog.Bootstrapper">
+                    <property name="WithSSL" value="false" />
+                    <property name="BucketName" value="catalog-images" />
                     <property name="ServerEndpoint">
                         <object type="System.Net.DnsEndPoint, System.Net.Primitives">
                             <constructor-arg name="host" value="minio" />

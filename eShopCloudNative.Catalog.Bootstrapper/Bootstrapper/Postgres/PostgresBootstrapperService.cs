@@ -64,8 +64,6 @@ public class PostgresBootstrapperService : IBootstrapperService
             using var databaseConnection = new NpgsqlConnection(this.BuildConnectionString(this.DatabaseToCreate, this.SysAdminUser));
             await databaseConnection.OpenAsync();
             await this.SetPermissions(databaseConnection);
-
-
         }
         else
         {
