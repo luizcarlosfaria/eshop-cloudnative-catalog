@@ -10,7 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace eShopCloudNative.Catalog.Architecture.Data;
-public static class MappingExtensions
+public static class FluentMigratorExtensions
 {
     public static ICreateTableWithColumnSyntax Table(this ICreateExpressionRoot it, string tableName, string schema)
         => it.Table(tableName.UnderQuotes()).InSchema(schema.UnderQuotes());
