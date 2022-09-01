@@ -20,9 +20,9 @@ public partial class Category
 
     public virtual string Icon { get; set; }
 
-    public virtual string? Description { get; set; }
+    public virtual string Description { get; set; }
 
-    public virtual string? Slug { get; set; }
+    public virtual string Slug { get; set; }
 
     public virtual bool Active { get; set; }
     

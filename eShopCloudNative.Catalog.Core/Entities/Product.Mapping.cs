@@ -32,5 +32,13 @@ public class ProductMapping : ClassMap<Product>
         .LazyLoad()
         .Fetch.Select()
         .AsBag();
+
+        this.HasMany(it => it.Images)
+            .KeyColumns.Add(nameof(Product.ProductId))
+            .Inverse()
+            .Cascade.Delete()
+            .LazyLoad()
+            .Fetch.Select()
+            .AsBag();
     }
 }
