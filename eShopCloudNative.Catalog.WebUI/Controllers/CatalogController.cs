@@ -7,25 +7,22 @@ namespace eShopCloudNative.Catalog.Controllers;
 public class CatalogController : Controller
 {
     private readonly ILogger<CatalogController> logger;
-    private readonly IProductService productService;
+    private readonly ICategoryService categoryService;
 
-    public CatalogController(ILogger<CatalogController> logger, IProductService productService)
+    public CatalogController(ILogger<CatalogController> logger, ICategoryService categoryService)
     {
         this.logger = logger;
-        this.productService = productService;
+        this.categoryService = categoryService;
     }
 
-    public async Task<IActionResult> IndexAsync()
-    {
-        var productsForHome = await this.productService.GetHomeCatalog();
-
-        return this.View(productsForHome);
+    private CatalogController SetViewBag() {
+        this.ViewBag.categoryService = categoryService;
+        return this;
     }
 
-    public IActionResult Privacy()
-    {
-        return this.View();
-    }
+    public IActionResult Index() => this.SetViewBag().View();
+
+    public IActionResult Privacy() => this.View();
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()

@@ -12,21 +12,26 @@ public class ImageController : Controller
     {
         if (id != Guid.Empty)
         {
-            MemoryStream stremToSend = new MemoryStream();
+            byte[]? content = default;
 
             var result = await minioClient.GetObjectAsync(
                 new GetObjectArgs()
                 .WithObject(id.ToString())
-                .WithBucket("catalog-images")                
-                .WithCallbackStream((stream) => stream.CopyTo(stremToSend) )
+                .WithBucket("catalog-images")
+                .WithCallbackStream((stream) =>
+                {
+                    MemoryStream streamToSend = new MemoryStream();
+                    stream.CopyTo(streamToSend);
+                    content = streamToSend.ToArray();
+                })
             );
 
-            stremToSend.Position = 0;
-
-            return File(stremToSend, "image/jpeg");
+            if (content != null)
+                return this.File(content, result.ContentType);
 
         }
 
-        return NotFound();
+        return this.NotFound();
     }
+
 }

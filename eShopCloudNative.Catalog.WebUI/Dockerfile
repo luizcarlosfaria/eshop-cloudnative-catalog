@@ -7,6 +7,8 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
+COPY ["eShopCloudNative.Catalog.Contracts/eShopCloudNative.Catalog.Contracts.csproj", "eShopCloudNative.Catalog.Contracts/"]
+COPY ["eShopCloudNative.Catalog.Architecture/eShopCloudNative.Catalog.Architecture.csproj", "eShopCloudNative.Catalog.Architecture/"]
 COPY ["eShopCloudNative.Catalog.WebUI/eShopCloudNative.Catalog.WebUI.csproj", "eShopCloudNative.Catalog.WebUI/"]
 RUN dotnet restore "eShopCloudNative.Catalog.WebUI/eShopCloudNative.Catalog.WebUI.csproj"
 COPY . .

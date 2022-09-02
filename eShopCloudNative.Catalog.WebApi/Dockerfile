@@ -6,10 +6,11 @@ EXPOSE 80
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
-COPY ["catalog/eShopCloudNative.Catalog.WebApi/eShopCloudNative.Catalog.WebApi.csproj", "catalog/eShopCloudNative.Catalog.WebApi/"]
-RUN dotnet restore "catalog/eShopCloudNative.Catalog.WebApi/eShopCloudNative.Catalog.WebApi.csproj"
+COPY ["eShopCloudNative.Catalog.Contracts/eShopCloudNative.Catalog.Contracts.csproj", "eShopCloudNative.Catalog.Contracts/"]
+COPY ["eShopCloudNative.Catalog.WebApi/eShopCloudNative.Catalog.WebApi.csproj", "eShopCloudNative.Catalog.WebApi/"]
+RUN dotnet restore "eShopCloudNative.Catalog.WebApi/eShopCloudNative.Catalog.WebApi.csproj"
 COPY . .
-WORKDIR "/src/catalog/eShopCloudNative.Catalog.WebApi"
+WORKDIR "/src/eShopCloudNative.Catalog.WebApi"
 RUN dotnet build "eShopCloudNative.Catalog.WebApi.csproj" -c Release -o /app/build
 
 FROM build AS publish
@@ -19,3 +20,4 @@ FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "eShopCloudNative.Catalog.WebApi.dll"]
+

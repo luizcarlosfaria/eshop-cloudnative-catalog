@@ -1,12 +1,15 @@
 ﻿@using eShopCloudNative.Catalog.Dto
-@model IEnumerable<CategoryDto>
-
+@using eShopCloudNative.Catalog.Services
 @{
+    ICategoryService categoryService = this.ViewBag.categoryService;
+
+    IEnumerable<CategoryDto> categorias = await categoryService.GetHomeCatalog();
+
     ViewData["Title"] = "Home Page";
 }
 
 
-@foreach (var category in this.Model)
+@foreach (var category in categorias)
 {
     <div class="border-b border-gray-200 pt-24 pb-10">
         <h1 class="text-4xl font-extrabold tracking-tight text-gray-900">@category.Name</h1>
@@ -20,7 +23,6 @@
 
                 @if (category.Products == null)
                 {
-
                     <span>Nenhum produto!</span>
                 }
                 else

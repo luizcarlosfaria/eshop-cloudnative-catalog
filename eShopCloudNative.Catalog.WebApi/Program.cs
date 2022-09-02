@@ -60,6 +60,7 @@ builder.Services.AddSingleton(sp => sp.GetRequiredService<MapperConfiguration>()
 builder.Services.AddScoped<CategoryQueryRepository>();
 
 builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
 
 builder.Services.AddEndpointsApiExplorer();
 
