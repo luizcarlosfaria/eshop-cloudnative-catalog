@@ -1,7 +1,7 @@
 ﻿@using eShopCloudNative.Catalog.Dto
 @using eShopCloudNative.Catalog.Services
 @{
-    ICategoryService categoryService = this.ViewBag.categoryService;
+    IPublicCatalogService categoryService = this.ViewBag.categoryService;
 
     IEnumerable<CategoryDto> categorias = await categoryService.GetHomeCatalog();
 

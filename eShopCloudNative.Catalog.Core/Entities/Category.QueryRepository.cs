@@ -25,7 +25,7 @@ public class CategoryQueryRepository : QueryRepository<Category>
     {
     }
 
-    public async Task<IList<Category>> GetShowCaseCategoriesWithProducts()
+    public async Task<IList<Category>> GetHomeCatalog()
     {
         string hql = $@"
             select category
@@ -44,4 +44,32 @@ public class CategoryQueryRepository : QueryRepository<Category>
         return returnValue;
     }
 
+    public async Task<IList<Category>> GetCategoriesForMenu()
+    {
+        string hql = $@"
+            select category
+            from {nameof(Category)} as category
+            inner join fetch category.{nameof(Category.CategoryType)} as categoryType
+            left join fetch category.{nameof(Category.Parent)} as parent
+        ";
+
+        var categories = await this.Session.CreateQuery(hql)
+            .SetResultTransformer(new DistinctRootEntityResultTransformer())
+            .ListAsync<Category>();
+
+        foreach (var category in categories)
+        {
+            category.Children = categories
+                .Where(it => 
+                it.Parent != null 
+                && it.Parent.CategoryId == category.CategoryId
+                && it.CategoryType.ShowOnMenu
+                ).ToList();
+        }
+
+        return categories.Where(it => 
+            it.CategoryType.ShowOnMenu 
+            && it.Parent == null)
+            .ToList();
+    }
 }

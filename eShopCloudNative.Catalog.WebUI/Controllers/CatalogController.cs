@@ -7,9 +7,9 @@ namespace eShopCloudNative.Catalog.Controllers;
 public class CatalogController : Controller
 {
     private readonly ILogger<CatalogController> logger;
-    private readonly ICategoryService categoryService;
+    private readonly IPublicCatalogService categoryService;
 
-    public CatalogController(ILogger<CatalogController> logger, ICategoryService categoryService)
+    public CatalogController(ILogger<CatalogController> logger, IPublicCatalogService categoryService)
     {
         this.logger = logger;
         this.categoryService = categoryService;

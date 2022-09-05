@@ -11,16 +11,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddResponseCaching();
 
 builder.Services
-    .AddRefitClient<IProductService>()    
-    .ConfigureHttpClient(c =>
-    {
-        c.BaseAddress = new Uri($"{builder.Configuration.GetValue<string>("eshop-cloudnative:global:api-gateway")}/catalog");
-        c.DefaultRequestHeaders.Add("apikey", builder.Configuration.GetValue<string>("eshop-cloudnative:global:apikey"));
-        //TODO: Adicionar versão atual!
-    });
-
-builder.Services
-    .AddRefitClient<ICategoryService>()
+    .AddRefitClient<IPublicCatalogService>()
     .ConfigureHttpClient(c =>
     {
         c.BaseAddress = new Uri($"{builder.Configuration.GetValue<string>("eshop-cloudnative:global:api-gateway")}/catalog");

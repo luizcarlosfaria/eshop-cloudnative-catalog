@@ -5,14 +5,17 @@ using Microsoft.AspNetCore.Mvc;
 namespace eShopCloudNative.Catalog.Controllers;
 [ApiController]
 [Route("[controller]")]
-public class CategoryController : ControllerBase, ICategoryService
+public class PublicCatalogController : ControllerBase, IPublicCatalogService
 {
-    private readonly ICategoryService categoryService;
+    private readonly IPublicCatalogService categoryService;
 
-    public CategoryController(ICategoryService  categoryService)
+    public PublicCatalogController(IPublicCatalogService  categoryService)
     {
         this.categoryService = categoryService;
     }
+
+    [HttpGet("CategoriesForMenu", Name = "CategoriesForMenu")]
+    public async Task<IEnumerable<CategoryDto>> GetCategoriesForMenu() => await this.categoryService.GetCategoriesForMenu();
 
     [HttpGet("HomeCatalog", Name = "HomeCatalog")]
     public async Task<IEnumerable<CategoryDto>> GetHomeCatalog() => await this.categoryService.GetHomeCatalog();
