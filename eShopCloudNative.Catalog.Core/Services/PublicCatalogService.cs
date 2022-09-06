@@ -8,33 +8,19 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace eShopCloudNative.Catalog.Services;
-public class PublicCatalogService : IPublicCatalogService
+public class PublicCatalogService : BaseService, IPublicCatalogService
 {
-    private readonly IMapper mapper;
     private readonly CategoryQueryRepository categoryQuery;
 
-    public PublicCatalogService(IMapper mapper, CategoryQueryRepository categoryQuery)
+    public PublicCatalogService(IMapper mapper, CategoryQueryRepository categoryQuery): base(mapper)
     {
-        this.mapper = mapper;
         this.categoryQuery = categoryQuery;
     }
 
-    public async Task<IEnumerable<CategoryDto>> GetCategoriesForMenu()
-    {
-        var dbResult = await categoryQuery.GetCategoriesForMenu();
+    public Task<IEnumerable<CategoryDto>> GetCategoriesForMenu()
+        => this.ExecuteAndAdapt<CategoryDto, Category>(() => this.categoryQuery.GetCategoriesForMenu());
 
-        var apiResult = mapper.Map<IEnumerable<CategoryDto>>(dbResult);
-
-        return apiResult;
-    }
-
-    public async Task<IEnumerable<CategoryDto>> GetHomeCatalog()
-    {
-        var dbResult = await categoryQuery.GetHomeCatalog();
-
-        var apiResult = mapper.Map<IEnumerable<CategoryDto>>(dbResult);
-
-        return apiResult;
-    }
+    public Task<IEnumerable<CategoryDto>> GetHomeCatalog()
+        => this.ExecuteAndAdapt<CategoryDto, Category>(() => this.categoryQuery.GetHomeCatalog());
 
 }
