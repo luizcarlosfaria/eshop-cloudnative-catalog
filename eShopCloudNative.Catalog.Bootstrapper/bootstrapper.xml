@@ -1,12 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <objects xmlns="http://www.springframework.net">
 
-    <object name="BootstrapperService" type="eShopCloudNative.Catalog.Bootstrapper.BootstrapperService, eShopCloudNative.Catalog.Bootstrapper">
+    <object name="BootstrapperService" type="eShopCloudNative.Architecture.Bootstrap.BootstrapperService, eShopCloudNative.Architecture.Bootstrap">
         
         <property name="Services">
-            <list element-type="eShopCloudNative.Catalog.Bootstrapper.IBootstrapperService, eShopCloudNative.Catalog.Bootstrapper">
+            <list element-type="eShopCloudNative.Architecture.Bootstrap.IBootstrapperService, eShopCloudNative.Architecture.Bootstrap">
 
                 <object type="eShopCloudNative.Catalog.Bootstrapper.Postgres.PostgresBootstrapperService, eShopCloudNative.Catalog.Bootstrapper">
+                    <property name="Configuration" ref="Configuration" />
                     <property name="ServerEndpoint">
                         <object type="System.Net.DnsEndPoint, System.Net.Primitives">
                             <constructor-arg name="host" value="postgres" />
@@ -29,9 +30,32 @@
                     <property name="DatabaseToCreate" value="eshop_catalog_db" />
                 </object>
 
-                <object type="eShopCloudNative.Catalog.Bootstrapper.Minio.MinioBootstrapperService, eShopCloudNative.Catalog.Bootstrapper">
+                <object type="eShopCloudNative.Architecture.Minio.MinioBootstrapperService, eShopCloudNative.Architecture.Bootstrap">
+                    <property name="Configuration" ref="Configuration" />
                     <property name="WithSSL" value="false" />
-                    <property name="BucketsToCreate" value="catalog-images,catalog-assets" />
+                    <property name="BucketsToCreate">
+                        <list element-type="eShopCloudNative.Architecture.Minio.MinioBucket, eShopCloudNative.Architecture.Bootstrap">
+
+                            <object type="eShopCloudNative.Architecture.Minio.MinioBucket, eShopCloudNative.Architecture.Bootstrap">
+                                <property name="BucketName" value="catalog-images" />
+                                <property name="Policy" >
+                                    <object type="eShopCloudNative.Architecture.Minio.PublicPolicy, eShopCloudNative.Architecture.Bootstrap" >
+                                        <property name="BucketName" value="catalog-images" />
+                                    </object>
+                                </property>
+                            </object>
+
+                            <object type="eShopCloudNative.Architecture.Minio.MinioBucket, eShopCloudNative.Architecture.Bootstrap">
+                                <property name="BucketName" value="catalog-assets" />
+                                <property name="Policy" >
+                                    <object type="eShopCloudNative.Architecture.Minio.PublicPolicy, eShopCloudNative.Architecture.Bootstrap" >
+                                        <property name="BucketName" value="catalog-assets" />
+                                    </object>
+                                </property>
+                            </object>
+                            
+                        </list>
+                    </property>
                     <property name="ServerEndpoint">
                         <object type="System.Net.DnsEndPoint, System.Net.Primitives">
                             <constructor-arg name="host" value="minio" />
@@ -47,6 +71,7 @@
                 </object>
 
                 <object type="eShopCloudNative.Catalog.Bootstrapper.Sample.SampleDataBootstrapperService, eShopCloudNative.Catalog.Bootstrapper">
+                    <property name="Configuration" ref="Configuration" />
                     <property name="WithSSL" value="false" />
                     <property name="BucketName" value="catalog-images" />
                     <property name="ServerEndpoint">
@@ -62,6 +87,7 @@
                         </object>
                     </property>
                 </object>
+                
             </list>
         </property>
        

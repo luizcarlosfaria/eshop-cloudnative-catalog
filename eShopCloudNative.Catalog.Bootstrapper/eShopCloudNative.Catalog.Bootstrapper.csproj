@@ -13,6 +13,7 @@
 
 
     <ItemGroup>
+        <PackageReference Include="eShopCloudNative.Architecture.Bootstrap" Version="0.0.5-alpha" />
         <PackageReference Include="FluentMigrator" Version="3.3.2" />
         <PackageReference Include="FluentMigrator.Runner" Version="3.3.2" />
         <PackageReference Include="FluentMigrator.Runner.Postgres" Version="3.3.2" />

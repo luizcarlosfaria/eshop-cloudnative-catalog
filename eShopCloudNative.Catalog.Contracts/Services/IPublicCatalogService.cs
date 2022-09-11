@@ -12,10 +12,10 @@ namespace eShopCloudNative.Catalog.Services;
 
 public interface IPublicCatalogService
 {
-    [Get("/PublicCatalog/HomeCatalog")]
+    [Get("/Public/Catalog/HomeCatalog")]
     Task<IEnumerable<CategoryDto>> GetHomeCatalog();
 
 
-    [Get("/PublicCatalog/CategoriesForMenu")]
+    [Get("/Public/Catalog/CategoriesForMenu")]
     Task<IEnumerable<CategoryDto>> GetCategoriesForMenu();
 }

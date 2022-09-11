@@ -7,6 +7,7 @@ COPY eShopCloudNative.Catalog.Bootstrapper/Assets /app/Assets
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
+COPY ./nuget.config ./
 COPY ["eShopCloudNative.Catalog.Bootstrapper/eShopCloudNative.Catalog.Bootstrapper.csproj", "eShopCloudNative.Catalog.Bootstrapper/"]
 RUN dotnet restore "eShopCloudNative.Catalog.Bootstrapper/eShopCloudNative.Catalog.Bootstrapper.csproj"
 COPY . .

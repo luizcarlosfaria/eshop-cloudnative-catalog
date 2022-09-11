@@ -1,4 +1,5 @@
-﻿using eShopCloudNative.Catalog.Architecture.Data;
+﻿using eShopCloudNative.Architecture.Bootstrap;
+using eShopCloudNative.Catalog.Architecture.Data;
 using eShopCloudNative.Catalog.Entities;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,6 +18,8 @@ internal class SampleDataBootstrapperService : IBootstrapperService
     private IServiceScope scope;
     private ISession session;
     private MinioClient minio;
+    
+    public IConfiguration Configuration { get; set; }
 
     public string BucketName { get; set; }
 
@@ -25,9 +28,11 @@ internal class SampleDataBootstrapperService : IBootstrapperService
 
     public bool WithSSL { get; set; }
 
-    public Task InitializeAsync(IConfiguration configuration)
+
+    public Task InitializeAsync()
     {
-        if (configuration.GetValue<bool>("boostrap:sample-data"))
+
+        if (this.Configuration.GetValue<bool>("boostrap:sample-data"))
         {
             this.serviceProvider = new ServiceCollection()
                 .AddNHibernate(cfg => cfg
@@ -36,7 +41,7 @@ internal class SampleDataBootstrapperService : IBootstrapperService
                 .AddMappingsFromAssemblyOf<CategoryMapping>()
                 .RegisterSession()
             )
-            .AddTransient(sp => configuration)
+            .AddTransient(sp => this.Configuration)
             .BuildServiceProvider();
 
             this.minio = new MinioClient()
@@ -48,9 +53,9 @@ internal class SampleDataBootstrapperService : IBootstrapperService
         return Task.CompletedTask;
     }
 
-    public async Task ExecuteAsync(IConfiguration configuration)
+    public async Task ExecuteAsync()
     {
-        if (configuration.GetValue<bool>("boostrap:sample-data"))
+        if (this.Configuration.GetValue<bool>("boostrap:sample-data"))
         {
             using var scope = this.serviceProvider.CreateScope();
             this.scope = scope;

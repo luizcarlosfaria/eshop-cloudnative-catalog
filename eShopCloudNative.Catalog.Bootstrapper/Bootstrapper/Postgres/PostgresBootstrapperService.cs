@@ -11,22 +11,23 @@ using eShopCloudNative.Catalog.Bootstrapper.Postgres.Migrations;
 using FluentMigrator.Runner.VersionTableInfo;
 using eShopCloudNative.Catalog.Architecture.Data;
 using Microsoft.Extensions.Configuration;
+using eShopCloudNative.Architecture.Bootstrap;
 
 namespace eShopCloudNative.Catalog.Bootstrapper.Postgres;
 
 public class PostgresBootstrapperService : IBootstrapperService
 {
-
     public System.Net.NetworkCredential SysAdminUser { get; set; }
     public System.Net.DnsEndPoint ServerEndpoint { get; set; }
     public System.Net.NetworkCredential AppUser { get; set; }
     public string DatabaseToCreate { get; set; }
     public string InitialDatabase { get; set; }
 
+    public IConfiguration Configuration { get; set; }
 
-    public Task InitializeAsync(IConfiguration configuration)
+    public Task InitializeAsync()
     {
-        if (configuration.GetValue<bool>("boostrap:postgres"))
+        if (this.Configuration.GetValue<bool>("boostrap:postgres"))
         {
             if (this.SysAdminUser is null)
                 throw new InvalidOperationException("SysAdminUser can't be null");
@@ -50,9 +51,9 @@ public class PostgresBootstrapperService : IBootstrapperService
         return Task.CompletedTask;
     }
 
-    public async Task ExecuteAsync(IConfiguration configuration)
+    public async Task ExecuteAsync()
     {
-        if (configuration.GetValue<bool>("boostrap:postgres"))
+        if (this.Configuration.GetValue<bool>("boostrap:postgres"))
         {
             using var rootConnection = new NpgsqlConnection(this.BuildConnectionString(this.InitialDatabase, this.SysAdminUser));
             await rootConnection.OpenAsync();
