@@ -1,5 +1,6 @@
 ﻿using eShopCloudNative.Architecture.Bootstrap;
 using eShopCloudNative.Architecture.Data;
+using eShopCloudNative.Architecture.Minio;
 using eShopCloudNative.Catalog.Architecture.Data;
 using eShopCloudNative.Catalog.Entities;
 using Microsoft.Extensions.Configuration;
@@ -18,17 +19,12 @@ internal class SampleDataBootstrapperService : IBootstrapperService
     private ServiceProvider serviceProvider;
     private IServiceScope scope;
     private ISession session;
-    private MinioClient minio;
-    
+
+    public IMinioClientAdapter Minio { get; set; }
+
     public IConfiguration Configuration { get; set; }
 
     public string BucketName { get; set; }
-
-    public System.Net.NetworkCredential Credentials { get; set; }
-    public System.Net.DnsEndPoint ServerEndpoint { get; set; }
-
-    public bool WithSSL { get; set; }
-
 
     public Task InitializeAsync()
     {
@@ -45,11 +41,6 @@ internal class SampleDataBootstrapperService : IBootstrapperService
             .AddTransient(sp => this.Configuration)
             .BuildServiceProvider();
 
-            this.minio = new MinioClient()
-                .WithEndpoint(this.ServerEndpoint.Host, this.ServerEndpoint.Port)
-                .WithCredentials(this.Credentials.UserName, this.Credentials.Password);
-
-            this.minio = (this.WithSSL ? minio.WithSSL() : minio).Build();
         }
         return Task.CompletedTask;
     }
@@ -64,12 +55,11 @@ internal class SampleDataBootstrapperService : IBootstrapperService
             using var session = scope.ServiceProvider.GetRequiredService<ISession>();
             this.session = session;
 
-            await this.ÇreateSampleData();
+            await this.CreateSampleData();
         }
-
     }
 
-    private async Task ÇreateSampleData()
+    private async Task CreateSampleData()
     {
         List<ICatalogEntity> itensToSave = new List<ICatalogEntity>();
 
@@ -165,7 +155,7 @@ internal class SampleDataBootstrapperService : IBootstrapperService
 
     private async Task UploadImage(Image image)
     {
-        await this.minio.PutObjectAsync((new PutObjectArgs())
+        await this.Minio.PutObjectAsync((new PutObjectArgs())
                     .WithBucket(this.BucketName)
                     .WithContentType($"image/{Path.GetExtension(image.FileName).Substring(1)}")
                     .WithFileName($"/app/Assets/{image.FileName}")

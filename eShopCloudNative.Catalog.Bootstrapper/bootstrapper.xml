@@ -1,8 +1,27 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <objects xmlns="http://www.springframework.net">
 
+
+    <object name="Minio" type="eShopCloudNative.Architecture.Minio.MinioClientAdapter, eShopCloudNative.Architecture.Bootstrap">
+        <constructor-arg name="serverEndpoint">
+            <object type="System.Net.DnsEndPoint, System.Net.Primitives">
+                <constructor-arg name="host" value="minio" />
+                <constructor-arg name="port" value="9000" />
+            </object>
+        </constructor-arg>
+        <constructor-arg name="credentials">
+            <object type="System.Net.NetworkCredential, System.Net.Primitives">
+                <constructor-arg name="userName" value="minioadmin" />
+                <constructor-arg name="password" value="minioadmin" />
+            </object>
+        </constructor-arg>
+        <constructor-arg name="withSSL" value="false" />
+    </object>
+
+
+
     <object name="BootstrapperService" type="eShopCloudNative.Architecture.Bootstrap.BootstrapperService, eShopCloudNative.Architecture.Bootstrap">
-        
+
         <property name="Services">
             <list element-type="eShopCloudNative.Architecture.Bootstrap.IBootstrapperService, eShopCloudNative.Architecture.Bootstrap">
 
@@ -15,7 +34,7 @@
                             <constructor-arg name="host" value="postgres" />
                             <constructor-arg name="port" value="5432" />
                         </object>
-                    </property>                    
+                    </property>
                     <property name="SysAdminUser">
                         <object type="System.Net.NetworkCredential, System.Net.Primitives">
                             <constructor-arg name="userName" value="eshop_user" />
@@ -34,7 +53,7 @@
 
                 <object type="eShopCloudNative.Architecture.Minio.MinioBootstrapperService, eShopCloudNative.Architecture.Bootstrap">
                     <property name="Configuration" ref="Configuration" />
-                    <property name="WithSSL" value="false" />
+                    <property name="Minio" ref="Minio" />
                     <property name="BucketsToCreate">
                         <list element-type="eShopCloudNative.Architecture.Minio.MinioBucket, eShopCloudNative.Architecture.Bootstrap">
 
@@ -55,44 +74,20 @@
                                     </object>
                                 </property>
                             </object>
-                            
+
                         </list>
-                    </property>
-                    <property name="ServerEndpoint">
-                        <object type="System.Net.DnsEndPoint, System.Net.Primitives">
-                            <constructor-arg name="host" value="minio" />
-                            <constructor-arg name="port" value="9000" />
-                        </object>
-                    </property>
-                    <property name="Credentials">
-                        <object type="System.Net.NetworkCredential, System.Net.Primitives">
-                            <constructor-arg name="userName" value="minioadmin" />
-                            <constructor-arg name="password" value="minioadmin" />
-                        </object>
                     </property>
                 </object>
 
                 <object type="eShopCloudNative.Catalog.Bootstrapper.Sample.SampleDataBootstrapperService, eShopCloudNative.Catalog.Bootstrapper">
                     <property name="Configuration" ref="Configuration" />
-                    <property name="WithSSL" value="false" />
+                    <property name="Minio" ref="Minio" />
                     <property name="BucketName" value="catalog-images" />
-                    <property name="ServerEndpoint">
-                        <object type="System.Net.DnsEndPoint, System.Net.Primitives">
-                            <constructor-arg name="host" value="minio" />
-                            <constructor-arg name="port" value="9000" />
-                        </object>
-                    </property>
-                    <property name="Credentials">
-                        <object type="System.Net.NetworkCredential, System.Net.Primitives">
-                            <constructor-arg name="userName" value="minioadmin" />
-                            <constructor-arg name="password" value="minioadmin" />
-                        </object>
-                    </property>
                 </object>
-                
+
             </list>
         </property>
-       
+
     </object>
 </objects>
 
