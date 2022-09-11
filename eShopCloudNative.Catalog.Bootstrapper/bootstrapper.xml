@@ -6,8 +6,10 @@
         <property name="Services">
             <list element-type="eShopCloudNative.Architecture.Bootstrap.IBootstrapperService, eShopCloudNative.Architecture.Bootstrap">
 
-                <object type="eShopCloudNative.Catalog.Bootstrapper.Postgres.PostgresBootstrapperService, eShopCloudNative.Catalog.Bootstrapper">
+                <object type="eShopCloudNative.Architecture.Bootstrap.Postgres.PostgresBootstrapperService, eShopCloudNative.Architecture.Bootstrap">
                     <property name="Configuration" ref="Configuration" />
+                    <property name="SchemaToSetPermissions" ref="DatabaseSchema" />
+                    <property name="MigrationType" value="eShopCloudNative.Catalog.Bootstrapper.Postgres.Migrations.Migration00001, eShopCloudNative.Catalog.Bootstrapper" />
                     <property name="ServerEndpoint">
                         <object type="System.Net.DnsEndPoint, System.Net.Primitives">
                             <constructor-arg name="host" value="postgres" />
