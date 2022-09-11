@@ -15,7 +15,7 @@ public class ProductMapping : ClassMap<Product>
     {
         this.DynamicUpdate();
         this.Table(nameof(Product));
-        this.Schema(Constants.Schema);
+        this.Schema(CatalogConstants.Schema);
 
         this.Id(it => it.ProductId).GeneratedBy.Sequence("product_seq");
         this.Map(it => it.Name).Length(300).Not.Nullable();

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace eShopCloudNative.Catalog.Entities;
-public partial class Product: ICatalogBaseEntity
+public partial class Product: ICatalogEntity
 {
    
 }

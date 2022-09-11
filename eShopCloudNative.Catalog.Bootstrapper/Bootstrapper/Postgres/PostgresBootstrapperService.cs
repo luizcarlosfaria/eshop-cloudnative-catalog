@@ -123,10 +123,10 @@ public class PostgresBootstrapperService : IBootstrapperService
     {
         using var command = connection.CreateCommand();
 
-        command.CommandText = $"GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA {Constants.Schema} TO {this.AppUser.UserName};";
+        command.CommandText = $"GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA {CatalogConstants.Schema} TO {this.AppUser.UserName};";
         await command.ExecuteNonQueryAsync();
 
-        command.CommandText = $"GRANT UPDATE, USAGE, SELECT ON ALL SEQUENCES IN SCHEMA {Constants.Schema} TO {this.AppUser.UserName};";
+        command.CommandText = $"GRANT UPDATE, USAGE, SELECT ON ALL SEQUENCES IN SCHEMA {CatalogConstants.Schema} TO {this.AppUser.UserName};";
         await command.ExecuteNonQueryAsync();
 
     }

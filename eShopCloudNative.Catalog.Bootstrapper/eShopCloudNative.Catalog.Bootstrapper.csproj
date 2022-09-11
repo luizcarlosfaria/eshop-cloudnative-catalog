@@ -13,7 +13,6 @@
 
 
     <ItemGroup>
-        <PackageReference Include="eShopCloudNative.Architecture.Bootstrap" Version="0.0.5-alpha" />
         <PackageReference Include="FluentMigrator" Version="3.3.2" />
         <PackageReference Include="FluentMigrator.Runner" Version="3.3.2" />
         <PackageReference Include="FluentMigrator.Runner.Postgres" Version="3.3.2" />
@@ -39,6 +38,22 @@
         <None Update="bootstrapper.xml">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
+    </ItemGroup>
+
+    <!--
+    Dependência Condicional 
+    Em dev usando referência de projeto, 
+    Em prod usando dependência de pacotes
+    -->
+    <ItemGroup Condition=" '$(Configuration)' == 'Debug' ">
+        <ProjectReference Include="..\..\architecture\eShopCloudNative.Architecture.Data\eShopCloudNative.Architecture.Data.csproj" />
+        <ProjectReference Include="..\..\architecture\eShopCloudNative.Architecture.Bootstrap\eShopCloudNative.Architecture.Bootstrap.csproj" />
+        <ProjectReference Include="..\..\architecture\eShopCloudNative.Architecture\eShopCloudNative.Architecture.csproj" />
+    </ItemGroup>
+    <ItemGroup Condition=" '$(Configuration)' == 'Release' ">
+        <PackageReference Include="eShopCloudNative.Architecture.Data" Version="0.*" />
+        <PackageReference Include="eShopCloudNative.Architecture.Bootstrap" Version="0.*" />
+        <PackageReference Include="eShopCloudNative.Architecture" Version="0.*" />
     </ItemGroup>
 
 </Project>

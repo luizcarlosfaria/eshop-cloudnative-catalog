@@ -1,8 +1,6 @@
-using eShopCloudNative.Catalog.Architecture.Configuration;
 using eShopCloudNative.Catalog.Services;
 using Minio;
 using Refit;
-using Endpoint = eShopCloudNative.Catalog.Architecture.Configuration.Endpoint;
 
 var builder = WebApplication.CreateBuilder(args);
 

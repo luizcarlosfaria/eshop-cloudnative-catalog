@@ -15,7 +15,7 @@ public class ImageMapping : ClassMap<Image>
     {
         this.DynamicUpdate();
         this.Table(nameof(Image));
-        this.Schema(Constants.Schema);
+        this.Schema(CatalogConstants.Schema);
 
         this.Id(it => it.ImageId).GeneratedBy.Assigned();
         this.Map(it => it.FileName).Length(400).Not.Nullable();

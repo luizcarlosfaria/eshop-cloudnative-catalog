@@ -1,4 +1,5 @@
 using AutoMapper;
+using eShopCloudNative.Architecture.Data;
 using eShopCloudNative.Catalog.Architecture.Data;
 using eShopCloudNative.Catalog.Dto;
 using eShopCloudNative.Catalog.Entities;
@@ -21,7 +22,7 @@ builder.Services.AddControllers().AddJsonOptions(x => x.JsonSerializerOptions.Re
 
 
 builder.Services.AddNHibernate(cfg => cfg
-    .Schema(Constants.Schema)
+    .Schema(CatalogConstants.Schema)
     .ConnectionStringKey("catalog")
     .AddMappingsFromAssemblyOf<CategoryMapping>()
     .RegisterSession()

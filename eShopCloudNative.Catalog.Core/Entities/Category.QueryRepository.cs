@@ -1,5 +1,4 @@
-﻿using eShopCloudNative.Catalog.Architecture.Data.Repositories;
-using NHibernate;
+﻿using NHibernate;
 using NHibernate.Criterion;
 using NHibernate.Criterion.Lambda;
 using NHibernate.Hql;
@@ -13,13 +12,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using NHibernate.Transform;
+using eShopCloudNative.Architecture.Data.Repositories;
+using eShopCloudNative.Catalog.Architecture.Data;
 
 namespace eShopCloudNative.Catalog.Entities;
 
 
 
 
-public class CategoryQueryRepository : QueryRepository<Category>
+public class CategoryQueryRepository : CatalogQueryRepository<Category>
 {
     public CategoryQueryRepository(ISession session) : base(session)
     {

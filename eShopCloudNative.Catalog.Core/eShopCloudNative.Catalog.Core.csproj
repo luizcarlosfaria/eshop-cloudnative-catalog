@@ -8,11 +8,14 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="AutoMapper" Version="11.0.1" />
-      <PackageReference Include="FluentNHibernate" Version="3.1.0" />
-      <PackageReference Include="NHibernate" Version="5.3.12" />
-      <PackageReference Include="Npgsql" Version="6.0.6" />
+        <PackageReference Include="AutoMapper" Version="11.0.1" />
+        <PackageReference Include="FluentNHibernate" Version="3.1.0" />
+        <PackageReference Include="NHibernate" Version="5.3.12" />
+        <PackageReference Include="Npgsql" Version="6.0.6" />
     </ItemGroup>
+
+
+
 
     <ItemGroup>
         <ProjectReference Include="..\eShopCloudNative.Catalog.Architecture\eShopCloudNative.Catalog.Architecture.csproj" />
@@ -36,9 +39,19 @@
         <Compile Update="**\*.QueryRepository.cs">
             <DependentUpon>$([System.String]::Copy(%(Filename)).Replace('.QueryRepository', '.cs'))</DependentUpon>
         </Compile>
-        
+
     </ItemGroup>
 
-    
+    <!--
+    Dependência Condicional 
+    Em dev usando referência de projeto, 
+    Em prod usando dependência de pacotes
+    -->
+    <ItemGroup Condition=" '$(Configuration)' == 'Debug' ">
+        <ProjectReference Include="..\..\architecture\eShopCloudNative.Architecture.Data\eShopCloudNative.Architecture.Data.csproj" />
+    </ItemGroup>
+    <ItemGroup Condition=" '$(Configuration)' == 'Release' ">
+        <PackageReference Include="eShopCloudNative.Architecture.Data" Version="0.*" />
+    </ItemGroup>
 
 </Project>

@@ -27,9 +27,3 @@ await bootstrapperService.InitializeAsync();
 
 await bootstrapperService.ExecuteAsync();
 
-
-public class ObjectContainer
-{
-    public static object Define(object defined) => defined;
-
-}

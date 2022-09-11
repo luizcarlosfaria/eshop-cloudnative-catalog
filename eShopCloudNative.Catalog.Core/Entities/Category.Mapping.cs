@@ -14,7 +14,7 @@ public class CategoryMapping : ClassMap<Category>
     {
         this.DynamicUpdate();
         this.Table(nameof(Category));
-        this.Schema(Constants.Schema);
+        this.Schema(CatalogConstants.Schema);
 
         this.Id(it => it.CategoryId).GeneratedBy.Sequence("category_seq");
         this.Map(it => it.Name).Length(300).Not.Nullable();

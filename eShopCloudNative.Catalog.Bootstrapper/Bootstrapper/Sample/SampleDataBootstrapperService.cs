@@ -1,4 +1,5 @@
 ﻿using eShopCloudNative.Architecture.Bootstrap;
+using eShopCloudNative.Architecture.Data;
 using eShopCloudNative.Catalog.Architecture.Data;
 using eShopCloudNative.Catalog.Entities;
 using Microsoft.Extensions.Configuration;
@@ -36,7 +37,7 @@ internal class SampleDataBootstrapperService : IBootstrapperService
         {
             this.serviceProvider = new ServiceCollection()
                 .AddNHibernate(cfg => cfg
-                .Schema(Constants.Schema)
+                .Schema(CatalogConstants.Schema)
                 .ConnectionStringKey("catalog")
                 .AddMappingsFromAssemblyOf<CategoryMapping>()
                 .RegisterSession()
@@ -70,7 +71,7 @@ internal class SampleDataBootstrapperService : IBootstrapperService
 
     private async Task ÇreateSampleData()
     {
-        List<ICatalogBaseEntity> itensToSave = new List<ICatalogBaseEntity>();
+        List<ICatalogEntity> itensToSave = new List<ICatalogEntity>();
 
         if (this.session.Query<CategoryType>().ToList().Count == 0)
         {

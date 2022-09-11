@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace eShopCloudNative.Catalog.Entities;
-public partial class CategoryType : ICatalogBaseEntity
+public partial class CategoryType : ICatalogEntity
 {
    
 }
