@@ -16,7 +16,7 @@ public class CatalogController : Controller
     }
 
     private CatalogController SetViewBag() {
-        this.ViewBag.categoryService = categoryService;
+        this.ViewBag.categoryService = this.categoryService;
         return this;
     }
 

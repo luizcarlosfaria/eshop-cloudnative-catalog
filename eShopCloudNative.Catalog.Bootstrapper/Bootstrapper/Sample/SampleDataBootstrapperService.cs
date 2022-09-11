@@ -1,4 +1,5 @@
-﻿using eShopCloudNative.Architecture.Bootstrap;
+﻿using Ardalis.GuardClauses;
+using eShopCloudNative.Architecture.Bootstrap;
 using eShopCloudNative.Architecture.Data;
 using eShopCloudNative.Architecture.Minio;
 using eShopCloudNative.Catalog.Architecture.Data;
@@ -28,6 +29,9 @@ internal class SampleDataBootstrapperService : IBootstrapperService
 
     public Task InitializeAsync()
     {
+        Guard.Against.Null(this.Minio, nameof(this.Minio));
+        Guard.Against.Null(this.Configuration, nameof(this.Configuration));
+        Guard.Against.NullOrWhiteSpace(this.BucketName, nameof(this.BucketName));
 
         if (this.Configuration.GetValue<bool>("boostrap:sample-data"))
         {
