@@ -25,6 +25,73 @@
         <property name="Services">
             <list element-type="eShopCloudNative.Architecture.Bootstrap.IBootstrapperService, eShopCloudNative.Architecture.Bootstrap">
 
+                <object type="eShopCloudNative.Architecture.Bootstrap.RabbitMQ.RabbbitMQBootstrapperService, eShopCloudNative.Architecture.Bootstrap">
+                    <property name="Configuration" ref="Configuration" />
+                    <property name="AmqpConnectionFactory" >
+                        <object type="RabbitMQ.Client.ConnectionFactory, RabbitMQ.Client">
+                            <property name="HostName" value="rabbitmq" />
+                            <property name="Port" value="5672" />
+                            <property name="VirtualHost" value="EnterpriseApplicationLog" />
+                            <property name="UserName" value="eshop_user" />
+                            <property name="Password" value="eshop_pass" />
+                        </object>
+                    </property>
+                    <property name="HttpUri" value="http://rabbitmq:15672" />
+                    <property name="HttpApiCredentials">
+                        <object type="System.Net.NetworkCredential, System.Net.Primitives">
+                            <constructor-arg name="userName" value="eshop_user" />
+                            <constructor-arg name="password" value="eshop_pass" />
+                        </object>
+                    </property>
+                    <property name="Commands">
+                        <list element-type="eShopCloudNative.Architecture.Bootstrap.RabbitMQ.IRabbitMQCommand, eShopCloudNative.Architecture.Bootstrap">
+                            <object type="eShopCloudNative.Architecture.Bootstrap.RabbitMQ.AdminCommands.CreateUserCommand, eShopCloudNative.Architecture.Bootstrap">
+                                <property name="Credential">
+                                    <object type="System.Net.NetworkCredential, System.Net.Primitives">
+                                        <constructor-arg name="userName" value="log_user" />
+                                        <constructor-arg name="password" value="log_pass" />
+                                    </object>
+                                </property>
+                                <property name="Tags" value="administrator" />
+                            </object>
+                            <object type="eShopCloudNative.Architecture.Bootstrap.RabbitMQ.AdminCommands.CreateVhostCommand, eShopCloudNative.Architecture.Bootstrap">
+                                <property name="Name" value="EnterpriseApplicationLog" />
+                            </object>
+                            <object type="eShopCloudNative.Architecture.Bootstrap.RabbitMQ.AdminCommands.SetUserPermissionCommand, eShopCloudNative.Architecture.Bootstrap">
+                                <property name="Vhost" value="EnterpriseApplicationLog" />
+                                <property name="UserName" value="log_user" />
+                                <property name="ConfigurePattern" value=".*" />
+                                <property name="WritePattern" value=".*" />
+                                <property name="ReadPattern" value=".*" />
+                            </object>
+                            <object type="eShopCloudNative.Architecture.Bootstrap.RabbitMQ.AdminCommands.SetUserPermissionCommand, eShopCloudNative.Architecture.Bootstrap">
+                                <property name="Vhost" value="EnterpriseApplicationLog" />
+                                <property name="UserName" value="eshop_user" />
+                                <property name="ConfigurePattern" value=".*" />
+                                <property name="WritePattern" value=".*" />
+                                <property name="ReadPattern" value=".*" />
+                            </object>
+                            <object type="eShopCloudNative.Architecture.Bootstrap.RabbitMQ.AmqpCommands.ExchangeDeclareCommand, eShopCloudNative.Architecture.Bootstrap">
+                                <property name="Exchange" value="log_exchange" />
+                                <property name="Type" value="fanout" />
+                                <property name="Durable" value="true" />
+                                <property name="AutoDelete" value="false" />
+                            </object>
+                            <object type="eShopCloudNative.Architecture.Bootstrap.RabbitMQ.AmqpCommands.QueueDeclareCommand, eShopCloudNative.Architecture.Bootstrap">
+                                <property name="Queue" value="log_queue" />
+                                <property name="Durable" value="true" />
+                                <property name="Exclusive" value="false" />
+                                <property name="AutoDelete" value="false" />
+                            </object>
+                            <object type="eShopCloudNative.Architecture.Bootstrap.RabbitMQ.AmqpCommands.QueueBindCommand, eShopCloudNative.Architecture.Bootstrap">
+                                <property name="Queue" value="log_queue" />
+                                <property name="Exchange" value="log_exchange" />
+                                <property name="RoutingKey" value="" />
+                            </object>
+                        </list>
+                    </property>
+                </object>
+
                 <object type="eShopCloudNative.Architecture.Bootstrap.Postgres.PostgresBootstrapperService, eShopCloudNative.Architecture.Bootstrap">
                     <property name="Configuration" ref="Configuration" />
                     <property name="SchemaToSetPermissions" ref="DatabaseSchema" />

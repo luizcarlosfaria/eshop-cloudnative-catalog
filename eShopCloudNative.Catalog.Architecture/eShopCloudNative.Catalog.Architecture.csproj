@@ -9,7 +9,6 @@
 
     <ItemGroup>
         <PackageReference Include="AutoMapper" Version="11.0.1" />
-        <PackageReference Include="eShopCloudNative.Architecture" Version="0.0.6-beta" />
         <PackageReference Include="FluentMigrator" Version="3.3.2" />
         <PackageReference Include="FluentNHibernate" Version="3.1.0" />
         <PackageReference Include="Microsoft.Extensions.Configuration" Version="6.0.1" />
@@ -29,8 +28,8 @@
         <ProjectReference Include="..\..\architecture\eShopCloudNative.Architecture\eShopCloudNative.Architecture.csproj" />
     </ItemGroup>
     <ItemGroup Condition=" '$(Configuration)' == 'Release' ">
-        <PackageReference Include="eShopCloudNative.Architecture.Data" Version="0.*" />
-        <PackageReference Include="eShopCloudNative.Architecture" Version="0.*" />
+        <PackageReference Include="eShopCloudNative.Architecture.Data" Version="0.*-*" />
+        <PackageReference Include="eShopCloudNative.Architecture" Version="0.*-*" />
     </ItemGroup>
 
 </Project>

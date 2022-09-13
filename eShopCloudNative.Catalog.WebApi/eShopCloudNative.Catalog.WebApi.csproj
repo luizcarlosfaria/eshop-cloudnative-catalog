@@ -30,8 +30,8 @@
         <ProjectReference Include="..\..\architecture\eShopCloudNative.Architecture\eShopCloudNative.Architecture.csproj" />
     </ItemGroup>
     <ItemGroup Condition=" '$(Configuration)' == 'Release' ">
-        <PackageReference Include="eShopCloudNative.Architecture.WebApi" Version="0.*" />
-        <PackageReference Include="eShopCloudNative.Architecture" Version="0.*" />
+        <!--<PackageReference Include="eShopCloudNative.Architecture.WebApi" Version="0.*-*" />-->
+        <PackageReference Include="eShopCloudNative.Architecture" Version="0.*-*" />
     </ItemGroup>
     
 </Project>

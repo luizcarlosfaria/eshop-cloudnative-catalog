@@ -1,5 +1,6 @@
 using AutoMapper;
 using eShopCloudNative.Architecture.Data;
+using eShopCloudNative.Architecture.Extensions;
 using eShopCloudNative.Catalog.Architecture.Data;
 using eShopCloudNative.Catalog.Dto;
 using eShopCloudNative.Catalog.Entities;
@@ -11,12 +12,17 @@ using NHibernate.Cfg;
 using NHibernate.Driver;
 using NHibernate.Mapping.ByCode;
 using NHibernate.Tool.hbm2ddl;
+using Serilog.Context;
+using Serilog.Core.Enrichers;
+using Serilog.Core;
 using System.Data;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Host.AddEnterpriseApplicationLog("Enterprise:Application:Log");
 
-// Add services to the container.
+EnterpriseApplicationLog.SetGlobalContext("eShopCloudNative.Catalog.WebApi");
+
 
 builder.Services.AddControllers().AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 

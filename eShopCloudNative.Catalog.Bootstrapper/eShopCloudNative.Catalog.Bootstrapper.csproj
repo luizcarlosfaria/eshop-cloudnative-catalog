@@ -51,9 +51,9 @@
         <ProjectReference Include="..\..\architecture\eShopCloudNative.Architecture\eShopCloudNative.Architecture.csproj" />
     </ItemGroup>
     <ItemGroup Condition=" '$(Configuration)' == 'Release' ">
-        <PackageReference Include="eShopCloudNative.Architecture.Data" Version="0.*" />
-        <PackageReference Include="eShopCloudNative.Architecture.Bootstrap" Version="0.*" />
-        <PackageReference Include="eShopCloudNative.Architecture" Version="0.*" />
+        <PackageReference Include="eShopCloudNative.Architecture.Data" Version="0.*-*" />
+        <PackageReference Include="eShopCloudNative.Architecture.Bootstrap" Version="0.*-*" />
+        <PackageReference Include="eShopCloudNative.Architecture" Version="0.*-*" />
     </ItemGroup>
 
 </Project>

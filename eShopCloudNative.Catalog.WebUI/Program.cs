@@ -1,8 +1,15 @@
+using eShopCloudNative.Architecture.Extensions;
 using eShopCloudNative.Catalog.Services;
 using Minio;
 using Refit;
+using Serilog.Context;
+using Serilog.Core.Enrichers;
+using Serilog.Core;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Host.AddEnterpriseApplicationLog("Enterprise:Application:Log");
+
+EnterpriseApplicationLog.SetGlobalContext("eShopCloudNative.Catalog.WebUI");
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -43,3 +50,5 @@ app.MapControllerRoute(
     pattern: "{controller=Catalog}/{action=Index}/{id?}");
 
 app.Run();
+
+
