@@ -1,6 +1,5 @@
 using AutoMapper;
 using eShopCloudNative.Architecture.Data;
-using eShopCloudNative.Architecture.Extensions;
 using eShopCloudNative.Catalog.Architecture.Data;
 using eShopCloudNative.Catalog.Dto;
 using eShopCloudNative.Catalog.Entities;
@@ -17,6 +16,7 @@ using Serilog.Core.Enrichers;
 using Serilog.Core;
 using System.Data;
 using System.Text.Json.Serialization;
+using eShopCloudNative.Architecture.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Host.AddEnterpriseApplicationLog("Enterprise:Application:Log");

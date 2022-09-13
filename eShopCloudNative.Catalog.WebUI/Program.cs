@@ -1,10 +1,10 @@
-using eShopCloudNative.Architecture.Extensions;
 using eShopCloudNative.Catalog.Services;
 using Minio;
 using Refit;
 using Serilog.Context;
 using Serilog.Core.Enrichers;
 using Serilog.Core;
+using eShopCloudNative.Architecture.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Host.AddEnterpriseApplicationLog("Enterprise:Application:Log");

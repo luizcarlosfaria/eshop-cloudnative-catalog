@@ -1,5 +1,6 @@
 ﻿using eShopCloudNative.Architecture.Bootstrap;
 using eShopCloudNative.Architecture.Extensions;
+using eShopCloudNative.Architecture.Logging;
 using eShopCloudNative.Catalog.Architecture.Data;
 using eShopCloudNative.Catalog.Bootstrapper;
 using Microsoft.AspNetCore.Builder;
@@ -33,6 +34,7 @@ builder.Services.AddSingleton<IHostedService>(sp =>
 });
 
 var app = builder.Build();
+
 
 app.Run();
 
