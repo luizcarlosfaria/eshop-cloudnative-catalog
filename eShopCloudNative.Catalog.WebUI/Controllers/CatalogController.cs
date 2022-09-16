@@ -7,16 +7,16 @@ namespace eShopCloudNative.Catalog.Controllers;
 public class CatalogController : Controller
 {
     private readonly ILogger<CatalogController> logger;
-    private readonly IPublicCatalogService categoryService;
+    private readonly IPublicCatalogService publicCatalogService;
 
-    public CatalogController(ILogger<CatalogController> logger, IPublicCatalogService categoryService)
+    public CatalogController(ILogger<CatalogController> logger, IPublicCatalogService publicCatalogService)
     {
         this.logger = logger;
-        this.categoryService = categoryService;
+        this.publicCatalogService = publicCatalogService;
     }
 
     private CatalogController SetViewBag() {
-        this.ViewBag.categoryService = this.categoryService;
+        this.ViewBag.publicCatalogService = this.publicCatalogService;
         return this;
     }
 

@@ -6,7 +6,8 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
         "eshop-cloudnative__global__api-gateway": "http://localhost:8000",
-        "eshop-cloudnative__global__minio__host": "localhost"
+        "eshop-cloudnative__global__minio__host": "localhost",
+        "Enterprise__Application__Log__Hostnames__0": "localhost"
       },
       "dotnetRunMessages": true,
       "applicationUrl": "https://localhost:7065;http://localhost:5065"

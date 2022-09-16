@@ -1,9 +1,17 @@
 ﻿@using eShopCloudNative.Catalog.Dto
 @using eShopCloudNative.Catalog.Services
 @{
-    IPublicCatalogService categoryService = this.ViewBag.categoryService;
+    IPublicCatalogService publicCatalogService = this.ViewBag.publicCatalogService;
 
-    IEnumerable<CategoryDto> categorias = await categoryService.GetHomeCatalog();
+    IEnumerable<CategoryDto> categorias = null; 
+    try
+    {
+        categorias = await publicCatalogService.GetHomeCatalog();
+    }
+    catch (Exception)
+    {
+        categorias = Array.Empty<CategoryDto>();
+    }
 
     ViewData["Title"] = "Home Page";
 }

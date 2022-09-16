@@ -7,6 +7,7 @@ using Serilog.Core;
 using eShopCloudNative.Architecture.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
+
 builder.Host.AddEnterpriseApplicationLog("Enterprise:Application:Log");
 
 EnterpriseApplicationLog.SetGlobalContext("eShopCloudNative.Catalog.WebUI");

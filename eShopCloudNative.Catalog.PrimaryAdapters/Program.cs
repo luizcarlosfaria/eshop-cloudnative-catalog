@@ -14,8 +14,9 @@ using eShopCloudNative.Catalog.Data.Mappings;
 using eShopCloudNative.Catalog.Data.Repositories;
 using eShopCloudNative.Architecture.HealthChecks;
 using RabbitMQ.Client;
+using System.Text;
 
-
+Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 var builder = WebApplication.CreateBuilder(args);
 builder.Host.AddEnterpriseApplicationLog("Enterprise:Application:Log");
 
