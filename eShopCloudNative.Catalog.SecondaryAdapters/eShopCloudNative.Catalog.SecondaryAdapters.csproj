@@ -1,9 +1,9 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
-        <Nullable>disable</Nullable>
+        <Nullable>enable</Nullable>
         <RootNamespace>eShopCloudNative.Catalog</RootNamespace>
     </PropertyGroup>
 
@@ -18,18 +18,8 @@
         <PackageReference Include="Npgsql" Version="6.0.6" />
     </ItemGroup>
 
-    <!--
-    Dependência Condicional 
-    Em dev usando referência de projeto, 
-    Em prod usando dependência de pacotes
-    -->
-    <ItemGroup Condition=" '$(Configuration)' == 'Debug' ">
-        <ProjectReference Include="..\..\architecture\eShopCloudNative.Architecture.Data\eShopCloudNative.Architecture.Data.csproj" />
-        <ProjectReference Include="..\..\architecture\eShopCloudNative.Architecture\eShopCloudNative.Architecture.csproj" />
-    </ItemGroup>
-    <ItemGroup Condition=" '$(Configuration)' == 'Release' ">
-        <PackageReference Include="eShopCloudNative.Architecture.Data" Version="0.*-*" />
-        <PackageReference Include="eShopCloudNative.Architecture" Version="0.*-*" />
+    <ItemGroup>
+      <ProjectReference Include="..\eShopCloudNative.Catalog.Core\eShopCloudNative.Catalog.Core.csproj" />
     </ItemGroup>
 
 </Project>

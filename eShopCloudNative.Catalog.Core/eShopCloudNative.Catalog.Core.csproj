@@ -10,7 +10,7 @@
     <ItemGroup>
         <PackageReference Include="AutoMapper" Version="11.0.1" />
         <PackageReference Include="FluentNHibernate" Version="3.1.0" />
-        <PackageReference Include="NHibernate" Version="5.3.12" />
+        <PackageReference Include="NHibernate" Version="5.3.13" />
         <PackageReference Include="Npgsql" Version="6.0.6" />
     </ItemGroup>
 
@@ -27,22 +27,16 @@
         <Compile Update="**\*.Data.cs">
             <DependentUpon>$([System.String]::Copy(%(Filename)).Replace('.Data', '.cs'))</DependentUpon>
         </Compile>
-
-        <Compile Update="**\*.Mapping.cs">
-            <DependentUpon>$([System.String]::Copy(%(Filename)).Replace('.Mapping', '.cs'))</DependentUpon>
+        
+        <Compile Update="**\*.IQueryRepository.cs">
+            <DependentUpon>$([System.String]::Copy(%(Filename)).Replace('.IQueryRepository', '.cs'))</DependentUpon>
         </Compile>
 
-        <Compile Update="**\*.Validation.cs">
-            <DependentUpon>$([System.String]::Copy(%(Filename)).Replace('.Validation', '.cs'))</DependentUpon>
-        </Compile>
-
-        <Compile Update="**\*.QueryRepository.cs">
-            <DependentUpon>$([System.String]::Copy(%(Filename)).Replace('.QueryRepository', '.cs'))</DependentUpon>
-        </Compile>
 
     </ItemGroup>
 
     <!--
+    ICategoryQueryRepository
     Dependência Condicional 
     Em dev usando referência de projeto, 
     Em prod usando dependência de pacotes

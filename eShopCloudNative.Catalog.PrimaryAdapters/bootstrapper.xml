@@ -1,0 +1,160 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<objects xmlns="http://www.springframework.net">
+
+
+    <object name="Minio" type="eShopCloudNative.Architecture.Minio.MinioClientAdapter, eShopCloudNative.Architecture.Bootstrap">
+        <constructor-arg name="serverEndpoint">
+            <object type="System.Net.DnsEndPoint, System.Net.Primitives">
+                <constructor-arg name="host" value="minio" />
+                <constructor-arg name="port" value="9000" />
+            </object>
+        </constructor-arg>
+        <constructor-arg name="credentials">
+            <object type="System.Net.NetworkCredential, System.Net.Primitives">
+                <constructor-arg name="userName" value="minioadmin" />
+                <constructor-arg name="password" value="minioadmin" />
+            </object>
+        </constructor-arg>
+        <constructor-arg name="withSSL" value="false" />
+    </object>
+
+
+
+    <object name="BootstrapperService" type="eShopCloudNative.Architecture.Bootstrap.BootstrapperService, eShopCloudNative.Architecture.Bootstrap">
+
+        <property name="Services">
+            <list element-type="eShopCloudNative.Architecture.Bootstrap.IBootstrapperService, eShopCloudNative.Architecture.Bootstrap">
+
+                <object type="eShopCloudNative.Architecture.Bootstrap.RabbitMQ.RabbbitMQBootstrapperService, eShopCloudNative.Architecture.Bootstrap">
+                    <property name="Configuration" ref="Configuration" />
+                    <property name="AmqpConnectionFactory">
+                        <object type="RabbitMQ.Client.ConnectionFactory, RabbitMQ.Client">
+                            <property name="HostName" value="rabbitmq" />
+                            <property name="Port" value="5672" />
+                            <property name="VirtualHost" value="EnterpriseApplicationLog" />
+                            <property name="UserName" value="eshop_user" />
+                            <property name="Password" value="eshop_pass" />
+                        </object>
+                    </property>
+                    <property name="HttpUri" value="http://rabbitmq:15672" />
+                    <property name="HttpApiCredentials">
+                        <object type="System.Net.NetworkCredential, System.Net.Primitives">
+                            <constructor-arg name="userName" value="eshop_user" />
+                            <constructor-arg name="password" value="eshop_pass" />
+                        </object>
+                    </property>
+                    <property name="Commands">
+                        <list element-type="eShopCloudNative.Architecture.Bootstrap.RabbitMQ.IRabbitMQCommand, eShopCloudNative.Architecture.Bootstrap">
+                            <object type="eShopCloudNative.Architecture.Bootstrap.RabbitMQ.AdminCommands.CreateUserCommand, eShopCloudNative.Architecture.Bootstrap">
+                                <property name="Credential">
+                                    <object type="System.Net.NetworkCredential, System.Net.Primitives">
+                                        <constructor-arg name="userName" value="log_user" />
+                                        <constructor-arg name="password" value="log_pass" />
+                                    </object>
+                                </property>
+                                <property name="Tags" value="administrator" />
+                            </object>
+                            <object type="eShopCloudNative.Architecture.Bootstrap.RabbitMQ.AdminCommands.CreateVhostCommand, eShopCloudNative.Architecture.Bootstrap">
+                                <property name="Name" value="EnterpriseApplicationLog" />
+                            </object>
+                            <object type="eShopCloudNative.Architecture.Bootstrap.RabbitMQ.AdminCommands.SetUserPermissionCommand, eShopCloudNative.Architecture.Bootstrap">
+                                <property name="Vhost" value="EnterpriseApplicationLog" />
+                                <property name="UserName" value="log_user" />
+                                <property name="ConfigurePattern" value=".*" />
+                                <property name="WritePattern" value=".*" />
+                                <property name="ReadPattern" value=".*" />
+                            </object>
+                            <object type="eShopCloudNative.Architecture.Bootstrap.RabbitMQ.AdminCommands.SetUserPermissionCommand, eShopCloudNative.Architecture.Bootstrap">
+                                <property name="Vhost" value="EnterpriseApplicationLog" />
+                                <property name="UserName" value="eshop_user" />
+                                <property name="ConfigurePattern" value=".*" />
+                                <property name="WritePattern" value=".*" />
+                                <property name="ReadPattern" value=".*" />
+                            </object>
+                            <object type="eShopCloudNative.Architecture.Bootstrap.RabbitMQ.AmqpCommands.ExchangeDeclareCommand, eShopCloudNative.Architecture.Bootstrap">
+                                <property name="Exchange" value="log_exchange" />
+                                <property name="Type" value="fanout" />
+                                <property name="Durable" value="true" />
+                                <property name="AutoDelete" value="false" />
+                            </object>
+                            <object type="eShopCloudNative.Architecture.Bootstrap.RabbitMQ.AmqpCommands.QueueDeclareCommand, eShopCloudNative.Architecture.Bootstrap">
+                                <property name="Queue" value="log_queue" />
+                                <property name="Durable" value="true" />
+                                <property name="Exclusive" value="false" />
+                                <property name="AutoDelete" value="false" />
+                            </object>
+                            <object type="eShopCloudNative.Architecture.Bootstrap.RabbitMQ.AmqpCommands.QueueBindCommand, eShopCloudNative.Architecture.Bootstrap">
+                                <property name="Queue" value="log_queue" />
+                                <property name="Exchange" value="log_exchange" />
+                                <property name="RoutingKey" value="" />
+                            </object>
+                        </list>
+                    </property>
+                </object>
+
+                <object type="eShopCloudNative.Architecture.Bootstrap.Postgres.PostgresBootstrapperService, eShopCloudNative.Architecture.Bootstrap">
+                    <property name="Configuration" ref="Configuration" />
+                    <property name="SchemaToSetPermissions" ref="DatabaseSchema" />
+                    <property name="MigrationType" value="eShopCloudNative.Catalog.Bootstrapper.Postgres.Migrations.Migration00001, eShopCloudNative.Catalog.PrimaryAdapters" />
+                    <property name="ServerEndpoint">
+                        <object type="System.Net.DnsEndPoint, System.Net.Primitives">
+                            <constructor-arg name="host" value="postgres" />
+                            <constructor-arg name="port" value="5432" />
+                        </object>
+                    </property>
+                    <property name="SysAdminUser">
+                        <object type="System.Net.NetworkCredential, System.Net.Primitives">
+                            <constructor-arg name="userName" value="eshop_user" />
+                            <constructor-arg name="password" value="eshop_pass" />
+                        </object>
+                    </property>
+                    <property name="InitialDatabase" value="eshop_db" />
+                    <property name="AppUser">
+                        <object type="System.Net.NetworkCredential, System.Net.Primitives">
+                            <constructor-arg name="userName" value="catalog_user" />
+                            <constructor-arg name="password" value="catalog_pass" />
+                        </object>
+                    </property>
+                    <property name="DatabaseToCreate" value="eshop_catalog_db" />
+                </object>
+
+                <object type="eShopCloudNative.Architecture.Minio.MinioBootstrapperService, eShopCloudNative.Architecture.Bootstrap">
+                    <property name="Configuration" ref="Configuration" />
+                    <property name="Minio" ref="Minio" />
+                    <property name="BucketsToCreate">
+                        <list element-type="eShopCloudNative.Architecture.Minio.MinioBucket, eShopCloudNative.Architecture.Bootstrap">
+
+                            <object type="eShopCloudNative.Architecture.Minio.MinioBucket, eShopCloudNative.Architecture.Bootstrap">
+                                <property name="BucketName" value="catalog-images" />
+                                <property name="Policy">
+                                    <object type="eShopCloudNative.Architecture.Minio.PublicPolicy, eShopCloudNative.Architecture.Bootstrap">
+                                        <property name="BucketName" value="catalog-images" />
+                                    </object>
+                                </property>
+                            </object>
+
+                            <object type="eShopCloudNative.Architecture.Minio.MinioBucket, eShopCloudNative.Architecture.Bootstrap">
+                                <property name="BucketName" value="catalog-assets" />
+                                <property name="Policy">
+                                    <object type="eShopCloudNative.Architecture.Minio.PublicPolicy, eShopCloudNative.Architecture.Bootstrap">
+                                        <property name="BucketName" value="catalog-assets" />
+                                    </object>
+                                </property>
+                            </object>
+
+                        </list>
+                    </property>
+                </object>
+
+                <object type="eShopCloudNative.Catalog.Bootstrapper.Sample.SampleDataBootstrapperService, eShopCloudNative.Catalog.PrimaryAdapters">
+                    <property name="Configuration" ref="Configuration" />
+                    <property name="Minio" ref="Minio" />
+                    <property name="BucketName" value="catalog-images" />
+                </object>
+
+            </list>
+        </property>
+
+    </object>
+</objects>
+

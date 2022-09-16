@@ -1,0 +1,61 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <Nullable>disable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+        <DockerfileContext>..\..</DockerfileContext>
+        <RootNamespace>eShopCloudNative.Catalog</RootNamespace>
+        <DockerComposeProjectPath>..\..\docker-compose.dcproj</DockerComposeProjectPath>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="AspNetCore.HealthChecks.NpgSql" Version="6.0.2" />
+        <PackageReference Include="AspNetCore.HealthChecks.RabbitMQ" Version="6.0.2" />
+        <PackageReference Include="AspNetCore.HealthChecks.Redis" Version="6.0.4" />
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
+        <PackageReference Include="FluentMigrator" Version="3.3.2" />
+        <PackageReference Include="FluentMigrator.Runner" Version="3.3.2" />
+        <PackageReference Include="FluentMigrator.Runner.Postgres" Version="3.3.2" />
+        <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
+        <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.0" />
+        <PackageReference Include="Minio" Version="4.0.5" />
+        <PackageReference Include="Npgsql" Version="6.0.6" />
+        <PackageReference Include="Spring.Core" Version="3.0.0" />
+
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\eShopCloudNative.Catalog.Contracts\eShopCloudNative.Catalog.Contracts.csproj" />
+        <ProjectReference Include="..\eShopCloudNative.Catalog.Core\eShopCloudNative.Catalog.Core.csproj" />
+        <ProjectReference Include="..\eShopCloudNative.Catalog.SecondaryAdapters\eShopCloudNative.Catalog.SecondaryAdapters.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Update="bootstrapper.xml">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
+
+
+    <!--
+    Dependência Condicional 
+    Em dev usando referência de projeto, 
+    Em prod usando dependência de pacotes
+    -->
+    <ItemGroup Condition=" '$(Configuration)' == 'Debug' ">
+        <ProjectReference Include="..\..\architecture\eShopCloudNative.Architecture.Data\eShopCloudNative.Architecture.Data.csproj" />
+        <ProjectReference Include="..\..\architecture\eShopCloudNative.Architecture.WebApi\eShopCloudNative.Architecture.WebApi.csproj" />
+        <ProjectReference Include="..\..\architecture\eShopCloudNative.Architecture.Bootstrap\eShopCloudNative.Architecture.Bootstrap.csproj" />
+        <ProjectReference Include="..\..\architecture\eShopCloudNative.Architecture\eShopCloudNative.Architecture.csproj" />
+    </ItemGroup>
+    <ItemGroup Condition=" '$(Configuration)' == 'Release' ">
+        <PackageReference Include="eShopCloudNative.Architecture.Data" Version="0.*-*" />
+        <PackageReference Include="eShopCloudNative.Architecture.WebApi" Version="0.*-*" />
+        <PackageReference Include="eShopCloudNative.Architecture.Bootstrap" Version="0.*-*" />
+        <PackageReference Include="eShopCloudNative.Architecture" Version="0.*-*" />
+    </ItemGroup>
+
+
+</Project>
