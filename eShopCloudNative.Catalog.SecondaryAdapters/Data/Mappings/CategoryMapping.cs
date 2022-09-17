@@ -38,9 +38,11 @@ public class CategoryMapping : ClassMap<Category>
             .Cascade.None();
 
         this.HasManyToMany(it => it.Products)
-            .ParentKeyColumns.Add(nameof(Category.CategoryId), p => p.UniqueKey("pk_product_category"))
+            //.ParentKeyColumns.Add(nameof(Category.CategoryId), p => p.UniqueKey("pk_product_category"))
+            .ParentKeyColumns.Add(nameof(Category.CategoryId))
             .Table("Product_Category")
-            .ChildKeyColumns.Add(nameof(Product.ProductId), p => p.UniqueKey("pk_product_category"))
+            //.ChildKeyColumns.Add(nameof(Product.ProductId), p => p.UniqueKey("pk_product_category"))
+            .ChildKeyColumns.Add(nameof(Product.ProductId))
             .ForeignKeyConstraintNames("fk_category_to_product_category", "fk_product_to_product_category")
             .LazyLoad()
             .Fetch.Select()

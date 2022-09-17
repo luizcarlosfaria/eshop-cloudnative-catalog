@@ -6,7 +6,7 @@
     IEnumerable<CategoryDto> categories = null;
     try
     {
-        categories = await publicCatalogService.GetCategoriesForMenu();
+        categories = await publicCatalogService.GetCategoriesForMenuAsync();
     }
     catch (Exception)
     {
@@ -72,13 +72,24 @@
                         <!-- Links -->
 
                         <div class="border-t border-gray-200 py-6 px-4 space-y-6">
-                            <div class="flow-root">
-                                <a href="#" class="-m-2 p-2 block font-medium text-gray-900">Company</a>
-                            </div>
-
-                            <div class="flow-root">
-                                <a href="#" class="-m-2 p-2 block font-medium text-gray-900">Stores</a>
-                            </div>
+                            @foreach (var categoryL1 in categories)
+                            {
+                                <div class="flow-root">
+                                    <a href="~/c/@categoryL1.GetCategorySlug()" class="-m-2 p-2 block font-medium text-gray-900">@categoryL1.Name</a>
+                                </div>
+                                @foreach (var categoryL2 in categoryL1.Children)
+                                {
+                                    <div class="flow-root">
+                                        <a href="~/c/@categoryL2.GetCategorySlug()" class="-m-2 p-2 ml-2 block font-medium text-gray-900">@categoryL2.Name</a>
+                                    </div>
+                                    @foreach (var categoryL3 in categoryL2.Children)
+                                    {
+                                        <div class="flow-root">
+                                            <a href="~/c/@categoryL3.GetCategorySlug()" class="-m-2 p-2 ml-6 block font-medium text-gray-900">@categoryL3.Name</a>
+                                        </div>
+                                    }
+                                }
+                            }
                         </div>
 
                         <div class="border-t border-gray-200 py-6 px-4 space-y-6">
@@ -118,7 +129,7 @@
 
                             <!-- Logo -->
                             <div class="ml-4 flex lg:ml-0">
-                                <a href="#">
+                                <a href="~/">
                                     <span class="sr-only">Workflow</span>
                                     <img class="h-8 w-auto" src="https://tailwindui.com/img/logos/workflow-mark.svg?color=indigo&shade=600" alt="">
                                 </a>
@@ -182,16 +193,16 @@
                                                                 @foreach (var categoryL2 in categoryL1.Children ?? Array.Empty<CategoryDto>())
                                                                 {
                                                                     <div>
-                                                                        <p id="Clothing-heading" class="font-medium text-gray-900">@categoryL2.Name</p>
+                                                                        <a href="~/c/@categoryL2.GetCategorySlug()" id="Clothing-heading" class="font-medium text-gray-900">@categoryL2.Name</a>
                                                                         <ul role="list" aria-labelledby="Clothing-heading" class="mt-6 space-y-6 sm:mt-4 sm:space-y-4">
 
                                                                             @foreach (var categoryL3 in categoryL2.Children ?? Array.Empty<CategoryDto>())
                                                                             {
                                                                                 <li class="flex">
-                                                                                    <a href="#" class="hover:text-gray-800"> @categoryL3.Name </a>
+                                                                                    <a href="~/c/@categoryL3.GetCategorySlug()" class="hover:text-gray-800"> @categoryL3.Name </a>
                                                                                 </li>
                                                                             }
-                                                                           
+
                                                                         </ul>
                                                                     </div>
                                                                 }

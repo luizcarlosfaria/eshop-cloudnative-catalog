@@ -10,6 +10,8 @@ using System.Text.RegularExpressions;
 using System.Text;
 using ISession = NHibernate.ISession;
 using Newtonsoft.Json;
+using eShopCloudNative.Architecture.Bootstrap.Postgres;
+using Serilog;
 
 namespace eShopCloudNative.Catalog.Bootstrapper.Sample;
 internal class SampleDataBootstrapperService : IBootstrapperService
@@ -48,6 +50,8 @@ internal class SampleDataBootstrapperService : IBootstrapperService
 
     public async Task ExecuteAsync()
     {
+        Log.Information("{svc} Iniciando... ", nameof(SampleDataBootstrapperService));
+
         if (this.Configuration.GetValue<bool>("boostrap:sample-data"))
         {
             using var scope = this.serviceProvider.CreateScope();
@@ -57,17 +61,16 @@ internal class SampleDataBootstrapperService : IBootstrapperService
             this.session = session;
 
             await this.CreateSampleData();
+
+            Log.Information("{svc} Finalizado com sucesso!!! ", nameof(SampleDataBootstrapperService));
+        }
+        else
+        {
+            Log.Information("{svc} Bootstrap ignorado por configuração ", nameof(SampleDataBootstrapperService));
         }
     }
 
     List<ICatalogEntity> itensToSave = new List<ICatalogEntity>();
-
-    private T AddToSave<T>(T item)
-        where T : ICatalogEntity
-    {
-        this.itensToSave.Add(item);
-        return item;
-    }
 
     public static string ToUrlSlug(string value)
     {
@@ -94,6 +97,17 @@ internal class SampleDataBootstrapperService : IBootstrapperService
         return value;
     }
 
+    private T AddToSave<T>(T item)
+        where T : ICatalogEntity
+    {
+
+        this.itensToSave.Add(item);
+
+        return item;
+    }
+
+    private Random random = new Random();
+
     private async Task<Product> CreateFakeProductAsync(string productName, params Category[] categories)
     {
         var product = new Product()
@@ -101,8 +115,16 @@ internal class SampleDataBootstrapperService : IBootstrapperService
             Name = productName,
             Slug = ToUrlSlug(productName),
             Active = true,
-            Description = "",
-            Price = 5,
+            Description
+            = productName + Environment.NewLine
+            + productName + Environment.NewLine
+            + productName + Environment.NewLine
+            + productName + Environment.NewLine
+            + productName + Environment.NewLine
+            + productName + Environment.NewLine
+            + productName + Environment.NewLine
+            + productName + Environment.NewLine,
+            Price = random.Next(100,1000),
             Categories = new List<Category>(categories)
         };
 
@@ -113,7 +135,6 @@ internal class SampleDataBootstrapperService : IBootstrapperService
         await this.UploadImage(this.AddToSave(new Image() { Product = product, ImageId = Guid.NewGuid(), Index = 2, FileName = "generic3.jpg" }));
         await this.UploadImage(this.AddToSave(new Image() { Product = product, ImageId = Guid.NewGuid(), Index = 3, FileName = "generic4.jpg" }));
 
-
         return product;
     }
 
@@ -121,8 +142,12 @@ internal class SampleDataBootstrapperService : IBootstrapperService
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0009:Member access should be qualified.", Justification = "<Pending>")]
     private async Task CreateSampleData()
     {
+        int automaticItens = 3;
+
         if (session.Query<CategoryType>().ToList().Count == 0)
         {
+            Log.Information("{svc} Criando dados em memória...", nameof(SampleDataBootstrapperService));
+
             var categoryTypeNormal = AddToSave(new CategoryType() { CategoryTypeId = 1, Name = "Normal", IsHomeShowCase = false, ShowOnMenu = true });
 
             var categoryVitrine = AddToSave(new CategoryType() { CategoryTypeId = 2, Name = "Vitrine", IsHomeShowCase = true, ShowOnMenu = false });
@@ -135,45 +160,45 @@ internal class SampleDataBootstrapperService : IBootstrapperService
 
             var cat_Esporte_ArLivre = AddToSave(new Category() {Parent = cat_Esporte, Name = "Ar Livre", Slug = "ar-livre", Icon = "<i class=\"fa-solid fa-person-biking\"></i>", CategoryType = categoryTypeNormal, Active = true, Description = "" });
             {
-                for (var i = 1; i <= 25; i++)
+                for (var i = 1; i <= automaticItens; i++)
                     await CreateFakeProductAsync($"Esport ao ar livre {i}", cat_Esporte_ArLivre);
             }
 
             var cat_Esporte_ArLivre_Biking = AddToSave(new Category() {Parent = cat_Esporte_ArLivre, Name = "Biking", Slug = "biking", Icon = "<i class=\"fa-solid fa-person-biking\"></i>", CategoryType = categoryTypeNormal, Active = true, Description = "" });
             {
-                for (var i = 1; i <= 25; i++)
+                for (var i = 1; i <= automaticItens; i++)
                     await CreateFakeProductAsync($"Bike {i}", cat_Esporte_ArLivre_Biking);
             }
 
-
             var cat_Esporte_Futebol = AddToSave(new Category() { Parent = cat_Esporte,  Name = "Futebol", Slug = "futebol", Icon="<i class=\"fa-sharp fa-solid fa-shirt\"></i>", CategoryType = categoryTypeNormal, Active = true, Description = "" });
             {
-                for (var i = 1; i <= 25; i++)
+                for (var i = 1; i <= automaticItens; i++)
                     await CreateFakeProductAsync($"Camisa {i}", cat_Esporte_Futebol);
             }
-
 
             var cat_Eletronicos = AddToSave(new Category() { Name = "Eletrônicos", Slug = "eletronicos", Icon="<i class=\"fa-sharp fa-solid fa-shirt\"></i>", CategoryType = categoryTypeNormal, Active = true, Description = "" });
 
             var catGames = AddToSave(new Category() { Parent = cat_Eletronicos,  Name = "Games", Slug = "jogos", Icon = "<i class=\"fa-solid fa-gamepad-modern\"></i>", CategoryType = categoryTypeNormal, Active = true, Description = "" });
             {
-                await CreateFakeProductAsync("Jogo 1", catGames);
-                await CreateFakeProductAsync("Jogo 2", catGames);
+                for (var i = 1; i <= automaticItens; i++)
+                    await CreateFakeProductAsync($"Game {i}", catGames);
             }
 
             var cat_Eletronicos_Computadorers = AddToSave(new Category() { Parent = cat_Eletronicos, Name = "Computadores", Slug = "computadores", Icon = "<i class=\"fa-solid fa-desktop\"></i>", CategoryType = categoryTypeNormal, Active = true, Description = "" });
             {
-                for (var i = 1; i <= 25; i++)
+                for (var i = 1; i <= automaticItens; i++)
                     await CreateFakeProductAsync($"Computador {i}", cat_Eletronicos_Computadorers);
             }
+
             var cat_Eletronicos_Brinquedos = AddToSave(new Category() { Parent = cat_Eletronicos, Name = "Brinquedos Eletrônicos", Slug = "brinquedos-eletronicos", Icon = "<i class=\"fa-solid fa-cars\"></i>", CategoryType = categoryTypeNormal, Active = true, Description = "" });
             {
-                for (var i = 1; i <= 25; i++)
+                for (var i = 1; i <= automaticItens; i++)
                     await CreateFakeProductAsync($"Brinquedos {i}", cat_Eletronicos_Brinquedos);
             }
+
             var cat_Eletronicos_SmartWatch = AddToSave(new Category() { Parent = cat_Eletronicos, Name = "SmartWatch", Slug = "smartwatch", Icon = "<i class=\"fa-solid fa-watch-apple\"></i>", CategoryType = categoryTypeNormal, Active = true, Description = "" });
             {
-                for (var i = 1; i <= 25; i++)
+                for (var i = 1; i <= automaticItens; i++)
                     await CreateFakeProductAsync($"Camisa {i}", cat_Eletronicos_SmartWatch);
             }
 
@@ -207,22 +232,36 @@ internal class SampleDataBootstrapperService : IBootstrapperService
                 var imagem2 = await UploadImage(AddToSave(new Image() { Product = controleXbox , ImageId = Guid.NewGuid(),Index = 1, FileName = "controle-xbox-elite-II-2.jpeg" }));
             }
 
+            Log.Information("{svc} Enviando para o NH...", nameof(SampleDataBootstrapperService));
 
             foreach (var item in itensToSave)
-                session.Save(item);
+            {
+                await session.SaveAsync(item);
+            }
 
-            session.Flush();
+            await session.FlushAsync();
+
+            Log.Information("{svc} FlushAsync() concluído com sucesso!!", nameof(SampleDataBootstrapperService));
         }
+        else
+        {
+            Log.Information("{svc} Ignorado inserts, tabela CategoryType já está prenchida!!", nameof(SampleDataBootstrapperService));
+        }
+    
     }
 
     private async Task<Image> UploadImage(Image image)
     {
+        Log.Debug("{svc} Realizando upload de '{FileName}' para o produto '{ProductName}' da categoria '{CategoryName}'", nameof(SampleDataBootstrapperService), image.FileName, image.Product.Name, image.Product.Categories.First().Name);
+
         await this.Minio.PutObjectAsync((new PutObjectArgs())
                     .WithBucket(this.BucketName)
                     .WithContentType($"image/{Path.GetExtension(image.FileName).Substring(1)}")
                     .WithFileName($"/app/Assets/{image.FileName}")
                     .WithObject(image.ImageId.ToString())
                     );
+
+        System.Diagnostics.Process.Start("curl", $"-k -L -s --compressed 'http://api:8000/minio/catalog-images/{image.ImageId.ToString()}'");
 
         return image;
     }

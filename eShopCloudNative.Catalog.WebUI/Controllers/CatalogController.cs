@@ -4,29 +4,22 @@ using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
 namespace eShopCloudNative.Catalog.Controllers;
-public class CatalogController : Controller
+public class CatalogController : EShopControllerBase
 {
-    private readonly ILogger<CatalogController> logger;
-    private readonly IPublicCatalogService publicCatalogService;
-
     public CatalogController(ILogger<CatalogController> logger, IPublicCatalogService publicCatalogService)
+    : base(logger, publicCatalogService)
+
     {
-        this.logger = logger;
-        this.publicCatalogService = publicCatalogService;
     }
 
-    private CatalogController SetViewBag() {
-        this.ViewBag.publicCatalogService = this.publicCatalogService;
-        return this;
-    }
+    [ResponseCache(Duration = 5, Location = ResponseCacheLocation.Any, NoStore = false)]
+    public IActionResult Index()
+        => this.SetViewBag().View();
 
-    public IActionResult Index() => this.SetViewBag().View();
-
-    public IActionResult Privacy() => this.View();
+    public IActionResult Privacy() 
+        => this.SetViewBag().View();
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-    public IActionResult Error()
-    {
-        return this.View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? this.HttpContext.TraceIdentifier });
-    }
+    public IActionResult Error() 
+        => this.SetViewBag().View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? this.HttpContext.TraceIdentifier });
 }

@@ -21,4 +21,6 @@ public interface ICategoryQueryRepository
     public Task<IList<Category>> GetHomeCatalog();
 
     public Task<IList<Category>> GetCategoriesForMenu();
+    
+    Task<Category> GetCategoryAsync(int categoryId);
 }

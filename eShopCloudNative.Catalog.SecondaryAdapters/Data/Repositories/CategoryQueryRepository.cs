@@ -59,4 +59,23 @@ public class CategoryQueryRepository
             && it.Parent == null)
             .ToList();
     }
+
+    public async Task<Category> GetCategoryAsync(int categoryId)
+    {
+        string hql = $@"
+            select category
+            from {nameof(Category)} as category
+            inner join fetch category.{nameof(Category.CategoryType)} as categoryType
+            inner join fetch category.{nameof(Category.Products)} as product
+            inner join fetch product.{nameof(Product.Images)} as image
+            where category.{nameof(Category.CategoryId)} = {categoryId}
+            and image.{nameof(Image.Index)} = 0
+        ";
+
+        var returnValue = await this.Session.CreateQuery(hql)
+            .SetResultTransformer(new DistinctRootEntityResultTransformer())
+            .ListAsync<Category>();
+
+        return returnValue.SingleOrDefault();
+    }
 }

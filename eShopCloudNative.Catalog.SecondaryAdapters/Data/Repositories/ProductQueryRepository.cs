@@ -1,10 +1,13 @@
-﻿using eShopCloudNative.Catalog.Entities;
+﻿using eShopCloudNative.Catalog.Dto;
+using eShopCloudNative.Catalog.Entities;
 using NHibernate;
+using NHibernate.Transform;
+using System.Linq.Expressions;
 
 namespace eShopCloudNative.Catalog.Data.Repositories;
 
-public class ProductQueryRepository : 
-    CatalogQueryRepository<Product>, 
+public class ProductQueryRepository :
+    CatalogQueryRepository<Product>,
     IProductQueryRepository
 {
     public ProductQueryRepository(ISession session) : base(session)
@@ -12,7 +15,24 @@ public class ProductQueryRepository :
     }
 
     public async Task<Product> GetProductAsync(int productId)
-        => await this.QueryOver.Where(it => it.ProductId == productId).SingleOrDefaultAsync();
+    {
+        //TODO: Query com problemas - Resultado duplicando Categorias
+
+        var returnValue = await this.QueryOver
+            //.Fetch(mode: SelectMode.FetchLazyProperties, path: it => it.Description)
+            .Fetch(it => it.Images, it => it.Categories)
+            .Where(it => it.ProductId == productId)
+            .SingleOrDefaultAsync();
+
+        returnValue.Categories = returnValue.Categories.Distinct().ToList();
+        returnValue.Images = returnValue.Images.Distinct().ToList();
+
+        //var returnValue = await this.Session.GetAsync<Product>(productId);
+        //returnValue.Categories.Any();
+        //returnValue.Images.Any();
+
+        return returnValue;
+    }
 
     public async Task<IEnumerable<Product>> GetProductsByCategoryAsync(int categoryId)
         => await this.QueryOver.Where(p =>

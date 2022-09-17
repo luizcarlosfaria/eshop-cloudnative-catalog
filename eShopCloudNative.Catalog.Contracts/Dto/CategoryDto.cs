@@ -22,4 +22,5 @@ public class CategoryDto
     public bool Active { get; set; }
 
 
+    public string GetCategorySlug() => $"{this.CategoryId}/{this.Slug}";
 }

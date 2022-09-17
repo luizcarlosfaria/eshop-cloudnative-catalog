@@ -19,9 +19,11 @@ public class ProductMapping : ClassMap<Product>
         this.Map(it => it.Active).Not.Nullable();
 
         this.HasManyToMany(it => it.Categories)
-            .ParentKeyColumns.Add(nameof(Product.ProductId), p => p.UniqueKey("pk_product_category"))
+            //.ParentKeyColumns.Add(nameof(Product.ProductId), p => p.UniqueKey("pk_product_category"))
+            .ParentKeyColumns.Add(nameof(Product.ProductId))
             .Table("Product_Category")
-            .ChildKeyColumns.Add(nameof(Category.CategoryId), p => p.UniqueKey("pk_product_category"))
+            //.ChildKeyColumns.Add(nameof(Category.CategoryId), p => p.UniqueKey("pk_product_category"))
+            .ChildKeyColumns.Add(nameof(Category.CategoryId))
             .ForeignKeyConstraintNames("fk_product_to_product_category", "fk_category_to_product_category")
             .LazyLoad()
             .Fetch.Select()

@@ -13,9 +13,18 @@ namespace eShopCloudNative.Catalog.Services;
 public interface IPublicCatalogService
 {
     [Get("/Public/Catalog/HomeCatalog")]
-    Task<IEnumerable<CategoryDto>> GetHomeCatalog();
+    Task<IEnumerable<CategoryDto>> GetHomeCatalogAsync();
 
 
     [Get("/Public/Catalog/CategoriesForMenu")]
-    Task<IEnumerable<CategoryDto>> GetCategoriesForMenu();
+    Task<IEnumerable<CategoryDto>> GetCategoriesForMenuAsync();
+
+
+    [Get("/Public/Catalog/Category/{categoryId}")]
+    Task<CategoryDto> GetCategoryAsync(int categoryId);
+
+
+    [Get("/Public/Catalog/Product/{productId}")]
+    Task<ProductDto> GetProductAsync(int productId);
+
 }

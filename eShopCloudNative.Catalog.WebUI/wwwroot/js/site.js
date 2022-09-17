@@ -24,4 +24,12 @@ $.when($.ready).then(function () {
 
     });
 
+    $("button.product-thumbnail").click(function (it) {
+
+        var src = $("img", this).attr("src");
+
+        $("img.product-main-image").attr("src", src);
+
+    });
+
 });

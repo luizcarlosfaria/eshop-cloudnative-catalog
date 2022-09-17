@@ -10,7 +10,7 @@ RUN mkdir /app/Assets
 RUN apt-get update && apt-get install lsb-release curl -y
 COPY eShopCloudNative.Catalog.PrimaryAdapters/Assets /app/Assets
 EXPOSE 80
-EXPOSE 443
+#EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src

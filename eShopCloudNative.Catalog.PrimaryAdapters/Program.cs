@@ -15,28 +15,38 @@ using eShopCloudNative.Catalog.Data.Repositories;
 using eShopCloudNative.Architecture.HealthChecks;
 using RabbitMQ.Client;
 using System.Text;
+using Serilog;
 
 Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+
+
 var builder = WebApplication.CreateBuilder(args);
+
+
+XmlApplicationContext context = new CodeConfigApplicationContext()
+        .RegisterInstance("Configuration", builder.Configuration)
+        //.RegisterInstance("ServiceProvider", sp)
+        .RegisterInstance("DatabaseSchema", CatalogConstants.Schema)
+        .CreateChildContext("./bootstrapper.xml");
+
+BootstrapperService bootstrapperService = context.GetObject<BootstrapperService>("BootstrapperService");
+
+//Task.Run(() => bootstrapperService.StartAsync(CancellationToken.None));
+
+bool useHealthChecks = builder.Configuration.GetFlag("boostrap", "healthcheck");
+
 builder.Host.AddEnterpriseApplicationLog("Enterprise:Application:Log");
 
 EnterpriseApplicationLog.SetGlobalContext("eShopCloudNative.Catalog.PrimaryAdapters");
 
 builder.Services.AddControllers().AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
-
-
 builder.Services.AddSingleton<IHostedService, BootstrapperService>(sp =>
 {
-    XmlApplicationContext context = new CodeConfigApplicationContext()
-        .RegisterInstance("Configuration", builder.Configuration)
-        .RegisterInstance("ServiceProvider", sp)
-        .RegisterInstance("DatabaseSchema", CatalogConstants.Schema)
-        .CreateChildContext("./bootstrapper.xml");
-
-    BootstrapperService bootstrapperService = context.GetObject<BootstrapperService>("BootstrapperService");
-    //bootstrapperService.AfterExecute += (sender, e) => sp.GetRequiredService<StartupHealthCheck>().StartupCompleted = true;
-
+    if (useHealthChecks)
+    {
+        bootstrapperService.AfterExecute += (sender, e) => sp.GetRequiredService<StartupHealthCheck>().StartupCompleted = true;
+    }
     return bootstrapperService;
 });
 
@@ -76,43 +86,46 @@ builder.Services.AddSingleton(sp => new MapperConfiguration(cfg =>
 builder.Services.AddSingleton(sp => sp.GetRequiredService<MapperConfiguration>().CreateMapper());
 
 builder.Services.AddScoped<ICategoryQueryRepository, CategoryQueryRepository>();
-
+builder.Services.AddScoped<IProductQueryRepository, ProductQueryRepository>();
 builder.Services.AddScoped<IPublicCatalogService, PublicCatalogService>();
 
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddSwaggerGen();
 
-//builder.Services.AddCloudNativeHealthChecks((healthChecksBuilder) =>
-//{
-//    //healthChecksBuilder.AddRabbitMQ(tags: new[] { "services" }, name: "RabbitMQ", rabbitConnectionString: "");
+if (useHealthChecks)
+{
+    builder.Services.AddCloudNativeHealthChecks((healthChecksBuilder) =>
+    {
+        //healthChecksBuilder.AddRabbitMQ(tags: new[] { "services" }, name: "RabbitMQ", rabbitConnectionString: "");
 
-//    //healthChecksBuilder.AddRedis(tags: new[] { "services" }, name: "Redis", redisConnectionString: "redis:6379");
-//});
+        //healthChecksBuilder.AddRedis(tags: new[] { "services" }, name: "Redis", redisConnectionString: "redis:6379");
+    });
+}
 
 
 var app = builder.Build();
 
-app.UseExceptionHandler(exceptionHandlerApp =>
-{
-    exceptionHandlerApp.Run(async context =>
-    {
-        context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+//app.UseExceptionHandler(exceptionHandlerApp =>
+//{
+//    exceptionHandlerApp.Run(async context =>
+//    {
+//        context.Response.StatusCode = StatusCodes.Status500InternalServerError;
 
-        // using static System.Net.Mime.MediaTypeNames;
-        context.Response.ContentType = System.Net.Mime.MediaTypeNames.Text.Plain;
+//        // using static System.Net.Mime.MediaTypeNames;
+//        context.Response.ContentType = System.Net.Mime.MediaTypeNames.Text.Plain;
 
-        var exceptionHandlerPathFeature =
-                context.Features.Get<Microsoft.AspNetCore.Diagnostics.IExceptionHandlerPathFeature>();
+//        var exceptionHandlerPathFeature =
+//                context.Features.Get<Microsoft.AspNetCore.Diagnostics.IExceptionHandlerPathFeature>();
 
-        await context.Response.WriteAsync("An exception was thrown." + exceptionHandlerPathFeature?.Error?.ToString() ?? "");
+//        await context.Response.WriteAsync("An exception was thrown." + exceptionHandlerPathFeature?.Error?.ToString() ?? "");
 
-        if (exceptionHandlerPathFeature?.Error != null)
-        {
-            Console.WriteLine(exceptionHandlerPathFeature.Error.ToString());
-        }
-    });
-});
+//        if (exceptionHandlerPathFeature?.Error != null)
+//        {
+//            Console.WriteLine(exceptionHandlerPathFeature.Error.ToString());
+//        }
+//    });
+//});
 
 
 //app.UseWelcomePage();
@@ -129,9 +142,15 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-//app.UseCloudNativeHealthChecks();
+if (useHealthChecks)
+{
+    app.UseCloudNativeHealthChecks();
+}
 
-
+AppDomain.CurrentDomain.UnhandledException += (sender, e) =>
+{
+    Log.Error((Exception)e.ExceptionObject, "AppDomain.CurrentDomain.UnhandledException");
+};
 
 app.Run();
 
