@@ -38,7 +38,7 @@
                             <button id="tabs-1-tab-1" class="product-thumbnail relative flex h-24 cursor-pointer items-center justify-center rounded-md bg-white text-sm font-medium uppercase text-gray-900 hover:bg-gray-50 focus:outline-none focus:ring focus:ring-opacity-50 focus:ring-offset-4" aria-controls="tabs-1-panel-1" role="tab" type="button">
                                 <span class="sr-only"> Angled view </span>
                                 <span class="absolute inset-0 overflow-hidden rounded-md">
-                                    <img src="http://localhost:8000/minio/catalog-images/@(image?.ImageId ?? Guid.Empty)" alt="" class="h-full w-full object-cover object-center">
+                                    <img src="http://localhost:9000/catalog-images/@(image?.ImageId ?? Guid.Empty)" alt="" class="h-full w-full object-cover object-center">
                                 </span>
                                 <!-- Selected: "ring-indigo-500", Not Selected: "ring-transparent" -->
                                 <span class="ring-transparent pointer-events-none absolute inset-0 rounded-md ring-2 ring-offset-2" aria-hidden="true"></span>
@@ -54,7 +54,7 @@
 
                     }
                     <div aria-labelledby="tabs-1-tab-1" role="tabpanel" tabindex="0">
-                        <img src="http://localhost:8000/minio/catalog-images/@(mainImageId)" alt="Angled front view with bag zipped and handles upright." class="product-main-image h-full w-full object-cover object-center sm:rounded-lg">
+                        <img src="http://localhost:9000/catalog-images/@(mainImageId)" alt="Angled front view with bag zipped and handles upright." class="product-main-image h-full w-full object-cover object-center sm:rounded-lg">
                     </div>
 
                     <!-- More images... -->

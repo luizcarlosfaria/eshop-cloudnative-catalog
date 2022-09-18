@@ -12,6 +12,7 @@ using ISession = NHibernate.ISession;
 using Newtonsoft.Json;
 using eShopCloudNative.Architecture.Bootstrap.Postgres;
 using Serilog;
+using System.Diagnostics;
 
 namespace eShopCloudNative.Catalog.Bootstrapper.Sample;
 internal class SampleDataBootstrapperService : IBootstrapperService
@@ -252,17 +253,39 @@ internal class SampleDataBootstrapperService : IBootstrapperService
 
     private async Task<Image> UploadImage(Image image)
     {
-        Log.Debug("{svc} Realizando upload de '{FileName}' para o produto '{ProductName}' da categoria '{CategoryName}'", nameof(SampleDataBootstrapperService), image.FileName, image.Product.Name, image.Product.Categories.First().Name);
+        Log.Information("{svc} Realizando upload de '{FileName}' para o produto '{ProductName}' da categoria '{CategoryName}'", nameof(SampleDataBootstrapperService), image.FileName, image.Product.Name, image.Product.Categories.First().Name);
+
+        string guid = image.ImageId.ToString();
 
         await this.Minio.PutObjectAsync((new PutObjectArgs())
                     .WithBucket(this.BucketName)
                     .WithContentType($"image/{Path.GetExtension(image.FileName).Substring(1)}")
                     .WithFileName($"/app/Assets/{image.FileName}")
-                    .WithObject(image.ImageId.ToString())
+                    .WithObject(guid)
                     );
 
-        System.Diagnostics.Process.Start("curl", $"-k -L -s --compressed 'http://api:8000/minio/catalog-images/{image.ImageId.ToString()}'");
+        //await this.PreflightAsync(guid);
 
         return image;
+    }
+
+    private async Task PreflightAsync(string guid)
+    {
+        Log.Information($"{nameof(SampleDataBootstrapperService)} | curl -v --compressed 'http://api:8000/minio/{this.BucketName}/{guid}' -o /tmp/{guid}");
+        
+        var startInfo = new ProcessStartInfo("curl");
+        var arguments = new string[] {
+            "-v",
+            "--compressed",
+            $"'http://api:8000/minio/{this.BucketName}/{guid}'",
+            $"-o", $"/tmp/{guid}",
+        };
+        foreach (string argument in arguments)
+        {
+            startInfo.ArgumentList.Add(argument);
+        }
+
+        Process curl = Process.Start(startInfo);
+        await curl.WaitForExitAsync();
     }
 }
