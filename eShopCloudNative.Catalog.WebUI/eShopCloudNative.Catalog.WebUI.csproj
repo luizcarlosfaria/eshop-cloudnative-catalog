@@ -1,26 +1,24 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <Nullable>disable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <UserSecretsId>b5c585e6-bb1f-4a94-92f0-17378b9de641</UserSecretsId>
-    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-    <DockerfileContext>..\..</DockerfileContext>
-    <DockerComposeProjectPath>..\..\docker-compose.dcproj</DockerComposeProjectPath>
-    <RootNamespace>eShopCloudNative.Catalog</RootNamespace>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <Nullable>disable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <UserSecretsId>b5c585e6-bb1f-4a94-92f0-17378b9de641</UserSecretsId>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+        <DockerfileContext>..\..</DockerfileContext>
+        <DockerComposeProjectPath>..\..\docker-compose.dcproj</DockerComposeProjectPath>
+        <RootNamespace>eShopCloudNative.Catalog</RootNamespace>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.0" />
-    <PackageReference Include="Minio" Version="4.0.5" />
-    <PackageReference Include="Refit" Version="6.3.2" />
-    <PackageReference Include="Refit.HttpClientFactory" Version="6.3.2" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Minio" Version="4.0.5" />
+        <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.0" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\eShopCloudNative.Catalog.Architecture\eShopCloudNative.Catalog.Architecture.csproj" />
-    <ProjectReference Include="..\eShopCloudNative.Catalog.Contracts\eShopCloudNative.Catalog.Contracts.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\eShopCloudNative.Catalog.Architecture\eShopCloudNative.Catalog.Architecture.csproj" />
+        <ProjectReference Include="..\eShopCloudNative.Catalog.Contracts\eShopCloudNative.Catalog.Contracts.csproj" />
+    </ItemGroup>
 
 </Project>
