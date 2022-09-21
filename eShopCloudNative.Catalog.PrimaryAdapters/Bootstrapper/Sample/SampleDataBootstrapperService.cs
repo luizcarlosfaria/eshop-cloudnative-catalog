@@ -13,6 +13,7 @@ using Newtonsoft.Json;
 using eShopCloudNative.Architecture.Bootstrap.Postgres;
 using Serilog;
 using System.Diagnostics;
+using Bogus;
 
 namespace eShopCloudNative.Catalog.Bootstrapper.Sample;
 internal class SampleDataBootstrapperService : IBootstrapperService
@@ -26,6 +27,9 @@ internal class SampleDataBootstrapperService : IBootstrapperService
     public IConfiguration Configuration { get; set; }
 
     public string BucketName { get; set; }
+
+
+    Bogus.DataSets.Lorem lorem = new Bogus.DataSets.Lorem(locale: "pt_BR");
 
     public Task InitializeAsync()
     {
@@ -44,8 +48,8 @@ internal class SampleDataBootstrapperService : IBootstrapperService
             )
             .AddTransient(sp => this.Configuration)
             .BuildServiceProvider();
-
         }
+
         return Task.CompletedTask;
     }
 
@@ -116,15 +120,7 @@ internal class SampleDataBootstrapperService : IBootstrapperService
             Name = productName,
             Slug = ToUrlSlug(productName),
             Active = true,
-            Description
-            = productName + Environment.NewLine
-            + productName + Environment.NewLine
-            + productName + Environment.NewLine
-            + productName + Environment.NewLine
-            + productName + Environment.NewLine
-            + productName + Environment.NewLine
-            + productName + Environment.NewLine
-            + productName + Environment.NewLine,
+            Description = lorem.Sentences(8, Environment.NewLine),
             Price = random.Next(100,1000),
             Categories = new List<Category>(categories)
         };
@@ -153,80 +149,80 @@ internal class SampleDataBootstrapperService : IBootstrapperService
 
             var categoryVitrine = AddToSave(new CategoryType() { CategoryTypeId = 2, Name = "Vitrine", IsHomeShowCase = true, ShowOnMenu = false });
 
-            var catVitrine1 = AddToSave(new Category() { Name = "Vitrine1", Slug = "v1", CategoryType = categoryVitrine, Active = true, Description = "" });
+            var catVitrine1 = AddToSave(new Category() { Name = "Vitrine1", Slug = "v1", CategoryType = categoryVitrine, Active = true, Description = lorem.Sentences(8, Environment.NewLine) });
 
-            var catVitrine2 = AddToSave(new Category() { Name = "Vitrine2", Slug = "v2", CategoryType = categoryVitrine, Active = true, Description = "" });
+            var catVitrine2 = AddToSave(new Category() { Name = "Vitrine2", Slug = "v2", CategoryType = categoryVitrine, Active = true, Description = lorem.Sentences(8, Environment.NewLine) });
 
-            var cat_Esporte = AddToSave(new Category() { Name = "Esporte", Slug = "esporte", Icon="<i class=\"fa-sharp fa-solid fa-shirt\"></i>", CategoryType = categoryTypeNormal, Active = true, Description = "" });
+            var cat_Esporte = AddToSave(new Category() { Name = "Esporte", Slug = "esporte", Icon="<i class=\"fa-sharp fa-solid fa-shirt\"></i>", CategoryType = categoryTypeNormal, Active = true, Description = lorem.Sentences(8, Environment.NewLine) });
 
-            var cat_Esporte_ArLivre = AddToSave(new Category() {Parent = cat_Esporte, Name = "Ar Livre", Slug = "ar-livre", Icon = "<i class=\"fa-solid fa-person-biking\"></i>", CategoryType = categoryTypeNormal, Active = true, Description = "" });
+            var cat_Esporte_ArLivre = AddToSave(new Category() {Parent = cat_Esporte, Name = "Ar Livre", Slug = "ar-livre", Icon = "<i class=\"fa-solid fa-person-biking\"></i>", CategoryType = categoryTypeNormal, Active = true, Description = lorem.Sentences(8, Environment.NewLine) });
             {
                 for (var i = 1; i <= automaticItens; i++)
                     await CreateFakeProductAsync($"Esport ao ar livre {i}", cat_Esporte_ArLivre);
             }
 
-            var cat_Esporte_ArLivre_Biking = AddToSave(new Category() {Parent = cat_Esporte_ArLivre, Name = "Biking", Slug = "biking", Icon = "<i class=\"fa-solid fa-person-biking\"></i>", CategoryType = categoryTypeNormal, Active = true, Description = "" });
+            var cat_Esporte_ArLivre_Biking = AddToSave(new Category() {Parent = cat_Esporte_ArLivre, Name = "Biking", Slug = "biking", Icon = "<i class=\"fa-solid fa-person-biking\"></i>", CategoryType = categoryTypeNormal, Active = true, Description = lorem.Sentences(8, Environment.NewLine) });
             {
                 for (var i = 1; i <= automaticItens; i++)
                     await CreateFakeProductAsync($"Bike {i}", cat_Esporte_ArLivre_Biking);
             }
 
-            var cat_Esporte_Futebol = AddToSave(new Category() { Parent = cat_Esporte,  Name = "Futebol", Slug = "futebol", Icon="<i class=\"fa-sharp fa-solid fa-shirt\"></i>", CategoryType = categoryTypeNormal, Active = true, Description = "" });
+            var cat_Esporte_Futebol = AddToSave(new Category() { Parent = cat_Esporte,  Name = "Futebol", Slug = "futebol", Icon="<i class=\"fa-sharp fa-solid fa-shirt\"></i>", CategoryType = categoryTypeNormal, Active = true, Description = lorem.Sentences(8, Environment.NewLine) });
             {
                 for (var i = 1; i <= automaticItens; i++)
                     await CreateFakeProductAsync($"Camisa {i}", cat_Esporte_Futebol);
             }
 
-            var cat_Eletronicos = AddToSave(new Category() { Name = "Eletrônicos", Slug = "eletronicos", Icon="<i class=\"fa-sharp fa-solid fa-shirt\"></i>", CategoryType = categoryTypeNormal, Active = true, Description = "" });
+            var cat_Eletronicos = AddToSave(new Category() { Name = "Eletrônicos", Slug = "eletronicos", Icon="<i class=\"fa-sharp fa-solid fa-shirt\"></i>", CategoryType = categoryTypeNormal, Active = true, Description = lorem.Sentences(8, Environment.NewLine) });
 
-            var catGames = AddToSave(new Category() { Parent = cat_Eletronicos,  Name = "Games", Slug = "jogos", Icon = "<i class=\"fa-solid fa-gamepad-modern\"></i>", CategoryType = categoryTypeNormal, Active = true, Description = "" });
+            var catGames = AddToSave(new Category() { Parent = cat_Eletronicos,  Name = "Games", Slug = "jogos", Icon = "<i class=\"fa-solid fa-gamepad-modern\"></i>", CategoryType = categoryTypeNormal, Active = true, Description = lorem.Sentences(8, Environment.NewLine) });
             {
                 for (var i = 1; i <= automaticItens; i++)
                     await CreateFakeProductAsync($"Game {i}", catGames);
             }
 
-            var cat_Eletronicos_Computadorers = AddToSave(new Category() { Parent = cat_Eletronicos, Name = "Computadores", Slug = "computadores", Icon = "<i class=\"fa-solid fa-desktop\"></i>", CategoryType = categoryTypeNormal, Active = true, Description = "" });
+            var cat_Eletronicos_Computadorers = AddToSave(new Category() { Parent = cat_Eletronicos, Name = "Computadores", Slug = "computadores", Icon = "<i class=\"fa-solid fa-desktop\"></i>", CategoryType = categoryTypeNormal, Active = true, Description = lorem.Sentences(8, Environment.NewLine) });
             {
                 for (var i = 1; i <= automaticItens; i++)
                     await CreateFakeProductAsync($"Computador {i}", cat_Eletronicos_Computadorers);
             }
 
-            var cat_Eletronicos_Brinquedos = AddToSave(new Category() { Parent = cat_Eletronicos, Name = "Brinquedos Eletrônicos", Slug = "brinquedos-eletronicos", Icon = "<i class=\"fa-solid fa-cars\"></i>", CategoryType = categoryTypeNormal, Active = true, Description = "" });
+            var cat_Eletronicos_Brinquedos = AddToSave(new Category() { Parent = cat_Eletronicos, Name = "Brinquedos Eletrônicos", Slug = "brinquedos-eletronicos", Icon = "<i class=\"fa-solid fa-cars\"></i>", CategoryType = categoryTypeNormal, Active = true, Description = lorem.Sentences(8, Environment.NewLine) });
             {
                 for (var i = 1; i <= automaticItens; i++)
                     await CreateFakeProductAsync($"Brinquedos {i}", cat_Eletronicos_Brinquedos);
             }
 
-            var cat_Eletronicos_SmartWatch = AddToSave(new Category() { Parent = cat_Eletronicos, Name = "SmartWatch", Slug = "smartwatch", Icon = "<i class=\"fa-solid fa-watch-apple\"></i>", CategoryType = categoryTypeNormal, Active = true, Description = "" });
+            var cat_Eletronicos_SmartWatch = AddToSave(new Category() { Parent = cat_Eletronicos, Name = "SmartWatch", Slug = "smartwatch", Icon = "<i class=\"fa-solid fa-watch-apple\"></i>", CategoryType = categoryTypeNormal, Active = true, Description = lorem.Sentences(8, Environment.NewLine) });
             {
                 for (var i = 1; i <= automaticItens; i++)
                     await CreateFakeProductAsync($"Camisa {i}", cat_Eletronicos_SmartWatch);
             }
 
-            var cat_Esporte_Camisas_Selecao = AddToSave(new Category() { Parent = cat_Esporte_Futebol, Name = "Camisas da Seleção", Slug = "selecao", Icon="<i class=\"fa-sharp fa-solid fa-shirt\"></i>", CategoryType = categoryTypeNormal, Active = true, Description = "" });
+            var cat_Esporte_Camisas_Selecao = AddToSave(new Category() { Parent = cat_Esporte_Futebol, Name = "Camisas da Seleção", Slug = "selecao", Icon="<i class=\"fa-sharp fa-solid fa-shirt\"></i>", CategoryType = categoryTypeNormal, Active = true, Description = lorem.Sentences(8, Environment.NewLine) });
 
-            var camisaSelecaoAmarela = AddToSave(new Product() { Name = "Camisa Seleção Brasileira - Amarela", Slug = "camisa-selecao-brasileira-amarela", Active = true, Description = "", Price = 5, Categories = new List<Category>() { cat_Esporte, cat_Esporte_Futebol, cat_Esporte_Camisas_Selecao, catVitrine1 } });
+            var camisaSelecaoAmarela = AddToSave(new Product() { Name = "Camisa Seleção Brasileira - Amarela", Slug = "camisa-selecao-brasileira-amarela", Active = true, Description = lorem.Sentences(8, Environment.NewLine), Price = 5, Categories = new List<Category>() { cat_Esporte, cat_Esporte_Futebol, cat_Esporte_Camisas_Selecao, catVitrine1 } });
             {
                 var imagem1 = await UploadImage(AddToSave(new Image() { Product = camisaSelecaoAmarela, ImageId = Guid.NewGuid(), Index = 0, FileName = "camisa-brasil-amarela1.webp" }));
 
                 var imagem2 = await UploadImage(AddToSave(new Image() { Product = camisaSelecaoAmarela, ImageId = Guid.NewGuid(), Index = 1,FileName = "camisa-brasil-amarela2.webp" }));
             }
 
-            var camisaSelecaoAzul = AddToSave(new Product() { Name = "Camisa Seleção Brasileira - Azul", Slug = "camisa-selecao-brasileira-azul", Active = true, Description = "", Price = 5, Categories = new List<Category>() { cat_Esporte, cat_Esporte_Futebol, cat_Esporte_Camisas_Selecao, catVitrine1 } });
+            var camisaSelecaoAzul = AddToSave(new Product() { Name = "Camisa Seleção Brasileira - Azul", Slug = "camisa-selecao-brasileira-azul", Active = true, Description = lorem.Sentences(8, Environment.NewLine), Price = 5, Categories = new List<Category>() { cat_Esporte, cat_Esporte_Futebol, cat_Esporte_Camisas_Selecao, catVitrine1 } });
             {
                 var imagem1 = await UploadImage(AddToSave(new Image() { Product = camisaSelecaoAzul, ImageId = Guid.NewGuid(), Index = 0, FileName = "camisa-brasil-azul1.webp" }));
 
                 var imagem2 = await UploadImage(AddToSave(new Image() { Product = camisaSelecaoAzul , ImageId = Guid.NewGuid(),Index = 1, FileName = "camisa-brasil-azul2.webp" }));
             }
 
-            var camisaSelecaoPreta = AddToSave(new Product() { Name = "Camisa Seleção Brasileira - Preta", Slug = "camisa-selecao-brasileira-preta", Active = true, Description = "", Price = 5, Categories = new List<Category>() { cat_Esporte, cat_Esporte_Futebol, cat_Esporte_Camisas_Selecao, catVitrine1 } });
+            var camisaSelecaoPreta = AddToSave(new Product() { Name = "Camisa Seleção Brasileira - Preta", Slug = "camisa-selecao-brasileira-preta", Active = true, Description = lorem.Sentences(8, Environment.NewLine), Price = 5, Categories = new List<Category>() { cat_Esporte, cat_Esporte_Futebol, cat_Esporte_Camisas_Selecao, catVitrine1 } });
             {
                 var imagem1 = await UploadImage(AddToSave(new Image() { Product = camisaSelecaoPreta, ImageId = Guid.NewGuid(), Index = 0,FileName = "camisa-brasil-preta1.jpeg" }));
 
                 var imagem2 = await UploadImage(AddToSave(new Image() { Product = camisaSelecaoPreta , ImageId = Guid.NewGuid(),Index = 1, FileName = "camisa-brasil-preta2.jpeg" }));
             }
 
-            var controleXbox = AddToSave(new Product() { Name = "Controle Xbox Elite Wireless Série 2", Slug = "controle-xbox-elite-wireless-serie-2", Active = true, Description = "", Price = 5, Categories = new List<Category>() { catGames, catVitrine2 } });
+            var controleXbox = AddToSave(new Product() { Name = "Controle Xbox Elite Wireless Série 2", Slug = "controle-xbox-elite-wireless-serie-2", Active = true, Description = lorem.Sentences(8, Environment.NewLine), Price = 5, Categories = new List<Category>() { catGames, catVitrine2 } });
             {
                 var imagem1 = await UploadImage(AddToSave(new Image() { Product = controleXbox, ImageId = Guid.NewGuid(), Index = 0, FileName = "controle-xbox-elite-II-1.jpeg" }));
 
