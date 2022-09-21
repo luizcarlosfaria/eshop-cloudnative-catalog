@@ -69,9 +69,8 @@ builder.Services.AddSingleton(sp => new MapperConfiguration(cfg =>
     cfg.CreateMap<CategoryType, CategoryTypeDto>()
         .ForMember(dest => dest.Categories, opt => opt.PreCondition(source => NHibernateUtil.IsInitialized(source.Categories)))
         .ForMember(dest => dest.Description, opt => opt.PreCondition(source => NHibernateUtil.IsPropertyInitialized(source, nameof(source.Description))))
-
-
     ;
+
     cfg.CreateMap<Product, ProductDto>()
         .ForMember(dest => dest.Categories, opt => opt.PreCondition(source => NHibernateUtil.IsInitialized(source.Categories)))
         .ForMember(dest => dest.Images, opt => opt.PreCondition(source => NHibernateUtil.IsInitialized(source.Images)))
@@ -81,6 +80,7 @@ builder.Services.AddSingleton(sp => new MapperConfiguration(cfg =>
     cfg.CreateMap<Image, ImageDto>()
         .ForMember(dest => dest.Product, opt => opt.PreCondition(source => NHibernateUtil.IsInitialized(source.Product)))
     ;
+
 }));
 
 builder.Services.AddSingleton(sp => sp.GetRequiredService<MapperConfiguration>().CreateMapper());
