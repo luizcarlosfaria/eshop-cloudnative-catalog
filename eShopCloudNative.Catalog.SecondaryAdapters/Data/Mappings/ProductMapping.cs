@@ -13,7 +13,7 @@ public class ProductMapping : ClassMap<Product>
 
         this.Id(it => it.ProductId).GeneratedBy.Sequence("product_seq");
         this.Map(it => it.Name).Length(300).Not.Nullable();
-        this.Map(it => it.Description).Length(8000).Nullable().LazyLoad();
+        this.Map(it => it.Description).Nullable().LazyLoad();
         this.Map(it => it.Slug).Length(300).Not.Nullable();
         this.Map(it => it.Price).Precision(8).Scale(2).Not.Nullable();
         this.Map(it => it.Active).Not.Nullable();

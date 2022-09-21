@@ -12,7 +12,7 @@ public class CategoryTypeMapping : ClassMap<CategoryType>
 
         this.Id(it => it.CategoryTypeId).GeneratedBy.Sequence("category_seq");
         this.Map(it => it.Name).Length(300).Not.Nullable();
-        this.Map(it => it.Description).Length(8000).Nullable().LazyLoad();
+        this.Map(it => it.Description).Nullable().LazyLoad();
         this.Map(it => it.ShowOnMenu).Not.Nullable();
         this.Map(it => it.IsHomeShowCase).Not.Nullable();
         this.HasMany(it => it.Categories)

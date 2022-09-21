@@ -19,7 +19,7 @@ public class Migration00001 : Migration
            .Table(nameof(CategoryType), CatalogConstants.Schema)
            .Column<CategoryType>(it => it.CategoryTypeId).PrimaryKey()
            .Column<CategoryType>(it => it.Name, 300).NotNullable()
-           .Column<CategoryType>(it => it.Description, 8000).Nullable()
+           .Clob<CategoryType>(it => it.Description).Nullable()
            .Column<CategoryType>(it => it.ShowOnMenu).NotNullable()
            .Column<CategoryType>(it => it.IsHomeShowCase).NotNullable() 
            ;
@@ -34,7 +34,7 @@ public class Migration00001 : Migration
            .WithColumn(nameof(CategoryType.CategoryTypeId)).AsInt32().NotNullable()
                .ForeignKey("FK_CATEGORYTYPE_TO_CATEGORY", CatalogConstants.Schema, nameof(CategoryType), nameof(CategoryType.CategoryTypeId))
            .Column<Category>(it => it.Name, 300).NotNullable()
-           .Column<Category>(it => it.Description, 8000).Nullable()
+           .Clob<Category>(it => it.Description).Nullable()
            .Column<Category>(it => it.Icon, 100).Nullable()
            .Column<Category>(it => it.Slug, 300).NotNullable()
            .Column<Category>(it => it.Active).NotNullable();
@@ -44,7 +44,7 @@ public class Migration00001 : Migration
            .Table(nameof(Product), CatalogConstants.Schema)
            .Column<Product>(it => it.ProductId).PrimaryKey()
            .Column<Product>(it => it.Name, 300).NotNullable()
-           .Column<Product>(it => it.Description, 8000).Nullable()
+           .Clob<Product>(it => it.Description).Nullable()
            .Column<Product>(it => it.Slug, 300).NotNullable()
            .Column<Product>(it => it.Price, 8, 2).NotNullable()
            .Column<Product>(it => it.Active).NotNullable();
