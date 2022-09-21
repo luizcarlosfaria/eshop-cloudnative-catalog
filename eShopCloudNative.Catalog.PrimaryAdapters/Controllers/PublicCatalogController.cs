@@ -5,8 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace eShopCloudNative.Catalog.Controllers;
 [ApiController]
-[Route("Public/Catalog")]
-public class PublicCatalogController : ControllerBase, IPublicCatalogService
+[Route("Public")]
+public partial class PublicCatalogController : ControllerBase, IPublicCatalogService
 {
     private readonly IPublicCatalogService publicCatalog;
 
