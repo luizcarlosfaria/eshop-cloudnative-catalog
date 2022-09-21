@@ -19,7 +19,7 @@ public class ProductQueryRepository :
         //TODO: Query com problemas - Resultado duplicando Categorias
 
         var returnValue = await this.QueryOver
-            //.Fetch(mode: SelectMode.FetchLazyProperties, path: it => it.Description)
+            .Fetch(SelectMode.FetchLazyProperties, it => it)
             .Fetch(it => it.Images, it => it.Categories)
             .Where(it => it.ProductId == productId)
             .SingleOrDefaultAsync();
