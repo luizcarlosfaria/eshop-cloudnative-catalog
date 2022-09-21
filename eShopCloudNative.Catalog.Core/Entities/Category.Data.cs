@@ -8,6 +8,7 @@ namespace eShopCloudNative.Catalog.Entities;
 public partial class Category
 {
     public virtual int CategoryId { get; set; }
+
     public virtual string Name { get; set; }
 
     public virtual Category Parent { get; set; }
