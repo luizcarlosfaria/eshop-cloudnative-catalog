@@ -5,15 +5,19 @@ using Serilog.Context;
 using Serilog.Core.Enrichers;
 using Serilog.Core;
 using eShopCloudNative.Architecture.Logging;
+using eShopCloudNative.Catalog;
+using eShopCloudNative.Architecture.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Configuration.ConfigureWith("WebConstants", WebConstants.Instance);
 
 builder.Host.AddEnterpriseApplicationLog("Enterprise:Application:Log");
 
 EnterpriseApplicationLog.SetGlobalContext("eShopCloudNative.Catalog.WebUI");
 
-// Add services to the container.
 builder.Services.AddControllersWithViews();
+
 builder.Services.AddResponseCaching();
 
 builder.Services
@@ -24,8 +28,6 @@ builder.Services
         c.DefaultRequestHeaders.Add("apikey", builder.Configuration.GetValue<string>("eshop-cloudnative:global:apikey"));
         //TODO: Adicionar versão atual!
     });
-
-
 
 var app = builder.Build();
 
@@ -38,6 +40,7 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
 app.UseStaticFiles();
 
 app.UseRouting();

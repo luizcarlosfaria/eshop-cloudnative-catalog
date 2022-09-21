@@ -1,23 +1,25 @@
 ﻿@using eShopCloudNative.Catalog.Dto
 @using eShopCloudNative.Catalog.Services
-@{
-    IPublicCatalogService publicCatalogService = this.ViewBag.publicCatalogService;
 
-    IEnumerable<CategoryDto> categorias = null; 
-    try
-    {
-        categorias = await publicCatalogService.GetHomeCatalogAsync();
+<cache expires-after="@WebConstants.Instance.HomeCatalogCacheTimeout" enabled="@WebConstants.Instance.HomeCatalogCacheTimeout != TimeSpan.Zero">
+    @{
+        IPublicCatalogService publicCatalogService = this.ViewBag.publicCatalogService;
+
+        IEnumerable<CategoryDto> categorias = null;
+        try
+        {
+            categorias = await publicCatalogService.GetHomeCatalogAsync();
+        }
+        catch (Exception)
+        {
+            categorias = Array.Empty<CategoryDto>();
+        }
+
+        ViewData["Title"] = "Home Page";
     }
-    catch (Exception)
+
+    @foreach (var category in categorias)
     {
-        categorias = Array.Empty<CategoryDto>();
+        <partial name="../Shared/Shared.Category.cshtml" model="@(category)" />
     }
-
-    ViewData["Title"] = "Home Page";
-}
-
-
-@foreach (var category in categorias)
-{
-    <partial name="../Shared/Shared.Category.cshtml" model="@(category)" />
-}
+</cache>
