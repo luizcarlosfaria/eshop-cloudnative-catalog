@@ -34,6 +34,12 @@ public class ProductQueryRepository :
         return returnValue;
     }
 
+    public async Task<decimal> GetProductPriceAsync(int productId)
+     => (await this.QueryOver
+        .Where(it => it.ProductId == productId)
+        .Select(it => it.Price)
+        .SingleOrDefaultAsync<decimal>());
+
     public async Task<IEnumerable<Product>> GetProductsByCategoryAsync(int categoryId)
         => await this.QueryOver.Where(p =>
             p.Categories != null

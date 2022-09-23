@@ -15,13 +15,26 @@ public class ProductController : EShopControllerBase
     {
     }
 
-    [ResponseCache(Duration = 5, Location = ResponseCacheLocation.Any, NoStore = false)]
-    [Route("{productId:int}/{*slug}")]
+    [ResponseCache(Duration = 120, Location = ResponseCacheLocation.Any, NoStore = false)]
+    [Route("{productId:int}/{slug}")]
     public async Task<IActionResult> IndexAsync(int productId, string slug)
-    { 
+    {
         ProductDto product = await this.PublicCatalogService.GetProductAsync(productId);
         return this.SetViewBag().View(product);
     }
 
+    [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
+    [Route("{productId:int}/{slug}/price")]
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> GetPriceIndexAsync(int productId, string slug)
+    {
+        if(slug.Contains("brasileira-azul") ) {
+            return this.BadRequest("Fake, exemplo de falha");
+        }
 
+        decimal price = await this.PublicCatalogService.GetProductPriceAsync(productId);
+
+        return this.Content($"R$ {price}");
+    }
 }

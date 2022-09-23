@@ -30,6 +30,17 @@
     </ItemGroup>
 
     <ItemGroup>
+         <!--<ProjectReference Include="..\..\architecture\eShopCloudNative.Architecture.SourceGen\eShopCloudNative.Architecture.SourceGen.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+
+       
+        <ProjectReference Include="..\..\architecture\eShopCloudNative.Architecture.SourceGen\eShopCloudNative.Architecture.SourceGen.csproj"
+                          OutputItemType="Analyzer"
+                          ReferenceOutputAssembly="false"
+                          />
+                          -->
+    </ItemGroup>
+
+    <ItemGroup>
         <ProjectReference Include="..\eShopCloudNative.Catalog.Contracts\eShopCloudNative.Catalog.Contracts.csproj" />
         <ProjectReference Include="..\eShopCloudNative.Catalog.Core\eShopCloudNative.Catalog.Core.csproj" />
         <ProjectReference Include="..\eShopCloudNative.Catalog.SecondaryAdapters\eShopCloudNative.Catalog.SecondaryAdapters.csproj" />

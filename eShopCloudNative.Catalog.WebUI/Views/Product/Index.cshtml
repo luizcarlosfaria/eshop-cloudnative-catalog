@@ -1,30 +1,17 @@
-﻿@using eShopCloudNative.Catalog.Dto
+﻿@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Antiforgery
+@using eShopCloudNative.Catalog.Dto
 @model ProductDto
+
 
 @{
     ViewData["Title"] = "Tudo sobre " + (Model.Name ?? "");
+
+    var requestToken = Antiforgery.GetAndStoreTokens(Context).RequestToken;
 }
 
+<input id="RequestVerificationToken" type="hidden" value="@requestToken" />
 
 
-
-<!--
-  This example requires Tailwind CSS v2.0+
-
-  This example requires some changes to your config:
-
-  ```
-  // tailwind.config.js
-  module.exports = {
-    // ...
-    plugins: [
-      // ...
-      require('tailwindcss/typography'),
-      require('tailwindcss/aspect-ratio'),
-    ],
-  }
-  ```
--->
 <div class="bg-white">
     <div class="mx-auto max-w-2xl py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8">
         <div class="lg:grid lg:grid-cols-2 lg:items-start lg:gap-x-8">
@@ -67,7 +54,7 @@
 
                 <div class="mt-3">
                     <h2 class="sr-only">Product information</h2>
-                    <p class="text-3xl tracking-tight text-gray-900">R$ @Model.Price</p>
+                    <p class="text-3xl tracking-tight text-gray-900 invisible" id="price">R$ @Model.Price</p>
                 </div>
 
                 <!-- Reviews -->
@@ -225,3 +212,28 @@
         </div>
     </div>
 </div>
+
+
+@section Scripts {
+    <script>
+
+        $.when($.ready).then(function () {
+            let priceTag = $("#price");
+            $.post(
+                "@(Url.Action("Index"))/price",
+                {
+                    __RequestVerificationToken: $("#RequestVerificationToken").val()
+                },
+                function (data) {
+                    priceTag.html(data).removeClass("invisible");
+                },
+                "text"
+            )
+                .fail(function () {
+                    priceTag.removeClass("invisible");
+                });
+
+        });
+
+    </script>
+}

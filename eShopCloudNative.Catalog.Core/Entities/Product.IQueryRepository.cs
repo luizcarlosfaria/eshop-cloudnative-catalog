@@ -12,6 +12,6 @@ public interface IProductQueryRepository
 {
 
     Task<Product> GetProductAsync(int productId);
-
+    Task<decimal> GetProductPriceAsync(int productId);
     Task<IEnumerable<Product>> GetProductsByCategoryAsync(int categoryId);
 }

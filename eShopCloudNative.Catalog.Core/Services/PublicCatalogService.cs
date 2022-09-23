@@ -34,5 +34,6 @@ public class PublicCatalogService : BaseService, IPublicCatalogService
     => await this.ExecuteAndAdaptAsync<ProductDto, Product>(async ()
         => await this.productQuery.GetProductAsync(productId));
 
-
+    public async Task<decimal> GetProductPriceAsync(int productId)
+        => await this.productQuery.GetProductPriceAsync(productId);
 }

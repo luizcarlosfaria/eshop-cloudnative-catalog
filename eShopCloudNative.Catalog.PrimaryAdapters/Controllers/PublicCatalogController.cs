@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace eShopCloudNative.Catalog.Controllers;
 [ApiController]
 [Route("Public")]
+[ResponseCache(Duration = 120,  Location = ResponseCacheLocation.Any, NoStore = false)]
 public partial class PublicCatalogController : ControllerBase, IPublicCatalogService
 {
     private readonly IPublicCatalogService publicCatalog;
@@ -30,7 +31,14 @@ public partial class PublicCatalogController : ControllerBase, IPublicCatalogSer
      => await this.publicCatalog.GetCategoryAsync(categoryId);
 
 
+    
     [HttpGet("Product/{productId}", Name = "GetProduct")]
     public async Task<ProductDto> GetProductAsync(int productId) 
         => await this.publicCatalog.GetProductAsync(productId);
+
+
+    [HttpGet("Product/{productId}/price", Name = "GetProductPrice")]
+    [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
+    public async Task<decimal> GetProductPriceAsync(int productId)
+       => await this.publicCatalog.GetProductPriceAsync(productId);
 }

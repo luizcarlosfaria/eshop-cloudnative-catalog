@@ -27,4 +27,7 @@ public interface IPublicCatalogService
     [Get("/Public/Product/{productId}")]
     Task<ProductDto> GetProductAsync(int productId);
 
+    [Get("/Public/Product/{productId}/price")]
+    Task<decimal> GetProductPriceAsync(int productId);
+
 }
