@@ -1,6 +1,11 @@
 ﻿using NHibernate;
 using NHibernate.Transform;
 using eShopCloudNative.Catalog.Entities;
+using Serilog;
+using Serilog.Context;
+using Serilog.Core.Enrichers;
+using Prop = Serilog.Core.Enrichers.PropertyEnricher;
+using eShopCloudNative.Architecture.Logging;
 
 namespace eShopCloudNative.Catalog.Data.Repositories;
 
@@ -14,7 +19,9 @@ public class CategoryQueryRepository
 
     public async Task<IList<Category>> GetHomeCatalog()
     {
-        string hql = $@"
+        using (new EnterpriseApplicationLogContext(nameof(ProductQueryRepository), nameof(GetHomeCatalog), it => it.Add("Operation", "Query")))
+        {
+            string hql = $@"
             select category
             from {nameof(Category)} as category
             inner join fetch category.{nameof(Category.CategoryType)} as categoryType
@@ -24,45 +31,54 @@ public class CategoryQueryRepository
             and image.{nameof(Image.Index)} = 0
         ";
 
-        var returnValue = await this.Session.CreateQuery(hql)
+            var returnValue = await this.Session.CreateQuery(hql)
             .SetResultTransformer(new DistinctRootEntityResultTransformer())
             .ListAsync<Category>();
 
-        return returnValue;
+            return returnValue;
+        }
     }
 
     public async Task<IList<Category>> GetCategoriesForMenu()
     {
-        string hql = $@"
+        using (new EnterpriseApplicationLogContext(nameof(ProductQueryRepository), nameof(GetCategoriesForMenu), it => it.Add("Operation", "Query")))
+        {
+            string hql = $@"
             select category
             from {nameof(Category)} as category
             inner join fetch category.{nameof(Category.CategoryType)} as categoryType
             left join fetch category.{nameof(Category.Parent)} as parent
         ";
 
-        var categories = await this.Session.CreateQuery(hql)
+            var categories = await this.Session.CreateQuery(hql)
             .SetResultTransformer(new DistinctRootEntityResultTransformer())
             .ListAsync<Category>();
 
-        foreach (var category in categories)
-        {
-            category.Children = categories
-                .Where(it =>
-                it.Parent != null
-                && it.Parent.CategoryId == category.CategoryId
-                && it.CategoryType.ShowOnMenu
-                ).ToList();
-        }
+            foreach (var category in categories)
+            {
+                category.Children = categories
+                    .Where(it =>
+                    it.Parent != null
+                    && it.Parent.CategoryId == category.CategoryId
+                    && it.CategoryType.ShowOnMenu
+                    ).ToList();
+            }
 
-        return categories.Where(it =>
-            it.CategoryType.ShowOnMenu
-            && it.Parent == null)
-            .ToList();
+            return categories.Where(it =>
+                it.CategoryType.ShowOnMenu
+                && it.Parent == null)
+                .ToList();
+        }
     }
 
     public async Task<Category> GetCategoryAsync(int categoryId)
     {
-        string hql = $@"
+        using (new EnterpriseApplicationLogContext(nameof(ProductQueryRepository), nameof(GetCategoryAsync), it => it.Add("Operation", "Query")))
+        {
+
+
+
+            string hql = $@"
             select category
             from {nameof(Category)} as category
             inner join fetch category.{nameof(Category.CategoryType)} as categoryType
@@ -72,10 +88,11 @@ public class CategoryQueryRepository
             and image.{nameof(Image.Index)} = 0
         ";
 
-        var returnValue = await this.Session.CreateQuery(hql)
+            var returnValue = await this.Session.CreateQuery(hql)
             .SetResultTransformer(new DistinctRootEntityResultTransformer())
             .ListAsync<Category>();
 
-        return returnValue.SingleOrDefault();
+            return returnValue.SingleOrDefault();
+        }
     }
 }
