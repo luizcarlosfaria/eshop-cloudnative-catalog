@@ -6,6 +6,7 @@ using Serilog.Context;
 using Serilog.Core.Enrichers;
 using Prop = Serilog.Core.Enrichers.PropertyEnricher;
 using eShopCloudNative.Architecture.Logging;
+using eShopCloudNative.Architecture.Data;
 
 namespace eShopCloudNative.Catalog.Data.Repositories;
 
@@ -19,7 +20,7 @@ public class CategoryQueryRepository
 
     public async Task<IList<Category>> GetHomeCatalog()
     {
-        using (new EnterpriseApplicationLogContext(nameof(ProductQueryRepository), nameof(GetHomeCatalog), it => it.Add("Operation", "Query")))
+        using (new EnterpriseApplicationLogContext(nameof(ProductQueryRepository), nameof(GetHomeCatalog), it => it.AddDataOperation(DataOperation.Query)))
         {
             string hql = $@"
             select category
@@ -41,7 +42,7 @@ public class CategoryQueryRepository
 
     public async Task<IList<Category>> GetCategoriesForMenu()
     {
-        using (new EnterpriseApplicationLogContext(nameof(ProductQueryRepository), nameof(GetCategoriesForMenu), it => it.Add("Operation", "Query")))
+        using (new EnterpriseApplicationLogContext(nameof(ProductQueryRepository), nameof(GetCategoriesForMenu), it => it.AddDataOperation(DataOperation.Query)))
         {
             string hql = $@"
             select category
@@ -73,11 +74,12 @@ public class CategoryQueryRepository
 
     public async Task<Category> GetCategoryAsync(int categoryId)
     {
-        using (new EnterpriseApplicationLogContext(nameof(ProductQueryRepository), nameof(GetCategoryAsync), it => it.Add("Operation", "Query")))
+        using (new EnterpriseApplicationLogContext(nameof(ProductQueryRepository), nameof(GetCategoryAsync), 
+            it => it
+            .AddDataOperation(DataOperation.Query)
+            .AddArgument(nameof(categoryId), categoryId)
+        ))
         {
-
-
-
             string hql = $@"
             select category
             from {nameof(Category)} as category
@@ -86,7 +88,7 @@ public class CategoryQueryRepository
             inner join fetch product.{nameof(Product.Images)} as image
             where category.{nameof(Category.CategoryId)} = {categoryId}
             and image.{nameof(Image.Index)} = 0
-        ";
+            ";
 
             var returnValue = await this.Session.CreateQuery(hql)
             .SetResultTransformer(new DistinctRootEntityResultTransformer())

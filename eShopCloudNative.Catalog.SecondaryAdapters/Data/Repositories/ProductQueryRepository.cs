@@ -1,4 +1,5 @@
-﻿using eShopCloudNative.Architecture.Logging;
+﻿using eShopCloudNative.Architecture.Data;
+using eShopCloudNative.Architecture.Logging;
 using eShopCloudNative.Catalog.Dto;
 using eShopCloudNative.Catalog.Entities;
 using NHibernate;
@@ -20,9 +21,12 @@ public class ProductQueryRepository :
 
     public async Task<Product> GetProductAsync(int productId)
     {
-        using (new EnterpriseApplicationLogContext(nameof(ProductQueryRepository), nameof(GetProductAsync), it => it.Add("Operation", "Query")))
+        using (new EnterpriseApplicationLogContext(nameof(ProductQueryRepository), nameof(GetProductAsync), 
+            it => it
+            .AddDataOperation(DataOperation.Query)
+            .AddArgument(nameof(productId), productId)
+            ))
         {
-            //TODO: Query com problemas - Resultado duplicando Categorias
 
             var returnValue = await this.QueryOver
             .Fetch(SelectMode.FetchLazyProperties, it => it)
@@ -30,12 +34,11 @@ public class ProductQueryRepository :
             .Where(it => it.ProductId == productId)
             .SingleOrDefaultAsync();
 
+            //TODO: Query com problemas - Resultado duplicando Categorias e Images
+            //Dado não vem duplicado do banco, mas o produto cartesiano produzido
+            //está produzindo esse efeito.
             returnValue.Categories = returnValue.Categories.Distinct().ToList();
             returnValue.Images = returnValue.Images.Distinct().ToList();
-
-            //var returnValue = await this.Session.GetAsync<Product>(productId);
-            //returnValue.Categories.Any();
-            //returnValue.Images.Any();
 
             return returnValue;
         }
@@ -43,7 +46,7 @@ public class ProductQueryRepository :
 
     public async Task<decimal> GetProductPriceAsync(int productId)
     {
-        using (new EnterpriseApplicationLogContext(nameof(ProductQueryRepository), nameof(GetProductPriceAsync), it => it.Add("Operation", "Query")))
+        using (new EnterpriseApplicationLogContext(nameof(ProductQueryRepository), nameof(GetProductPriceAsync), it => it.AddDataOperation(DataOperation.Query)))
         {
             return (await this.QueryOver
             .Where(it => it.ProductId == productId)
@@ -54,7 +57,7 @@ public class ProductQueryRepository :
 
     public async Task<IEnumerable<Product>> GetProductsByCategoryAsync(int categoryId)
     {
-        using (new EnterpriseApplicationLogContext(nameof(ProductQueryRepository), nameof(GetProductsByCategoryAsync), it => it.Add("Operation", "Query")))
+        using (new EnterpriseApplicationLogContext(nameof(ProductQueryRepository), nameof(GetProductsByCategoryAsync), it => it.AddDataOperation(DataOperation.Query)))
         {
             return await this.QueryOver.Where(p =>
                 p.Categories != null
