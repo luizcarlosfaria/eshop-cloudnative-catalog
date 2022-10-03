@@ -24,8 +24,7 @@ var builder = WebApplication.CreateBuilder(args);
 bool useHealthChecks = builder.Configuration.GetFlag("boostrap", "healthcheck");
 
 
-
-builder.Host.AddEnterpriseApplicationLog("Enterprise:Application:Log");
+builder.AddEnterpriseApplicationLog("Enterprise:Application:Log", Mode.Standalone);
 
 EnterpriseApplicationLog.SetGlobalContext("eShopCloudNative.Catalog.PrimaryAdapters");
 

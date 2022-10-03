@@ -37,7 +37,8 @@ XmlApplicationContext context = new CodeConfigApplicationContext()
 BootstrapperService bootstrapperService = context.GetObject<BootstrapperService>("BootstrapperService");
 
 
-builder.Host.AddEnterpriseApplicationLog("Enterprise:Application:Log");
+builder.AddEnterpriseApplicationLog("Enterprise:Application:Log", Mode.Standalone);
+
 
 EnterpriseApplicationLog.SetGlobalContext("eShopCloudNative.Catalog.Bootstrap");
 
