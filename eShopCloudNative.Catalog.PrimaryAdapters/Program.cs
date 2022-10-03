@@ -6,49 +6,30 @@ using eShopCloudNative.Catalog.Services;
 using NHibernate;
 using System.Text.Json.Serialization;
 using eShopCloudNative.Architecture.Logging;
-using Spring.Context.Support;
 using eShopCloudNative.Architecture.Extensions;
-using eShopCloudNative.Architecture.Bootstrap;
 using eShopCloudNative.Catalog.Data;
 using eShopCloudNative.Catalog.Data.Mappings;
 using eShopCloudNative.Catalog.Data.Repositories;
 using eShopCloudNative.Architecture.HealthChecks;
-using RabbitMQ.Client;
 using System.Text;
 using Serilog;
+
+Console.WriteLine($"Starting {Environment.MachineName}");
+
 
 Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
 
 var builder = WebApplication.CreateBuilder(args);
-
-
-XmlApplicationContext context = new CodeConfigApplicationContext()
-        .RegisterInstance("Configuration", builder.Configuration)
-        //.RegisterInstance("ServiceProvider", sp)
-        .RegisterInstance("DatabaseSchema", CatalogConstants.Schema)
-        .CreateChildContext("./bootstrapper.xml");
-
-BootstrapperService bootstrapperService = context.GetObject<BootstrapperService>("BootstrapperService");
-
-//Task.Run(() => bootstrapperService.StartAsync(CancellationToken.None));
-
 bool useHealthChecks = builder.Configuration.GetFlag("boostrap", "healthcheck");
+
+
 
 builder.Host.AddEnterpriseApplicationLog("Enterprise:Application:Log");
 
 EnterpriseApplicationLog.SetGlobalContext("eShopCloudNative.Catalog.PrimaryAdapters");
 
 builder.Services.AddControllers().AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
-
-builder.Services.AddSingleton<IHostedService, BootstrapperService>(sp =>
-{
-    if (useHealthChecks)
-    {
-        bootstrapperService.AfterExecute += (sender, e) => sp.GetRequiredService<StartupHealthCheck>().StartupCompleted = true;
-    }
-    return bootstrapperService;
-});
 
 builder.Services.AddNHibernate(cfg => cfg
     .Schema(CatalogConstants.Schema)
@@ -105,27 +86,6 @@ if (useHealthChecks)
 
 
 var app = builder.Build();
-
-//app.UseExceptionHandler(exceptionHandlerApp =>
-//{
-//    exceptionHandlerApp.Run(async context =>
-//    {
-//        context.Response.StatusCode = StatusCodes.Status500InternalServerError;
-
-//        // using static System.Net.Mime.MediaTypeNames;
-//        context.Response.ContentType = System.Net.Mime.MediaTypeNames.Text.Plain;
-
-//        var exceptionHandlerPathFeature =
-//                context.Features.Get<Microsoft.AspNetCore.Diagnostics.IExceptionHandlerPathFeature>();
-
-//        await context.Response.WriteAsync("An exception was thrown." + exceptionHandlerPathFeature?.Error?.ToString() ?? "");
-
-//        if (exceptionHandlerPathFeature?.Error != null)
-//        {
-//            Console.WriteLine(exceptionHandlerPathFeature.Error.ToString());
-//        }
-//    });
-//});
 
 
 //app.UseWelcomePage();

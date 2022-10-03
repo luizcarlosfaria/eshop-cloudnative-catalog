@@ -1,0 +1,44 @@
+{
+  "profiles": {
+    "eShopCloudNative.Catalog.Bootstrap": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "launchUrl": "swagger",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "Enterprise__Application__Log__Hostnames__0": "localhost",
+        "ConnectionStrings__catalog": "User ID=catalog_user;Password=catalog_pass;Host=localhost;Port=5432;Database=eshop_catalog_db;",
+        "boostrap__minio": "false",
+        "boostrap__postgres": "false",
+        "boostrap__sample-data": "false",
+        "boostrap__rabbitmq": "false",
+        "boostrap__healthcheck": "false"
+      },
+      "dotnetRunMessages": true,
+      "applicationUrl": "http://localhost:5295"
+    },
+    "IIS Express": {
+      "commandName": "IISExpress",
+      "launchBrowser": true,
+      "launchUrl": "swagger",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    },
+    "Docker": {
+      "commandName": "Docker",
+      "launchBrowser": true,
+      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/swagger",
+      "publishAllPorts": true
+    }
+  },
+  "$schema": "https://json.schemastore.org/launchsettings.json",
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+    "iisExpress": {
+      "applicationUrl": "http://localhost:64544",
+      "sslPort": 0
+    }
+  }
+}
