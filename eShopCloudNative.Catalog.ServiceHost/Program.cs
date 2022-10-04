@@ -26,7 +26,7 @@ bool useHealthChecks = builder.Configuration.GetFlag("boostrap", "healthcheck");
 
 builder.AddEnterpriseApplicationLog("Enterprise:Application:Log", Mode.Standalone);
 
-EnterpriseApplicationLog.SetGlobalContext("eShopCloudNative.Catalog.PrimaryAdapters");
+EnterpriseApplicationLog.SetGlobalContext("eShopCloudNative.Catalog.ServiceHost");
 
 builder.Services.AddControllers().AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 

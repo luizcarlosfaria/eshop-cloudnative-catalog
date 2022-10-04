@@ -7,6 +7,7 @@ using Serilog.Core.Enrichers;
 using Prop = Serilog.Core.Enrichers.PropertyEnricher;
 using eShopCloudNative.Architecture.Logging;
 using eShopCloudNative.Architecture.Data;
+using System.Linq.Expressions;
 
 namespace eShopCloudNative.Catalog.Data.Repositories;
 
@@ -17,6 +18,9 @@ public class CategoryQueryRepository
     public CategoryQueryRepository(ISession session) : base(session)
     {
     }
+
+    public Expression<Func<Category, bool>> ActiveOnly = (it => it.Active);
+
 
     public async Task<IList<Category>> GetHomeCatalog()
     {

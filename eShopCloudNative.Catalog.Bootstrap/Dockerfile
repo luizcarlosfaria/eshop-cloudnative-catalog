@@ -17,7 +17,7 @@ WORKDIR /src
 COPY ./nuget.config ./
 COPY ["eShopCloudNative.Catalog.Contracts/eShopCloudNative.Catalog.Contracts.csproj", "eShopCloudNative.Catalog.Contracts/"]
 COPY ["eShopCloudNative.Catalog.Core/eShopCloudNative.Catalog.Core.csproj", "eShopCloudNative.Catalog.Core/"]
-COPY ["eShopCloudNative.Catalog.SecondaryAdapters/eShopCloudNative.Catalog.SecondaryAdapters.csproj", "eShopCloudNative.Catalog.SecondaryAdapters/"]
+COPY ["eShopCloudNative.Catalog.Adapters/eShopCloudNative.Catalog.Adapters.csproj", "eShopCloudNative.Catalog.Adapters/"]
 COPY ["eShopCloudNative.Catalog.Bootstrap/eShopCloudNative.Catalog.Bootstrap.csproj", "eShopCloudNative.Catalog.Bootstrap/"]
 RUN dotnet restore "eShopCloudNative.Catalog.Bootstrap/eShopCloudNative.Catalog.Bootstrap.csproj"
 COPY . .

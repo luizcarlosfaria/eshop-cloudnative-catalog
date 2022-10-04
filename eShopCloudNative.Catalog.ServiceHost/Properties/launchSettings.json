@@ -1,6 +1,6 @@
 {
   "profiles": {
-    "eShopCloudNative.Catalog.PrimaryAdapters": {
+    "eShopCloudNative.Catalog.ServiceHost": {
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "swagger",

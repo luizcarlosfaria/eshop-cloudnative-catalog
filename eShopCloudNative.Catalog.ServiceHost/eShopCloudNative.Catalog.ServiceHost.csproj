@@ -42,7 +42,7 @@
     <ItemGroup>
         <ProjectReference Include="..\eShopCloudNative.Catalog.Contracts\eShopCloudNative.Catalog.Contracts.csproj" />
         <ProjectReference Include="..\eShopCloudNative.Catalog.Core\eShopCloudNative.Catalog.Core.csproj" />
-        <ProjectReference Include="..\eShopCloudNative.Catalog.SecondaryAdapters\eShopCloudNative.Catalog.SecondaryAdapters.csproj" />
+        <ProjectReference Include="..\eShopCloudNative.Catalog.Adapters\eShopCloudNative.Catalog.Adapters.csproj" />
     </ItemGroup>
 
 
