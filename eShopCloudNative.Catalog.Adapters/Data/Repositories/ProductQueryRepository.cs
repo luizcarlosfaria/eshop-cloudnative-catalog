@@ -46,7 +46,10 @@ public class ProductQueryRepository :
 
     public async Task<decimal> GetProductPriceAsync(int productId)
     {
-        using (new EnterpriseApplicationLogContext(nameof(ProductQueryRepository), nameof(GetProductPriceAsync), it => it.AddDataOperation(DataOperation.Query)))
+        using (new EnterpriseApplicationLogContext(nameof(ProductQueryRepository), nameof(GetProductPriceAsync), it => 
+            it.AddDataOperation(DataOperation.Query)
+            .AddArgument(nameof(productId), productId)
+        ))
         {
             return (await this.QueryOver
             .Where(it => it.ProductId == productId)
