@@ -2,12 +2,7 @@
 @using eShopCloudNative.Catalog.Services
 @inject IPublicCatalogService publicCatalogService
 @{
-
-    if (publicCatalogService == null)
-    {
-        throw new InvalidOperationException("ViewBag.publicCatalogService is not set. _Menu.cshtml require a valid instance of IPublicCatalogService on ViewBag.publicCatalogService");
-    }
-
+    //É um local em que quero ser permissivo e tolerar erros
     IEnumerable<CategoryDto> categories = null;
     try
     {

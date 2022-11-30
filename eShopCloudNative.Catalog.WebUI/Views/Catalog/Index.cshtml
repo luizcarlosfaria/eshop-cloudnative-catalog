@@ -1,15 +1,11 @@
 ﻿@using eShopCloudNative.Catalog.Dto
 @using eShopCloudNative.Catalog.Services
 @inject IPublicCatalogService publicCatalogService
-@if (publicCatalogService == null)
-{
-    throw new InvalidOperationException("ViewBag.publicCatalogService is not set. _Menu.cshtml require a valid instance of IPublicCatalogService on ViewBag.publicCatalogService");
-}
+
+
 <cache expires-after="@WebConstants.Instance.HomeCatalogCacheTimeout" enabled="@WebConstants.Instance.HomeCatalogCacheTimeout != TimeSpan.Zero">
     @{
-
-
-
+        //É um local em que quero ser permissivo e tolerar erros
         IEnumerable<CategoryDto> categorias = null;
         try
         {
