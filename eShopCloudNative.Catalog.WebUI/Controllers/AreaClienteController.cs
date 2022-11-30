@@ -9,14 +9,14 @@ namespace eShopCloudNative.Catalog.Controllers;
 [Route("/area-cliente")]
 public class AreaClienteController : EShopControllerBase
 {
-    public AreaClienteController(ILogger<AreaClienteController> logger, IPublicCatalogService publicCatalogService) : base(logger, publicCatalogService)
+    public AreaClienteController(ILogger<AreaClienteController> logger) : base(logger)
     {
     }
 
     [Authorize()]
     public IActionResult Index()
     {
-        return this.SetViewBag().View();
+        return this.View();
     }
 
     [HttpGet("sair")]

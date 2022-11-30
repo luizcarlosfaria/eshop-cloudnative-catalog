@@ -9,18 +9,21 @@ namespace eShopCloudNative.Catalog.Controllers;
 [Route("/p")]
 public class ProductController : EShopControllerBase
 {
+    private readonly IPublicCatalogService publicCatalogService;
+
     public ProductController(ILogger<CatalogController> logger, IPublicCatalogService publicCatalogService)
-        : base(logger, publicCatalogService)
+        : base(logger)
 
     {
+        this.publicCatalogService = publicCatalogService;
     }
 
     [ResponseCache(Duration = 120, Location = ResponseCacheLocation.Any, NoStore = false)]
     [Route("{productId:int}/{slug}")]
     public async Task<IActionResult> IndexAsync(int productId, string slug)
     {
-        ProductDto product = await this.PublicCatalogService.GetProductAsync(productId);
-        return this.SetViewBag().View(product);
+        ProductDto product = await this.publicCatalogService.GetProductAsync(productId);
+        return this.View(product);
     }
 
     [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
@@ -33,7 +36,7 @@ public class ProductController : EShopControllerBase
             return this.BadRequest("Fake, exemplo de falha");
         }
 
-        decimal price = await this.PublicCatalogService.GetProductPriceAsync(productId);
+        decimal price = await this.publicCatalogService.GetProductPriceAsync(productId);
 
         return this.Content($"R$ {price}");
     }

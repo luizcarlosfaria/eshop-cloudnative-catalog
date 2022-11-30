@@ -6,20 +6,20 @@ using System.Diagnostics;
 namespace eShopCloudNative.Catalog.Controllers;
 public class CatalogController : EShopControllerBase
 {
-    public CatalogController(ILogger<CatalogController> logger, IPublicCatalogService publicCatalogService)
-    : base(logger, publicCatalogService)
+    public CatalogController(ILogger<CatalogController> logger)
+    : base(logger)
 
     {
     }
 
     [ResponseCache(Duration = 5, Location = ResponseCacheLocation.Any, NoStore = false)]
     public IActionResult Index()
-        => this.SetViewBag().View();
+        => this.View();
 
     public IActionResult Privacy() 
-        => this.SetViewBag().View();
+        => this.View();
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error() 
-        => this.SetViewBag().View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? this.HttpContext.TraceIdentifier });
+        => this.View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? this.HttpContext.TraceIdentifier });
 }
