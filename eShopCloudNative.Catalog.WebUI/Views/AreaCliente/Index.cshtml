@@ -3,3 +3,38 @@
 *@
 @{
 }
+
+
+<div class="overflow-hidden bg-white shadow sm:rounded-lg my-10">
+    <div class="px-4 py-5 sm:px-6">
+        <h3 class="text-lg font-medium leading-6 text-gray-900">Área do Cliente</h3>
+        <p class="mt-1 max-w-2xl text-sm text-gray-500">Dados pessoais e Compras.</p>
+    </div>
+    <div class="border-t border-gray-200 px-4 py-5 sm:p-0">
+        <dl class="sm:divide-y sm:divide-gray-200">
+            <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5 sm:px-6">
+                <dt class="text-sm font-medium text-gray-500">Nome</dt>
+                <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">@this.User.Claims.SingleOrDefault(it => it.Type=="name")?.Value </dd>
+            </div>
+            <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5 sm:px-6">
+                <dt class="text-sm font-medium text-gray-500">E-mail</dt>
+                <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">@this.User.Claims.SingleOrDefault(it => it.Type=="email")?.Value</dd>
+            </div>           
+        </dl>
+    </div>
+</div>
+
+
+<div class="overflow-hidden bg-white shadow sm:rounded-lg my-10">
+    <div class="px-4 py-5 sm:px-6">
+        <h3 class="text-lg font-medium leading-6 text-gray-900">Meus pedidos</h3>
+        <p class="mt-1 max-w-2xl text-sm text-gray-500">Últimas compras.</p>
+    </div>
+    <div class="border-t border-gray-200 px-4 py-5 sm:p-0">
+        <dl class="sm:divide-y sm:divide-gray-200">
+            <div class="py-4 sm:grid  sm:py-5 sm:px-6">
+                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 text-center">Nenhuma compra realizada.</dd>
+            </div>
+        </dl>
+    </div>
+</div>
