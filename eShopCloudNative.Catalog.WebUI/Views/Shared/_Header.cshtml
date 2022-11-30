@@ -1,0 +1,187 @@
+﻿@using eShopCloudNative.Catalog.Dto
+@using eShopCloudNative.Catalog.Services
+
+
+<div class="bg-white">
+    <div>
+       @* <!--
+          Mobile menu
+
+          Off-canvas menu for mobile, show/hide based on off-canvas menu state.
+        -->
+        <div class="relative z-40 lg:hidden" role="dialog" aria-modal="true">
+            <!--
+              Off-canvas menu backdrop, show/hide based on off-canvas menu state.
+
+              Entering: "transition-opacity ease-linear duration-300"
+                From: "opacity-0"
+                To: "opacity-100"
+              Leaving: "transition-opacity ease-linear duration-300"
+                From: "opacity-100"
+                To: "opacity-0"
+            -->
+            <div class="fixed inset-0 bg-black bg-opacity-25"></div>
+
+            <div class="fixed inset-0 flex z-40">
+                <!--
+                  Off-canvas menu, show/hide based on off-canvas menu state.
+
+                  Entering: "transition ease-in-out duration-300 transform"
+                    From: "-translate-x-full"
+                    To: "translate-x-0"
+                  Leaving: "transition ease-in-out duration-300 transform"
+                    From: "translate-x-0"
+                    To: "-translate-x-full"
+                -->
+                <div class="relative max-w-xs w-full bg-white shadow-xl pb-12 flex flex-col overflow-y-auto">
+                    <div class="px-4 pt-5 pb-2 flex">
+                        <button type="button" class="-m-2 p-2 rounded-md inline-flex items-center justify-center text-gray-400">
+                            <span class="sr-only">Close menu</span>
+                            <!-- Heroicon name: outline/x -->
+                            <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+
+                    <!-- Links -->
+
+                    <div class="border-t border-gray-200 py-6 px-4 space-y-6">
+                        @foreach (var categoryL1 in categories)
+                        {
+                            <div class="flow-root">
+                                <a href="~/c/@categoryL1.GetCategorySlug()" class="-m-2 p-2 block font-medium text-gray-900">@categoryL1.Name</a>
+                            </div>
+                            @foreach (var categoryL2 in categoryL1.Children)
+                            {
+                                <div class="flow-root">
+                                    <a href="~/c/@categoryL2.GetCategorySlug()" class="-m-2 p-2 ml-2 block font-medium text-gray-900">@categoryL2.Name</a>
+                                </div>
+                                @foreach (var categoryL3 in categoryL2.Children)
+                                {
+                                    <div class="flow-root">
+                                        <a href="~/c/@categoryL3.GetCategorySlug()" class="-m-2 p-2 ml-6 block font-medium text-gray-900">@categoryL3.Name</a>
+                                    </div>
+                                }
+                            }
+                        }
+                    </div>
+
+                    <div class="border-t border-gray-200 py-6 px-4 space-y-6">
+                        <div class="flow-root">
+                            <a href="/area-cliente" class="-m-2 p-2 block font-medium text-gray-900">Entrar/Cadastrar</a>
+                        </div>
+                    </div>
+
+                   
+                </div>
+            </div>
+        </div>*@
+
+        <header class="relative bg-white">
+            <p class="bg-indigo-600 h-10 flex items-center justify-center text-sm font-medium text-white px-4 sm:px-6 lg:px-8">Get free delivery on orders over $100</p>
+
+            <nav aria-label="Top" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="border-b border-gray-200">
+                    <div class="h-16 flex items-center">
+                        <!-- Mobile menu toggle, controls the 'mobileMenuOpen' state. -->
+                        <button type="button" class="bg-white p-2 rounded-md text-gray-400 lg:hidden">
+                            <span class="sr-only">Open menu</span>
+                            <!-- Heroicon name: outline/menu -->
+                            <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                            </svg>
+                        </button>
+
+                        <!-- Logo -->
+                        <div class="ml-4 flex lg:ml-0">
+                            <a href="~/">
+                                <span class="sr-only">Workflow</span>
+                                <img class="h-8 w-auto" src="https://tailwindui.com/img/logos/workflow-mark.svg?color=indigo&shade=600" alt="">
+                            </a>
+                        </div>
+
+                        <!-- Flyout menus -->
+                        <div class="hidden lg:ml-8 lg:block lg:self-stretch">
+
+                            <cache expires-after="@WebConstants.Instance.MenuCacheTimeout" enabled="@WebConstants.Instance.MenuCacheTimeout != TimeSpan.Zero">
+                                <partial name="_Menu.cshtml" />
+                            </cache>
+
+                        </div>
+
+                        <div class="ml-auto flex items-center">
+
+                            @if (this.User.Identity.IsAuthenticated)
+                            {
+                                <div class="hidden lg:flex lg:flex-3 lg:items-center lg:justify-end lg:space-x-6">
+                                    <span href="/area-cliente" class="text-base font-medium text-gray-700 hover:text-gray-800">
+                                        @this.User.Claims.Single(it => it.Type=="name").Value <br>
+                                        <span class="text-sm font-base">(@this.User.Claims.Single(it => it.Type=="email").Value)</span>
+                                        
+                                    </span>
+                                </div>
+
+                                <div class="hidden lg:flex lg:flex-2 lg:items-center lg:justify-end lg:space-x-6">
+                                    <a href="/area-cliente/sair" class="text-sm font-medium text-gray-700 hover:text-gray-800">Sair</a>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
+                                    <a href="/area-cliente" class="text-sm font-medium text-gray-700 hover:text-gray-800">Entrar/Cadastrar</a>
+                                </div>
+                            }
+@*
+                            <!-- Search -->
+                            <div class="flex lg:ml-6">
+                                <a href="#" class="p-2 text-gray-400 hover:text-gray-500">
+                                    <span class="sr-only">Search</span>
+                                    <!-- Heroicon name: outline/search -->
+                                    <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                    </svg>
+                                </a>
+                            </div>*@
+
+                            <!-- Cart -->
+                            <div class="ml-4 flow-root lg:ml-6">
+                                <a href="#" class="group -m-2 p-2 flex items-center">
+                                    <!-- Heroicon name: outline/shopping-bag -->
+                                    <svg class="flex-shrink-0 h-6 w-6 text-gray-400 group-hover:text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                                    </svg>
+                                    <span class="ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-800">0</span>
+                                    <span class="sr-only">items in cart, view bag</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </header>
+    </div>
+
+    @*<div>
+
+        <div class="border-b border-gray-200">
+            <nav aria-label="Breadcrumb" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <ol role="list" class="flex items-center space-x-4 py-4">
+                    <li>
+                        <div class="flex items-center">
+                            <a href="#" class="mr-4 text-sm font-medium text-gray-900"> Men </a>
+                            <svg viewBox="0 0 6 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="h-5 w-auto text-gray-300">
+                                <path d="M4.878 4.34H3.551L.27 16.532h1.327l3.281-12.19z" fill="currentColor" />
+                            </svg>
+                        </div>
+                    </li>
+
+                    <li class="text-sm">
+                        <a href="#" aria-current="page" class="font-medium text-gray-500 hover:text-gray-600"> New Arrivals </a>
+                    </li>
+                </ol>
+            </nav>
+        </div>
+
+    </div>*@
+</div>

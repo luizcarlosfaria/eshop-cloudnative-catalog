@@ -3,7 +3,7 @@ using eShopCloudNative.Catalog.Entities;
 using NHibernate;
 
 namespace eShopCloudNative.Catalog.Data;
-public class CatalogPersistenseRepository<TEntityBase> : PersistenseRepository<TEntityBase>
+public class CatalogPersistenseRepository<TEntityBase> : AsyncPersistenseRepository<TEntityBase>
     where TEntityBase : IEntity
 {
 
