@@ -33,7 +33,5 @@ public class AreaClienteController : EShopControllerBase
 
         //Identity
         return this.Redirect($"{configuration.GetValue<string>("oidc:Authority")}/account/forcelogout?redirect_uri={path}"); //?=encodedRedirectUri
-
-        //return RedirectToAction("Index", "Home");
     }
 }
