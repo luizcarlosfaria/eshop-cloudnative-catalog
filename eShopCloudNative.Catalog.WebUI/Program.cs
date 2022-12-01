@@ -12,6 +12,8 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication;
 using System.Security.Claims;
+using NHibernate.Criterion;
+using eShopCloudNative.Architecture.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,12 +23,15 @@ builder.AddEnterpriseApplicationLog("Enterprise:Application:Log", Mode.Standalon
 
 EnterpriseApplicationLog.SetGlobalContext("eShopCloudNative.Catalog.WebUI");
 
+builder.Services.AddTransient<RequestDelegatingHandler>();
+
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddResponseCaching();
 
 builder.Services
     .AddRefitClient<IPublicCatalogService>()
+    .AddHttpMessageHandler<RequestDelegatingHandler>()
     .ConfigureHttpClient(c =>
     {
         c.BaseAddress = new Uri($"{builder.Configuration.GetValue<string>("eshop-cloudnative:global:api-gateway")}/catalog");
@@ -126,3 +131,21 @@ app.MapControllerRoute(
 app.Run();
 
 
+public class RequestDelegatingHandler : DelegatingHandler
+{
+    protected override HttpResponseMessage Send(HttpRequestMessage request, CancellationToken cancellationToken)
+    {
+        using (new EnterpriseApplicationLogContext(request.RequestUri.ToString(), request.Method.ToString(), it => it.AddProperty("Refit", true).AddProperty("Async", false)))
+        {
+            return base.Send(request, cancellationToken);
+        }
+    }
+
+    protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+    {
+        using (new EnterpriseApplicationLogContext(request.RequestUri.ToString(), request.Method.ToString(), it => it.AddProperty("Refit", true).AddProperty("Async", true)))
+        {
+            return await base.SendAsync(request, cancellationToken);
+        }
+    }
+}
