@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace eShopCloudNative.Catalog.Controllers;
 [ApiController]
 [Route("Public")]
-//[ResponseCache(Duration = 120,  Location = ResponseCacheLocation.Any, NoStore = false)]
+[ResponseCache(Duration = 120,  Location = ResponseCacheLocation.Any, NoStore = false)]
 public partial class PublicCatalogController : ControllerBase, IPublicCatalogService
 {
     private readonly IPublicCatalogService publicCatalog;
