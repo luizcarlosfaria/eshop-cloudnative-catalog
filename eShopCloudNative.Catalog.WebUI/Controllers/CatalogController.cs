@@ -1,7 +1,9 @@
 ﻿using eShopCloudNative.Catalog.Models;
 using eShopCloudNative.Catalog.Services;
 using Microsoft.AspNetCore.Mvc;
+using Minio.DataModel;
 using System.Diagnostics;
+
 
 namespace eShopCloudNative.Catalog.Controllers;
 public class CatalogController : EShopControllerBase
@@ -12,7 +14,7 @@ public class CatalogController : EShopControllerBase
     {
     }
 
-    [ResponseCache(Duration = 5, Location = ResponseCacheLocation.Any, NoStore = false)]
+    //[ResponseCache(Duration = 3, Location = ResponseCacheLocation.Any, NoStore = false)]
     public IActionResult Index()
         => this.View();
 

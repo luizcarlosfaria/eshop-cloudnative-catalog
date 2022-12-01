@@ -18,7 +18,7 @@ public class CategoryController : EShopControllerBase
         this.publicCatalogService = publicCatalogService;
     }
 
-    [ResponseCache(Duration = 5, Location = ResponseCacheLocation.Any, NoStore = false)]
+    //[ResponseCache(Duration = 5, Location = ResponseCacheLocation.Any, NoStore = false)]
     [Route("{categoryId:int}/{*slug}")]
     public async Task<IActionResult> IndexAsync(int categoryId, string slug)
         => this.View("Shared.Category", await this.publicCatalogService.GetCategoryAsync(categoryId));

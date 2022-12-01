@@ -18,7 +18,7 @@ public class ProductController : EShopControllerBase
         this.publicCatalogService = publicCatalogService;
     }
 
-    [ResponseCache(Duration = 120, Location = ResponseCacheLocation.Any, NoStore = false)]
+    //[ResponseCache(Duration = 120, Location = ResponseCacheLocation.Any, NoStore = false)]
     [Route("{productId:int}/{slug}")]
     public async Task<IActionResult> IndexAsync(int productId, string slug)
     {
