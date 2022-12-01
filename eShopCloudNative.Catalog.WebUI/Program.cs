@@ -17,7 +17,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration.ConfigureWith("WebConstants", WebConstants.Instance);
 
-builder.AddEnterpriseApplicationLog("Enterprise:Application:Log", Mode.Integrated);
+builder.AddEnterpriseApplicationLog("Enterprise:Application:Log", Mode.Standalone);
 
 EnterpriseApplicationLog.SetGlobalContext("eShopCloudNative.Catalog.WebUI");
 
