@@ -3,6 +3,6 @@
 public class ImageDto
 {
     public Guid ImageId { get; set; }
-    public ProductDto? Product { get; set; }
-    public string? FileName { get; set; }
+    public ProductDto Product { get; set; }
+    public string FileName { get; set; }
 }
