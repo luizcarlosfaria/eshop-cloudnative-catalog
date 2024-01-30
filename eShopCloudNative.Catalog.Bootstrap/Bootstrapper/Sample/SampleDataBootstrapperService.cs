@@ -120,8 +120,8 @@ internal class SampleDataBootstrapperService : IBootstrapperService
             Name = productName,
             Slug = ToUrlSlug(productName),
             Active = true,
-            Description = lorem.Sentences(8, Environment.NewLine),
-            Price = random.Next(100,1000),
+            Description = this.lorem.Sentences(8, Environment.NewLine),
+            Price = this.random.Next(100,1000),
             Categories = new List<Category>(categories)
         };
 
