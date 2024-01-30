@@ -21,12 +21,13 @@ public class ProductQueryRepository :
 
     public async Task<Product> GetProductAsync(int productId)
     {
-        using (new EnterpriseApplicationLogContext(nameof(ProductQueryRepository), nameof(GetProductAsync), 
-            it => it
-            .AddDataOperation(DataOperation.Query)
-            .AddArgument(nameof(productId), productId)
-            ))
+        using (var context = new EnterpriseApplicationLogContext())
         {
+            context.SetIdentity<ProductQueryRepository>();
+
+            context
+                .AddDataOperation(DataOperation.Query)
+                .AddArgument(nameof(productId), productId);
 
             var returnValue = await this.QueryOver
             .Fetch(SelectMode.FetchLazyProperties, it => it)
@@ -46,11 +47,15 @@ public class ProductQueryRepository :
 
     public async Task<decimal> GetProductPriceAsync(int productId)
     {
-        using (new EnterpriseApplicationLogContext(nameof(ProductQueryRepository), nameof(GetProductPriceAsync), it => 
-            it.AddDataOperation(DataOperation.Query)
-            .AddArgument(nameof(productId), productId)
-        ))
+        using (var context = new EnterpriseApplicationLogContext())
         {
+            context.SetIdentity<ProductQueryRepository>();
+
+            context
+                .AddDataOperation(DataOperation.Query)
+                .AddArgument(nameof(productId), productId);
+
+
             return (await this.QueryOver
             .Where(it => it.ProductId == productId)
             .Select(it => it.Price)
@@ -60,8 +65,12 @@ public class ProductQueryRepository :
 
     public async Task<IEnumerable<Product>> GetProductsByCategoryAsync(int categoryId)
     {
-        using (new EnterpriseApplicationLogContext(nameof(ProductQueryRepository), nameof(GetProductsByCategoryAsync), it => it.AddDataOperation(DataOperation.Query)))
+        using (var context = new EnterpriseApplicationLogContext())
         {
+            context.SetIdentity<ProductQueryRepository>();
+
+            context.AddDataOperation(DataOperation.Query);
+
             return await this.QueryOver.Where(p =>
                 p.Categories != null
                 &&

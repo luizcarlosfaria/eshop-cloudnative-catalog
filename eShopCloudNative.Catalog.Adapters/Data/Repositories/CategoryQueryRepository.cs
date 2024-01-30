@@ -24,8 +24,12 @@ public class CategoryQueryRepository
 
     public async Task<IList<Category>> GetHomeCatalog()
     {
-        using (new EnterpriseApplicationLogContext(nameof(ProductQueryRepository), nameof(GetHomeCatalog), it => it.AddDataOperation(DataOperation.Query)))
+        using (var context = new EnterpriseApplicationLogContext())
         {
+            context.SetIdentity<CategoryQueryRepository>();
+
+            context.AddDataOperation(DataOperation.Query);
+
             string hql = $@"
             select category
             from {nameof(Category)} as category
@@ -46,8 +50,12 @@ public class CategoryQueryRepository
 
     public async Task<IList<Category>> GetCategoriesForMenu()
     {
-        using (new EnterpriseApplicationLogContext(nameof(ProductQueryRepository), nameof(GetCategoriesForMenu), it => it.AddDataOperation(DataOperation.Query)))
+        using (var context = new EnterpriseApplicationLogContext())
         {
+            context.SetIdentity<CategoryQueryRepository>();
+
+            context.AddDataOperation(DataOperation.Query);
+
             string hql = $@"
             select category
             from {nameof(Category)} as category
@@ -78,12 +86,15 @@ public class CategoryQueryRepository
 
     public async Task<Category> GetCategoryAsync(int categoryId)
     {
-        using (new EnterpriseApplicationLogContext(nameof(ProductQueryRepository), nameof(GetCategoryAsync), 
-            it => it
-            .AddDataOperation(DataOperation.Query)
-            .AddArgument(nameof(categoryId), categoryId)
-        ))
+        using (var context = new EnterpriseApplicationLogContext())
         {
+            context.SetIdentity<CategoryQueryRepository>();
+
+            context
+                .AddDataOperation(DataOperation.Query)
+                .AddArgument(nameof(categoryId), categoryId);
+
+
             string hql = $@"
             select category
             from {nameof(Category)} as category
@@ -94,7 +105,7 @@ public class CategoryQueryRepository
             and image.{nameof(Image.Index)} = 0
             ";
 
-            var returnValue = await this.Session.CreateQuery(hql)
+            var returnValue = await this.Session.CreateQuery(hql)                
             .SetResultTransformer(new DistinctRootEntityResultTransformer())
             .ListAsync<Category>();
 
